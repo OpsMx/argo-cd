@@ -22,19 +22,19 @@ export const AddAuthToToolbar = (init: Toolbar | Observable<Toolbar>, ctx: Conte
             toolbar = toolbar || {};
             toolbar.tools = [
                 toolbar.tools,
-                <DataLoader key='loginPanel' load={() => isLoggedIn()}>
-                    {loggedIn =>
-                        loggedIn ? (
-                            <button className='login-logout-button' key='logout' onClick={() => (window.location.href = requests.toAbsURL('/auth/logout'))}>
-                                Log out
-                            </button>
-                        ) : (
-                            <button className='login-logout-button' key='login' onClick={() => ctx.navigation.goto(`/login?return_url=${encodeURIComponent(location.href)}`)}>
-                                Log in
-                            </button>
-                        )
-                    }
-                </DataLoader>
+                // <DataLoader key='loginPanel' load={() => isLoggedIn()}>
+                //     {loggedIn =>
+                //         loggedIn ? (
+                //             <button className='login-logout-button' key='logout' onClick={() => (window.location.href = requests.toAbsURL('/auth/logout'))}>
+                //                 Log out
+                //             </button>
+                //         ) : (
+                //             <button className='login-logout-button' key='login' onClick={() => ctx.navigation.goto(`/login?return_url=${encodeURIComponent(location.href)}`)}>
+                //                 Log in
+                //             </button>
+                //         )
+                //     }
+                // </DataLoader>
             ];
             return toolbar;
         })
