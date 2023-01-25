@@ -42,29 +42,29 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    {
-        title: 'Applications',
-        tooltip: 'Manage your applications, and diagnose health problems.',
-        path: '/applications',
-        iconClassName: 'argo-icon argo-icon-application'
-    },
-    {
-        title: 'Settings',
-        tooltip: 'Manage your repositories, projects, settings',
-        path: '/settings',
-        iconClassName: 'argo-icon argo-icon-settings'
-    },
-    {
-        title: 'User Info',
-        path: '/user-info',
-        iconClassName: 'fa fa-user-circle'
-    },
-    {
-        title: 'Documentation',
-        tooltip: 'Read the documentation, and get help and assistance.',
-        path: '/help',
-        iconClassName: 'argo-icon argo-icon-docs'
-    }
+    // {
+    //     title: 'Applications',
+    //     tooltip: 'Manage your applications, and diagnose health problems.',
+    //     path: '/applications',
+    //     iconClassName: 'argo-icon argo-icon-application'
+    // },
+    // {
+    //     title: 'Settings',
+    //     tooltip: 'Manage your repositories, projects, settings',
+    //     path: '/settings',
+    //     iconClassName: 'argo-icon argo-icon-settings'
+    // },
+    // {
+    //     title: 'User Info',
+    //     path: '/user-info',
+    //     iconClassName: 'fa fa-user-circle'
+    // },
+    // {
+    //     title: 'Documentation',
+    //     tooltip: 'Read the documentation, and get help and assistance.',
+    //     path: '/help',
+    //     iconClassName: 'argo-icon argo-icon-docs'
+    // }
 ];
 
 const versionLoader = services.version.version();

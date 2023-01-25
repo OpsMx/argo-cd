@@ -19,7 +19,7 @@ export const useSidebarTarget = () => {
 
     React.useEffect(() => {
         const sidebar = document.getElementById(SIDEBAR_TOOLS_ID);
-        // sidebar.appendChild(sidebarTarget?.current);
+        sidebar.appendChild(sidebarTarget?.current);
         return () => {
             sidebarTarget.current?.remove();
         };
@@ -46,12 +46,12 @@ export const Sidebar = (props: SidebarProps) => {
 
     return (
         <div className={`sidebar ${props.pref.hideSidebar ? 'sidebar--collapsed' : ''}`}>
-            <div className='sidebar__logo'>
+            {/* <div className='sidebar__logo'>
                 <img src='assets/images/logo.png' alt='Argo' /> {!props.pref.hideSidebar && 'Argo CD'}
             </div>
             <div className='sidebar__version' onClick={props.onVersionClick}>
                 {loading ? 'Loading...' : error?.state ? 'Unknown' : version?.Version || 'Unknown'}
-            </div>
+            </div> */}
             {(props.navItems || []).map(item => (
                 <Tooltip key={item.path} content={item?.tooltip || item.title} {...tooltipProps}>
                     <div
@@ -67,9 +67,9 @@ export const Sidebar = (props: SidebarProps) => {
                     </div>
                 </Tooltip>
             ))}
-            <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
+            {/* <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                 <i className={`fas fa-arrow-${props.pref.hideSidebar ? 'right' : 'left'}`} />
-            </div>
+            </div> */}
             {props.pref.hideSidebar && (
                 <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                     <Tooltip content='Show Filters' {...tooltipProps}>
