@@ -4,7 +4,7 @@ import {Timestamp} from '../../../shared/components';
 import * as models from '../../../shared/models';
 import {getConditionCategory} from '../utils';
 
-import './application-conditions.scss';
+require('./application-conditions.scss');
 
 export const ApplicationConditions = ({conditions}: {conditions: models.ApplicationCondition[]}) => {
     return (

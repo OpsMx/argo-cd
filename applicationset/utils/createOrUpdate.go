@@ -125,7 +125,7 @@ func LogPatch(logCtx *log.Entry, patch client.Patch, obj *argov1alpha1.Applicati
 // mutate wraps a MutateFn and applies validation to its result
 func mutate(f controllerutil.MutateFn, key client.ObjectKey, obj client.Object) error {
 	if err := f(); err != nil {
-		return fmt.Errorf("error while wrapping using MutateFn: %w", err)
+		return err
 	}
 	if newKey := client.ObjectKeyFromObject(obj); key != newKey {
 		return fmt.Errorf("MutateFn cannot mutate object name and/or object namespace")

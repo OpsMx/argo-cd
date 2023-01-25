@@ -23,7 +23,11 @@ spec:
       serviceAccountName: argocd-redis        
       containers:
       - name: redis
+<<<<<<< HEAD
         image: redis:7.0.14-alpine
+=======
+        image: redis:7.0.5-alpine
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         args:
         - "--save"

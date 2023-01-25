@@ -26,7 +26,6 @@ import (
 
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 // Utility struct for a reference to a secret key.
@@ -48,6 +47,7 @@ type ApplicationSet struct {
 	Status            ApplicationSetStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
+<<<<<<< HEAD
 // RBACName formats fully qualified application name for RBAC check.
 func (a *ApplicationSet) RBACName(defaultNS string) string {
 	return security.RBACName(defaultNS, a.Spec.Template.Spec.GetProject(), a.Namespace, a.Name)
@@ -92,6 +92,14 @@ type ApplicationMatchExpression struct {
 	Key      string   `json:"key,omitempty" protobuf:"bytes,1,opt,name=key"`
 	Operator string   `json:"operator,omitempty" protobuf:"bytes,2,opt,name=operator"`
 	Values   []string `json:"values,omitempty" protobuf:"bytes,3,opt,name=values"`
+=======
+// ApplicationSetSpec represents a class of application set state.
+type ApplicationSetSpec struct {
+	GoTemplate bool                      `json:"goTemplate,omitempty" protobuf:"bytes,1,name=goTemplate"`
+	Generators []ApplicationSetGenerator `json:"generators" protobuf:"bytes,2,name=generators"`
+	Template   ApplicationSetTemplate    `json:"template" protobuf:"bytes,3,name=template"`
+	SyncPolicy *ApplicationSetSyncPolicy `json:"syncPolicy,omitempty" protobuf:"bytes,4,name=syncPolicy"`
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 // ApplicationsSyncPolicy representation
@@ -398,10 +406,13 @@ type GitGenerator struct {
 	Revision            string                      `json:"revision" protobuf:"bytes,4,name=revision"`
 	RequeueAfterSeconds *int64                      `json:"requeueAfterSeconds,omitempty" protobuf:"bytes,5,name=requeueAfterSeconds"`
 	Template            ApplicationSetTemplate      `json:"template,omitempty" protobuf:"bytes,6,name=template"`
+<<<<<<< HEAD
 	PathParamPrefix     string                      `json:"pathParamPrefix,omitempty" protobuf:"bytes,7,name=pathParamPrefix"`
 
 	// Values contains key/value pairs which are passed directly as parameters to the template
 	Values map[string]string `json:"values,omitempty" protobuf:"bytes,8,name=values"`
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 type GitDirectoryGeneratorItem struct {
@@ -757,8 +768,7 @@ type PluginGenerator struct {
 type ApplicationSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Conditions        []ApplicationSetCondition         `json:"conditions,omitempty" protobuf:"bytes,1,name=conditions"`
-	ApplicationStatus []ApplicationSetApplicationStatus `json:"applicationStatus,omitempty" protobuf:"bytes,2,name=applicationStatus"`
+	Conditions []ApplicationSetCondition `json:"conditions,omitempty" protobuf:"bytes,1,name=conditions"`
 }
 
 // ApplicationSetCondition contains details about an applicationset condition, which is usally an error or warning
@@ -794,12 +804,11 @@ const (
 // prefix "Info" means informational condition
 type ApplicationSetConditionType string
 
-// ErrorOccurred / ParametersGenerated / TemplateRendered / ResourcesUpToDate
+//ErrorOccurred / ParametersGenerated / TemplateRendered / ResourcesUpToDate
 const (
 	ApplicationSetConditionErrorOccurred       ApplicationSetConditionType = "ErrorOccurred"
 	ApplicationSetConditionParametersGenerated ApplicationSetConditionType = "ParametersGenerated"
 	ApplicationSetConditionResourcesUpToDate   ApplicationSetConditionType = "ResourcesUpToDate"
-	ApplicationSetConditionRolloutProgressing  ApplicationSetConditionType = "RolloutProgressing"
 )
 
 type ApplicationSetReasonType string
@@ -816,11 +825,9 @@ const (
 	ApplicationSetReasonDeleteApplicationError           = "DeleteApplicationError"
 	ApplicationSetReasonRefreshApplicationError          = "RefreshApplicationError"
 	ApplicationSetReasonApplicationValidationError       = "ApplicationValidationError"
-	ApplicationSetReasonApplicationSetModified           = "ApplicationSetModified"
-	ApplicationSetReasonApplicationSetRolloutComplete    = "ApplicationSetRolloutComplete"
-	ApplicationSetReasonSyncApplicationError             = "SyncApplicationError"
 )
 
+<<<<<<< HEAD
 // ApplicationSetApplicationStatus contains details about each Application managed by the ApplicationSet
 type ApplicationSetApplicationStatus struct {
 	// Application contains the name of the Application resource
@@ -835,6 +842,8 @@ type ApplicationSetApplicationStatus struct {
 	Step string `json:"step" protobuf:"bytes,5,opt,name=step"`
 }
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 // ApplicationSetList contains a list of ApplicationSet
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
@@ -892,6 +901,7 @@ func findConditionIndex(conditions []ApplicationSetCondition, t ApplicationSetCo
 	}
 	return -1
 }
+<<<<<<< HEAD
 
 func (status *ApplicationSetStatus) SetApplicationStatus(newStatus ApplicationSetApplicationStatus) {
 	for i := range status.ApplicationStatus {
@@ -914,3 +924,5 @@ func (a *ApplicationSet) QualifiedName() string {
 		return a.Namespace + "/" + a.Name
 	}
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

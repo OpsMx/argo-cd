@@ -9,11 +9,15 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+<<<<<<< HEAD
 # shellcheck disable=SC2128
 PROJECT_ROOT=$(
     cd "$(dirname "${BASH_SOURCE}")"/..
     pwd
 )
+=======
+PROJECT_ROOT=$(cd $(dirname ${BASH_SOURCE})/..; pwd)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 PATH="${PROJECT_ROOT}/dist:${PATH}"
 GOPATH=$(go env GOPATH)
 GOPATH_PROJECT_ROOT="${GOPATH}/src/github.com/argoproj/argo-cd"
@@ -57,6 +61,7 @@ else
 fi
 
 go-to-protobuf \
+<<<<<<< HEAD
     --go-header-file="${PROJECT_ROOT}"/hack/custom-boilerplate.go.txt \
     --packages="$(
         IFS=,
@@ -69,6 +74,13 @@ go-to-protobuf \
     --proto-import="${PROJECT_ROOT}"/vendor \
     --proto-import="${protoc_include}" \
     --output-base="${GOPATH}/src/"
+=======
+    --go-header-file=${PROJECT_ROOT}/hack/custom-boilerplate.go.txt \
+    --packages=$(IFS=, ; echo "${PACKAGES[*]}") \
+    --apimachinery-packages=$(IFS=, ; echo "${APIMACHINERY_PKGS[*]}") \
+    --proto-import=./vendor \
+    --proto-import=${protoc_include}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 # Either protoc-gen-go, protoc-gen-gofast, or protoc-gen-gogofast can be used to build
 # server/*/<service>.pb.go from .proto files. golang/protobuf and gogo/protobuf can be used
@@ -86,17 +98,17 @@ MOD_ROOT=${GOPATH}/pkg/mod
 grpc_gateway_version=$(go list -m github.com/grpc-ecosystem/grpc-gateway | awk '{print $NF}' | head -1)
 GOOGLE_PROTO_API_PATH=${MOD_ROOT}/github.com/grpc-ecosystem/grpc-gateway@${grpc_gateway_version}/third_party/googleapis
 GOGO_PROTOBUF_PATH=${PROJECT_ROOT}/vendor/github.com/gogo/protobuf
-PROTO_FILES=$(find "$PROJECT_ROOT" \( -name "*.proto" -and -path '*/server/*' -or -path '*/reposerver/*' -and -name "*.proto" -or -path '*/cmpserver/*' -and -name "*.proto" \) | sort)
+PROTO_FILES=$(find $PROJECT_ROOT \( -name "*.proto" -and -path '*/server/*' -or -path '*/reposerver/*' -and -name "*.proto" -or -path '*/cmpserver/*' -and -name "*.proto" \) | sort)
 for i in ${PROTO_FILES}; do
     protoc \
-        -I"${PROJECT_ROOT}" \
-        -I"${protoc_include}" \
+        -I${PROJECT_ROOT} \
+        -I${protoc_include} \
         -I./vendor \
-        -I"$GOPATH"/src \
-        -I"${GOOGLE_PROTO_API_PATH}" \
-        -I"${GOGO_PROTOBUF_PATH}" \
-        --${GOPROTOBINARY}_out=plugins=grpc:"$GOPATH"/src \
-        --grpc-gateway_out=logtostderr=true:"$GOPATH"/src \
+        -I$GOPATH/src \
+        -I${GOOGLE_PROTO_API_PATH} \
+        -I${GOGO_PROTOBUF_PATH} \
+        --${GOPROTOBINARY}_out=plugins=grpc:$GOPATH/src \
+        --grpc-gateway_out=logtostderr=true:$GOPATH/src \
         --swagger_out=logtostderr=true:. \
         "$i"
 done
@@ -108,8 +120,8 @@ done
 collect_swagger() {
     SWAGGER_ROOT="$1"
     SWAGGER_OUT="${PROJECT_ROOT}/assets/swagger.json"
-    PRIMARY_SWAGGER=$(mktemp)
-    COMBINED_SWAGGER=$(mktemp)
+    PRIMARY_SWAGGER=`mktemp`
+    COMBINED_SWAGGER=`mktemp`
 
     cat <<EOF >"${PRIMARY_SWAGGER}"
 {
@@ -148,7 +160,13 @@ clean_swagger() {
     find "${SWAGGER_ROOT}" -name '*.swagger.json' -delete
 }
 
+<<<<<<< HEAD
 collect_swagger server
+=======
+echo "If additional types are added, the number of expected collisions may need to be increased"
+EXPECTED_COLLISION_COUNT=90
+collect_swagger server ${EXPECTED_COLLISION_COUNT}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 clean_swagger server
 clean_swagger reposerver
 clean_swagger controller

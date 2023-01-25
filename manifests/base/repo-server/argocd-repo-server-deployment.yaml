@@ -162,6 +162,7 @@ spec:
                 key: reposerver.streamed.manifest.max.extracted.size
                 name: argocd-cmd-params-cm
                 optional: true
+<<<<<<< HEAD
           - name: ARGOCD_REPO_SERVER_HELM_MANIFEST_MAX_EXTRACTED_SIZE
             valueFrom:
               configMapKeyRef:
@@ -198,6 +199,8 @@ spec:
                 key: reposerver.git.request.timeout
                 name: argocd-cmd-params-cm
                 optional: true
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
           - name: HELM_CACHE_HOME
             value: /helm-working-dir
           - name: HELM_CONFIG_HOME
@@ -212,9 +215,8 @@ spec:
             path: /healthz?full=true
             port: 8084
           initialDelaySeconds: 30
-          periodSeconds: 30
+          periodSeconds: 5
           failureThreshold: 3
-          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /healthz

@@ -231,6 +231,7 @@ func Test_SSHCreds_Environ(t *testing.T) {
 		assert.NoFileExists(t, privateKeyFile)
 	}
 }
+<<<<<<< HEAD
 
 func Test_SSHCreds_Environ_WithProxy(t *testing.T) {
 	for _, insecureIgnoreHostKey := range []bool{false, true} {
@@ -367,3 +368,5 @@ func TestGoogleCloudCreds_Environ_cleanup(t *testing.T) {
 	io.Close(closer)
 	assert.NotContains(t, store.creds, nonce)
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

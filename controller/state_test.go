@@ -1173,7 +1173,7 @@ func TestSignedResponseSignatureRequired(t *testing.T) {
 		assert.Len(t, app.Status.Conditions, 0)
 	}
 
-	// Signature required and local manifests supplied and GPG subsystem is disabled - sync
+	// Signature required and local manifests supplied and GPG subystem is disabled - sync
 	{
 		app := newFakeApp()
 		data := fakeData{

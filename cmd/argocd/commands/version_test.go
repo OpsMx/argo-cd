@@ -5,11 +5,10 @@ import (
 	"testing"
 
 	argocdclient "github.com/argoproj/argo-cd/v2/pkg/apiclient"
-	"github.com/argoproj/argo-cd/v2/pkg/apiclient/version"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestShortVersionClient(t *testing.T) {
+func TestShortVersion(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd := NewVersionCmd(&argocdclient.ClientOptions{}, nil)
 	cmd.SetOut(buf)

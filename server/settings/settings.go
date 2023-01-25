@@ -2,6 +2,7 @@ package settings
 
 import (
 	"context"
+<<<<<<< HEAD
 	"fmt"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -9,6 +10,10 @@ import (
 
 	"github.com/argoproj/argo-cd/v2/reposerver/apiclient"
 	ioutil "github.com/argoproj/argo-cd/v2/util/io"
+=======
+
+	"github.com/ghodss/yaml"
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 	sessionmgr "github.com/argoproj/argo-cd/v2/util/session"
 
@@ -20,7 +25,6 @@ import (
 // Server provides a Settings service
 type Server struct {
 	mgr                       *settings.SettingsManager
-	repoClient                apiclient.Clientset
 	authenticator             Authenticator
 	disableAuth               bool
 	appsInAnyNamespaceEnabled bool
@@ -31,8 +35,8 @@ type Authenticator interface {
 }
 
 // NewServer returns a new instance of the Settings service
-func NewServer(mgr *settings.SettingsManager, repoClient apiclient.Clientset, authenticator Authenticator, disableAuth, appsInAnyNamespaceEnabled bool) *Server {
-	return &Server{mgr: mgr, repoClient: repoClient, authenticator: authenticator, disableAuth: disableAuth, appsInAnyNamespaceEnabled: appsInAnyNamespaceEnabled}
+func NewServer(mgr *settings.SettingsManager, authenticator Authenticator, disableAuth, appsInAnyNamespaceEnabled bool) *Server {
+	return &Server{mgr: mgr, authenticator: authenticator, disableAuth: disableAuth, appsInAnyNamespaceEnabled: appsInAnyNamespaceEnabled}
 }
 
 // Get returns Argo CD settings
@@ -62,6 +66,13 @@ func (s *Server) Get(ctx context.Context, q *settingspkg.SettingsQuery) (*settin
 	if err != nil {
 		return nil, err
 	}
+<<<<<<< HEAD
+=======
+	plugins, err := s.plugins()
+	if err != nil {
+		return nil, err
+	}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	userLoginsDisabled := true
 	accounts, err := s.mgr.GetAccounts()
 	if err != nil {
@@ -145,6 +156,7 @@ func (s *Server) Get(ctx context.Context, q *settingspkg.SettingsQuery) (*settin
 	return &set, nil
 }
 
+<<<<<<< HEAD
 // GetPlugins returns a list of plugins
 func (s *Server) GetPlugins(ctx context.Context, q *settingspkg.SettingsQuery) (*settingspkg.SettingsPluginsResponse, error) {
 	plugins, err := s.plugins(ctx)
@@ -173,6 +185,18 @@ func (s *Server) plugins(ctx context.Context) ([]*settingspkg.Plugin, error) {
 		}
 	}
 
+=======
+func (s *Server) plugins() ([]*settingspkg.Plugin, error) {
+	in, err := s.mgr.GetConfigManagementPlugins()
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*settingspkg.Plugin, len(in))
+	for i, p := range in {
+		out[i] = &settingspkg.Plugin{Name: p.Name}
+
+	}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	return out, nil
 }
 

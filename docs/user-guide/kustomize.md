@@ -197,7 +197,7 @@ spec:
   source:
     repoURL: https://github.com/argoproj/argocd-example-apps.git
     targetRevision: HEAD
-    path: kustomize-guestbook
+    path: guestbook-kustomize
 
     kustomize:
       version: v3.5.4
@@ -212,7 +212,7 @@ argocd app set <appName> --kustomize-version v3.5.4
 
 ## Build Environment
 
-Kustomize apps have access to the [standard build environment](build-environment.md) which can be used in combination with a [config managment plugin](../operator-manual/config-management-plugins.md) to alter the rendered manifests.
+Kustomize does not support parameters and therefore cannot support the standard [build environment](build-environment.md).
 
 You can use these build environment variables in your Argo CD Application manifests. You can enable this by setting `.spec.source.kustomize.commonAnnotationsEnvsubst` to `true` in your Application manifest.
 

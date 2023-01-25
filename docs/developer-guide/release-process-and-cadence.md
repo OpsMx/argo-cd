@@ -1,10 +1,13 @@
 # Release Process And Cadence
 
-## Release Cycle
+Argo CD is being developed using the following process:
 
-### Schedule
+* Maintainers commit to work on set of features and enhancements and create GitHub milestone to track the work.
+* We are trying to avoid delaying release and prefer moving the feature into the next release if we cannot complete it on time.
+* The new release is published every **3 months**.
+* Critical bug-fixes are cherry-picked into the release branch and delivered using patch releases as frequently as needed.
 
-These are the upcoming releases dates:
+## Release Planning
 
 | Release | Release Candidate 1   | General Availability | Release Champion                                      | Release Approver                                      |Checklist                                                      |
 |---------|-----------------------|----------------------|-------------------------------------------------------|-------------------------------------------------------|---------------------------------------------------------------|
@@ -16,30 +19,34 @@ These are the upcoming releases dates:
 | v2.11   | Monday, Mar. 18, 2024 | Monday, May 6, 2024  | 
 | v2.12   | Monday, Jun. 17, 2024 | Monday, Aug. 5, 2024 | 
 
-Actual release dates might differ from the plan by a few days.
+* Issues that maintainers committed to working on. Maintainers decide which features they are committing to work on during the next release based on
+  their availability. Typically issues added offline by each maintainer and finalized during the contributors' meeting. Each such issue should be
+  assigned to maintainer who plans to implement and test it.
+* Nice to have improvements contributed by community contributors. Nice to have issues are typically not critical, smallish enhancements that could
+  be contributed by community contributors. Maintainers are not committing to implement them but committing to review PR from the community.
 
-### Release Process
+The milestone should have a clear description of the most important features as well as the expected end date. This should provide clarity to end-users
+about what to expect from the next release and when.
 
-#### Minor Releases (e.g. 2.x.0)
+In addition to the next milestone, we need to maintain a draft of the upcoming release milestone. 
 
 A minor Argo CD release occurs four times a year, once every three months. Each General Availability (GA) release is
 preceded by several Release Candidates (RCs). The first RC is released seven weeks before the scheduled GA date. This
 effectively means that there is a seven-week feature freeze.
 
-These are the approximate release dates:
+We receive a lot of contributions from our awesome community, and we're very grateful for that fact. However, reviewing and testing PRs is a lot of (unplanned) work and therefore, we cannot guarantee that contributions (especially large or complex ones) made by the community receive a timely review within a release's time frame. Maintainers may decide on their own to put work on a PR together with the contributor and in this case, the maintainer will self-assigned the PR and thereby committing to review, eventually merge and later test it on the release scope.
 
-* The first Monday of February
-* The first Monday of May
-* The first Monday of August
-* The first Monday of November
+## Release Testing
 
-Dates may be shifted slightly to accommodate holidays. Those shifts should be minimal.
+We need to make sure that each change, both from maintainers and community contributors, is tested well and have someone who is going to fix last-minute
+bugs. In order to ensure it, each merged pull request must have an assigned maintainer before it gets merged. The assigned maintainer will be working on
+testing the introduced changes and fixing of any introduced bugs.
 
-#### Patch Releases (e.g. 2.5.x)
+We have a code freeze period two weeks before the release until the release branch is created. During code freeze no feature PR should be merged and it is ok
+to merge bug fixes.
 
-Argo CD patch releases occur on an as-needed basis. Only the three most recent minor versions are eligible for patch
-releases. Versions older than the three most recent minor versions are considered EOL and will not receive bug fixes or
-security updates.
+Maintainers assigned to a PR that's been merged should drive testing and work on fixing last-minute issues. For tracking purposes after verifying PR the assigned
+the maintainer should label it with a `verified` label.
 
 #### Release Champion
 

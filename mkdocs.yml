@@ -25,7 +25,6 @@ nav:
   - operator-manual/installation.md
   - operator-manual/core.md
   - operator-manual/declarative-setup.md
-  - operator-manual/app-any-namespace.md
   - operator-manual/ingress.md
   - High Availability:
     - Overview: operator-manual/high_availability.md
@@ -80,7 +79,6 @@ nav:
       - operator-manual/notifications/services/googlechat.md
       - operator-manual/notifications/services/grafana.md
       - operator-manual/notifications/services/mattermost.md
-      - operator-manual/notifications/services/newrelic.md
       - operator-manual/notifications/services/opsgenie.md
       - operator-manual/notifications/services/overview.md
       - operator-manual/notifications/services/pagerduty.md
@@ -90,7 +88,6 @@ nav:
       - operator-manual/notifications/services/slack.md
       - operator-manual/notifications/services/teams.md
       - operator-manual/notifications/services/telegram.md
-      - operator-manual/notifications/services/webex.md
       - operator-manual/notifications/services/webhook.md
   - operator-manual/troubleshooting.md
   - ApplicationSet:
@@ -157,10 +154,10 @@ nav:
   - user-guide/import.md
   - user-guide/jsonnet.md
   - user-guide/directory.md
+  - user-guide/config-management-plugins.md
   - user-guide/tool_detection.md
   - user-guide/projects.md
   - user-guide/private-repositories.md
-  - user-guide/multiple_sources.md
   - GnuPG verification: user-guide/gpg-verification.md
   - user-guide/auto_sync.md
   - Diffing:

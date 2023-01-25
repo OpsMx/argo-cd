@@ -144,14 +144,6 @@ spec:
                       which to sync the application to If omitted, will use the revision
                       specified in app spec.
                     type: string
-                  revisions:
-                    description: Revisions is the list of revision (Git) or chart
-                      version (Helm) which to sync each source in sources field for
-                      the application to If omitted, will use the revision specified
-                      in app spec.
-                    items:
-                      type: string
-                    type: array
                   source:
                     description: Source overrides the source definition set in the
                       application. This is typically set in a Rollback operation and
@@ -442,35 +434,7 @@ spec:
                             type: array
                           name:
                             type: string
-                          parameters:
-                            items:
-                              properties:
-                                array:
-                                  description: Array is the value of an array type
-                                    parameter.
-                                  items:
-                                    type: string
-                                  type: array
-                                map:
-                                  additionalProperties:
-                                    type: string
-                                  description: Map is the value of a map type parameter.
-                                  type: object
-                                name:
-                                  description: Name is the name identifying a parameter.
-                                  type: string
-                                string:
-                                  description: String_ is the value of a string type
-                                    parameter.
-                                  type: string
-                              type: object
-                            type: array
                         type: object
-                      ref:
-                        description: Ref is reference to another source within sources
-                          field. This field will not be used if used with a `source`
-                          tag.
-                        type: string
                       repoURL:
                         description: RepoURL is the URL to the repository (Git or
                           Helm) that contains the application manifests
@@ -484,6 +448,7 @@ spec:
                     required:
                     - repoURL
                     type: object
+<<<<<<< HEAD
                   sources:
                     description: Sources overrides the source definition set in the
                       application. This is typically set in a Rollback operation and
@@ -825,6 +790,8 @@ spec:
                       - repoURL
                       type: object
                     type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   syncOptions:
                     description: SyncOptions provide per-sync sync-options, e.g. Validate=false
                     items:
@@ -1233,32 +1200,7 @@ spec:
                         type: array
                       name:
                         type: string
-                      parameters:
-                        items:
-                          properties:
-                            array:
-                              description: Array is the value of an array type parameter.
-                              items:
-                                type: string
-                              type: array
-                            map:
-                              additionalProperties:
-                                type: string
-                              description: Map is the value of a map type parameter.
-                              type: object
-                            name:
-                              description: Name is the name identifying a parameter.
-                              type: string
-                            string:
-                              description: String_ is the value of a string type parameter.
-                              type: string
-                          type: object
-                        type: array
                     type: object
-                  ref:
-                    description: Ref is reference to another source within sources
-                      field. This field will not be used if used with a `source` tag.
-                    type: string
                   repoURL:
                     description: RepoURL is the URL to the repository (Git or Helm)
                       that contains the application manifests
@@ -1272,6 +1214,7 @@ spec:
                 required:
                 - repoURL
                 type: object
+<<<<<<< HEAD
               sources:
                 description: Sources is a reference to the location of the application's
                   manifests or chart
@@ -1605,6 +1548,8 @@ spec:
                   - repoURL
                   type: object
                 type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
               syncPolicy:
                 description: SyncPolicy controls when and how a sync will be performed
                 properties:
@@ -1626,19 +1571,6 @@ spec:
                           back to their desired state upon modification in the cluster
                           (default: false)'
                         type: boolean
-                    type: object
-                  managedNamespaceMetadata:
-                    description: ManagedNamespaceMetadata controls metadata in the
-                      given namespace (if CreateNamespace=true)
-                    properties:
-                      annotations:
-                        additionalProperties:
-                          type: string
-                        type: object
-                      labels:
-                        additionalProperties:
-                          type: string
-                        type: object
                     type: object
                   retry:
                     description: Retry controls failed sync retry behavior
@@ -1677,6 +1609,7 @@ spec:
             required:
             - destination
             - project
+            - source
             type: object
           status:
             description: ApplicationStatus contains status information for the application
@@ -1759,12 +1692,6 @@ spec:
                       description: Revision holds the revision the sync was performed
                         against
                       type: string
-                    revisions:
-                      description: Revisions holds the revision of each source in
-                        sources field the sync was performed against
-                      items:
-                        type: string
-                      type: array
                     source:
                       description: Source is a reference to the application source
                         used for the sync operation
@@ -2058,35 +1985,7 @@ spec:
                               type: array
                             name:
                               type: string
-                            parameters:
-                              items:
-                                properties:
-                                  array:
-                                    description: Array is the value of an array type
-                                      parameter.
-                                    items:
-                                      type: string
-                                    type: array
-                                  map:
-                                    additionalProperties:
-                                      type: string
-                                    description: Map is the value of a map type parameter.
-                                    type: object
-                                  name:
-                                    description: Name is the name identifying a parameter.
-                                    type: string
-                                  string:
-                                    description: String_ is the value of a string
-                                      type parameter.
-                                    type: string
-                                type: object
-                              type: array
                           type: object
-                        ref:
-                          description: Ref is reference to another source within sources
-                            field. This field will not be used if used with a `source`
-                            tag.
-                          type: string
                         repoURL:
                           description: RepoURL is the URL to the repository (Git or
                             Helm) that contains the application manifests
@@ -2101,6 +2000,7 @@ spec:
                       required:
                       - repoURL
                       type: object
+<<<<<<< HEAD
                     sources:
                       description: Sources is a reference to the application sources
                         used for the sync operation
@@ -2448,9 +2348,12 @@ spec:
                         - repoURL
                         type: object
                       type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   required:
                   - deployedAt
                   - id
+                  - revision
                   type: object
                 type: array
               observedAt:
@@ -2573,14 +2476,6 @@ spec:
                               (Helm) which to sync the application to If omitted,
                               will use the revision specified in app spec.
                             type: string
-                          revisions:
-                            description: Revisions is the list of revision (Git) or
-                              chart version (Helm) which to sync each source in sources
-                              field for the application to If omitted, will use the
-                              revision specified in app spec.
-                            items:
-                              type: string
-                            type: array
                           source:
                             description: Source overrides the source definition set
                               in the application. This is typically set in a Rollback
@@ -2891,37 +2786,7 @@ spec:
                                     type: array
                                   name:
                                     type: string
-                                  parameters:
-                                    items:
-                                      properties:
-                                        array:
-                                          description: Array is the value of an array
-                                            type parameter.
-                                          items:
-                                            type: string
-                                          type: array
-                                        map:
-                                          additionalProperties:
-                                            type: string
-                                          description: Map is the value of a map type
-                                            parameter.
-                                          type: object
-                                        name:
-                                          description: Name is the name identifying
-                                            a parameter.
-                                          type: string
-                                        string:
-                                          description: String_ is the value of a string
-                                            type parameter.
-                                          type: string
-                                      type: object
-                                    type: array
                                 type: object
-                              ref:
-                                description: Ref is reference to another source within
-                                  sources field. This field will not be used if used
-                                  with a `source` tag.
-                                type: string
                               repoURL:
                                 description: RepoURL is the URL to the repository
                                   (Git or Helm) that contains the application manifests
@@ -2936,6 +2801,7 @@ spec:
                             required:
                             - repoURL
                             type: object
+<<<<<<< HEAD
                           sources:
                             description: Sources overrides the source definition set
                               in the application. This is typically set in a Rollback
@@ -3300,6 +3166,8 @@ spec:
                               - repoURL
                               type: object
                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                           syncOptions:
                             description: SyncOptions provide per-sync sync-options,
                               e.g. Validate=false
@@ -3422,12 +3290,6 @@ spec:
                         description: Revision holds the revision this sync operation
                           was performed to
                         type: string
-                      revisions:
-                        description: Revisions holds the revision this sync operation
-                          was performed for respective indexed source in sources field
-                        items:
-                          type: string
-                        type: array
                       source:
                         description: Source records the application source information
                           of the sync, used for comparing auto-sync
@@ -3726,37 +3588,7 @@ spec:
                                 type: array
                               name:
                                 type: string
-                              parameters:
-                                items:
-                                  properties:
-                                    array:
-                                      description: Array is the value of an array
-                                        type parameter.
-                                      items:
-                                        type: string
-                                      type: array
-                                    map:
-                                      additionalProperties:
-                                        type: string
-                                      description: Map is the value of a map type
-                                        parameter.
-                                      type: object
-                                    name:
-                                      description: Name is the name identifying a
-                                        parameter.
-                                      type: string
-                                    string:
-                                      description: String_ is the value of a string
-                                        type parameter.
-                                      type: string
-                                  type: object
-                                type: array
                             type: object
-                          ref:
-                            description: Ref is reference to another source within
-                              sources field. This field will not be used if used with
-                              a `source` tag.
-                            type: string
                           repoURL:
                             description: RepoURL is the URL to the repository (Git
                               or Helm) that contains the application manifests
@@ -3771,6 +3603,7 @@ spec:
                         required:
                         - repoURL
                         type: object
+<<<<<<< HEAD
                       sources:
                         description: Source records the application source information
                           of the sync, used for comparing auto-sync
@@ -4127,6 +3960,8 @@ spec:
                           - repoURL
                           type: object
                         type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                     required:
                     - revision
                     type: object
@@ -4190,14 +4025,6 @@ spec:
               sourceType:
                 description: SourceType specifies the type of this application
                 type: string
-              sourceTypes:
-                description: SourceTypes specifies the type of the sources included
-                  in the application
-                items:
-                  description: ApplicationSourceType specifies the type of the application's
-                    source
-                  type: string
-                type: array
               summary:
                 description: Summary contains a list of URLs and container images
                   used by this application
@@ -4577,37 +4404,7 @@ spec:
                                 type: array
                               name:
                                 type: string
-                              parameters:
-                                items:
-                                  properties:
-                                    array:
-                                      description: Array is the value of an array
-                                        type parameter.
-                                      items:
-                                        type: string
-                                      type: array
-                                    map:
-                                      additionalProperties:
-                                        type: string
-                                      description: Map is the value of a map type
-                                        parameter.
-                                      type: object
-                                    name:
-                                      description: Name is the name identifying a
-                                        parameter.
-                                      type: string
-                                    string:
-                                      description: String_ is the value of a string
-                                        type parameter.
-                                      type: string
-                                  type: object
-                                type: array
                             type: object
-                          ref:
-                            description: Ref is reference to another source within
-                              sources field. This field will not be used if used with
-                              a `source` tag.
-                            type: string
                           repoURL:
                             description: RepoURL is the URL to the repository (Git
                               or Helm) that contains the application manifests
@@ -4622,6 +4419,7 @@ spec:
                         required:
                         - repoURL
                         type: object
+<<<<<<< HEAD
                       sources:
                         description: Sources is a reference to the application's multiple
                           sources used for comparison
@@ -4978,19 +4776,16 @@ spec:
                           - repoURL
                           type: object
                         type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                     required:
                     - destination
+                    - source
                     type: object
                   revision:
                     description: Revision contains information about the revision
                       the comparison has been performed to
                     type: string
-                  revisions:
-                    description: Revisions contains information about the revisions
-                      of multiple sources the comparison has been performed to
-                    items:
-                      type: string
-                    type: array
                   status:
                     description: Status is the sync state of the comparison
                     type: string
@@ -5338,26 +5133,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -5365,6 +5141,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -5582,6 +5359,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -5592,17 +5371,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -5628,6 +5396,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -5929,26 +5698,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -5956,6 +5706,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -6173,6 +5924,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -6183,17 +5936,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -6219,6 +5961,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -6251,8 +5994,6 @@ spec:
                             - path
                             type: object
                           type: array
-                        pathParamPrefix:
-                          type: string
                         repoURL:
                           type: string
                         requeueAfterSeconds:
@@ -6524,26 +6265,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -6551,6 +6273,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -6768,6 +6491,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -6778,17 +6503,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -6814,6 +6528,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -7099,26 +6814,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -7126,6 +6822,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -7343,6 +7040,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -7353,17 +7052,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -7389,6 +7077,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -7696,26 +7385,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -7723,6 +7393,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -7940,6 +7611,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -7950,17 +7623,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -7986,6 +7648,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -8287,26 +7950,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -8314,6 +7958,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -8531,6 +8176,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -8541,17 +8188,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -8577,6 +8213,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -8609,8 +8246,6 @@ spec:
                                       - path
                                       type: object
                                     type: array
-                                  pathParamPrefix:
-                                    type: string
                                   repoURL:
                                     type: string
                                   requeueAfterSeconds:
@@ -8882,26 +8517,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -8909,6 +8525,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -9126,6 +8743,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -9136,17 +8755,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -9172,6 +8780,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -9457,26 +9066,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -9484,6 +9074,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -9701,6 +9292,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -9711,17 +9304,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -9747,6 +9329,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -10805,26 +10388,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -10832,6 +10396,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -11049,6 +10614,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -11059,17 +10626,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -11095,6 +10651,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -11565,26 +11122,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -11592,6 +11130,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -11809,6 +11348,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -11819,17 +11360,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -11855,6 +11385,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -12154,26 +11685,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -12181,6 +11693,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -12398,6 +11911,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -12408,17 +11923,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -12444,6 +11948,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -12753,26 +12258,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -12780,6 +12266,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -12997,6 +12484,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -13007,17 +12496,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -13043,6 +12521,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -13344,26 +12823,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -13371,6 +12831,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -13588,6 +13049,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -13598,17 +13061,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -13634,6 +13086,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -13666,8 +13119,6 @@ spec:
                                       - path
                                       type: object
                                     type: array
-                                  pathParamPrefix:
-                                    type: string
                                   repoURL:
                                     type: string
                                   requeueAfterSeconds:
@@ -13939,26 +13390,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -13966,6 +13398,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -14183,6 +13616,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -14193,17 +13628,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -14229,6 +13653,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -14514,26 +13939,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -14541,6 +13947,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -14758,6 +14165,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -14768,17 +14177,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -14804,6 +14202,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -15862,26 +15261,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -15889,6 +15269,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -16106,6 +15487,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -16116,17 +15499,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -16152,6 +15524,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -16622,26 +15995,7 @@ spec:
                                                     type: array
                                                   name:
                                                     type: string
-                                                  parameters:
-                                                    items:
-                                                      properties:
-                                                        array:
-                                                          items:
-                                                            type: string
-                                                          type: array
-                                                        map:
-                                                          additionalProperties:
-                                                            type: string
-                                                          type: object
-                                                        name:
-                                                          type: string
-                                                        string:
-                                                          type: string
-                                                      type: object
-                                                    type: array
                                                 type: object
-                                              ref:
-                                                type: string
                                               repoURL:
                                                 type: string
                                               targetRevision:
@@ -16649,6 +16003,7 @@ spec:
                                             required:
                                             - repoURL
                                             type: object
+<<<<<<< HEAD
                                           sources:
                                             items:
                                               properties:
@@ -16866,6 +16221,8 @@ spec:
                                               - repoURL
                                               type: object
                                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                           syncPolicy:
                                             properties:
                                               automated:
@@ -16876,17 +16233,6 @@ spec:
                                                     type: boolean
                                                   selfHeal:
                                                     type: boolean
-                                                type: object
-                                              managedNamespaceMetadata:
-                                                properties:
-                                                  annotations:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
-                                                  labels:
-                                                    additionalProperties:
-                                                      type: string
-                                                    type: object
                                                 type: object
                                               retry:
                                                 properties:
@@ -16912,6 +16258,7 @@ spec:
                                         required:
                                         - destination
                                         - project
+                                        - source
                                         type: object
                                     required:
                                     - metadata
@@ -17215,26 +16562,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -17242,6 +16570,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -17459,6 +16788,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -17469,17 +16800,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -17505,6 +16825,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -18562,26 +17883,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -18589,6 +17891,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -18806,6 +18109,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -18816,17 +18121,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -18852,6 +18146,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -19322,26 +18617,7 @@ spec:
                                           type: array
                                         name:
                                           type: string
-                                        parameters:
-                                          items:
-                                            properties:
-                                              array:
-                                                items:
-                                                  type: string
-                                                type: array
-                                              map:
-                                                additionalProperties:
-                                                  type: string
-                                                type: object
-                                              name:
-                                                type: string
-                                              string:
-                                                type: string
-                                            type: object
-                                          type: array
                                       type: object
-                                    ref:
-                                      type: string
                                     repoURL:
                                       type: string
                                     targetRevision:
@@ -19349,6 +18625,7 @@ spec:
                                   required:
                                   - repoURL
                                   type: object
+<<<<<<< HEAD
                                 sources:
                                   items:
                                     properties:
@@ -19566,6 +18843,8 @@ spec:
                                     - repoURL
                                     type: object
                                   type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 syncPolicy:
                                   properties:
                                     automated:
@@ -19576,17 +18855,6 @@ spec:
                                           type: boolean
                                         selfHeal:
                                           type: boolean
-                                      type: object
-                                    managedNamespaceMetadata:
-                                      properties:
-                                        annotations:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
-                                        labels:
-                                          additionalProperties:
-                                            type: string
-                                          type: object
                                       type: object
                                     retry:
                                       properties:
@@ -19612,6 +18880,7 @@ spec:
                               required:
                               - destination
                               - project
+                              - source
                               type: object
                           required:
                           - metadata
@@ -19649,6 +18918,7 @@ spec:
                 type: array
               goTemplate:
                 type: boolean
+<<<<<<< HEAD
               goTemplateOptions:
                 items:
                   type: string
@@ -19710,6 +18980,8 @@ spec:
                   type:
                     type: string
                 type: object
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
               syncPolicy:
                 properties:
                   applicationsSync:
@@ -19986,26 +19258,7 @@ spec:
                                 type: array
                               name:
                                 type: string
-                              parameters:
-                                items:
-                                  properties:
-                                    array:
-                                      items:
-                                        type: string
-                                      type: array
-                                    map:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    name:
-                                      type: string
-                                    string:
-                                      type: string
-                                  type: object
-                                type: array
                             type: object
-                          ref:
-                            type: string
                           repoURL:
                             type: string
                           targetRevision:
@@ -20013,6 +19266,7 @@ spec:
                         required:
                         - repoURL
                         type: object
+<<<<<<< HEAD
                       sources:
                         items:
                           properties:
@@ -20230,6 +19484,8 @@ spec:
                           - repoURL
                           type: object
                         type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                       syncPolicy:
                         properties:
                           automated:
@@ -20240,17 +19496,6 @@ spec:
                                 type: boolean
                               selfHeal:
                                 type: boolean
-                            type: object
-                          managedNamespaceMetadata:
-                            properties:
-                              annotations:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                              labels:
-                                additionalProperties:
-                                  type: string
-                                type: object
                             type: object
                           retry:
                             properties:
@@ -20276,6 +19521,7 @@ spec:
                     required:
                     - destination
                     - project
+                    - source
                     type: object
                 required:
                 - metadata
@@ -20289,6 +19535,7 @@ spec:
             type: object
           status:
             properties:
+<<<<<<< HEAD
               applicationStatus:
                 items:
                   properties:
@@ -20310,6 +19557,8 @@ spec:
                   - step
                   type: object
                 type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
               conditions:
                 items:
                   properties:
@@ -21528,6 +20777,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+<<<<<<< HEAD
         - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_LEADER_ELECTION
           valueFrom:
             configMapKeyRef:
@@ -21643,6 +20893,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: argocd-applicationset-controller
         ports:
@@ -21765,7 +21018,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /shared/argocd-dex
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         imagePullPolicy: Always
         name: copyutil
         securityContext:
@@ -21820,6 +21073,7 @@ spec:
         app.kubernetes.io/name: argocd-notifications-controller
     spec:
       containers:
+<<<<<<< HEAD
       - args:
         - /usr/local/bin/argocd-notifications
         env:
@@ -21848,6 +21102,11 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+      - command:
+        - argocd-notifications
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         livenessProbe:
           tcpSocket:
@@ -21924,7 +21183,11 @@ spec:
         - ""
         - --appendonly
         - "no"
+<<<<<<< HEAD
         image: redis:7.0.14-alpine
+=======
+        image: redis:7.0.5-alpine
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: redis
         ports:
@@ -22117,6 +21380,7 @@ spec:
               key: reposerver.streamed.manifest.max.extracted.size
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_REPO_SERVER_HELM_MANIFEST_MAX_EXTRACTED_SIZE
           valueFrom:
             configMapKeyRef:
@@ -22153,13 +21417,15 @@ spec:
               key: reposerver.git.request.timeout
               name: argocd-cmd-params-cm
               optional: true
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         - name: HELM_CACHE_HOME
           value: /helm-working-dir
         - name: HELM_CONFIG_HOME
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -22167,8 +21433,7 @@ spec:
             path: /healthz?full=true
             port: 8084
           initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
+          periodSeconds: 5
         name: argocd-repo-server
         ports:
         - containerPort: 8081
@@ -22211,7 +21476,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -22504,6 +21769,7 @@ spec:
               key: application.namespaces
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_SERVER_ENABLE_PROXY_EXTENSION
           valueFrom:
             configMapKeyRef:
@@ -22529,6 +21795,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -22536,7 +21805,6 @@ spec:
             port: 8080
           initialDelaySeconds: 3
           periodSeconds: 30
-          timeoutSeconds: 5
         name: argocd-server
         ports:
         - containerPort: 8080
@@ -22786,6 +22054,7 @@ spec:
               key: application.namespaces
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_CONTROLLER_SHARDING_ALGORITHM
           valueFrom:
             configMapKeyRef:
@@ -22817,6 +22086,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: argocd-application-controller
         ports:

@@ -33,7 +33,11 @@ func getApplicationSourceAndName(obj *unstructured.Unstructured) (*v1alpha1.Appl
 	if err != nil {
 		return nil, "", err
 	}
+<<<<<<< HEAD
 	return application.Spec.GetSourcePtr(0), application.GetName(), nil
+=======
+	return &application.Spec.Source, nil
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func getAppDetails(app *unstructured.Unstructured, argocdService service.Service) (*shared.AppDetail, error) {

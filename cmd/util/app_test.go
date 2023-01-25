@@ -185,9 +185,7 @@ func (f *appOptionsFixture) SetFlagWithSourceIndex(key, value string, index int)
 
 func newAppOptionsFixture() *appOptionsFixture {
 	fixture := &appOptionsFixture{
-		spec: &v1alpha1.ApplicationSpec{
-			Source: &v1alpha1.ApplicationSource{},
-		},
+		spec:    &v1alpha1.ApplicationSpec{},
 		command: &cobra.Command{},
 		options: &AppOptions{},
 	}

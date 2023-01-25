@@ -1,4 +1,4 @@
-import {DataLoader, DropDown, Tab, Tabs} from 'argo-ui';
+import {DataLoader, Tab, Tabs} from 'argo-ui';
 import * as React from 'react';
 import {useState} from 'react';
 import {EventsList, YamlEditor} from '../../../shared/components';
@@ -124,7 +124,6 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                         content: (
                             <PodTerminalViewer
                                 applicationName={application.metadata.name}
-                                applicationNamespace={application.metadata.namespace}
                                 projectName={application.spec.project}
                                 podState={podState}
                                 selectedNode={selectedNode}
@@ -168,9 +167,9 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                         key='appDetails'
                         input={application}
                         load={app =>
-                            services.repos.appDetails(AppUtils.getAppDefaultSource(app), app.metadata.name, app.spec.project).catch(() => ({
+                            services.repos.appDetails(app.spec.source, app.metadata.name, app.spec.project).catch(() => ({
                                 type: 'Directory' as AppSourceType,
-                                path: AppUtils.getAppDefaultSource(app).path
+                                path: application.spec.source.path
                             }))
                         }>
                         {(details: RepoAppDetails) => (
@@ -280,9 +279,14 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                         const settings = await services.authService.settings();
                         const execEnabled = settings.execEnabled;
                         const logsAllowed = await services.accounts.canI('logs', 'get', application.spec.project + '/' + application.metadata.name);
+<<<<<<< HEAD
                         const execAllowed = execEnabled && (await services.accounts.canI('exec', 'create', application.spec.project + '/' + application.metadata.name));
                         const links = await services.applications.getResourceLinks(application.metadata.name, application.metadata.namespace, selectedNode).catch(() => null);
                         return {controlledState, liveState, events, podState, execEnabled, execAllowed, logsAllowed, links};
+=======
+                        const execAllowed = await services.accounts.canI('exec', 'create', application.spec.project + '/' + application.metadata.name);
+                        return {controlledState, liveState, events, podState, execEnabled, execAllowed, logsAllowed};
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                     }}>
                     {data => (
                         <React.Fragment>
@@ -304,14 +308,12 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                                     onClick={() => appContext.navigation.goto('.', {deploy: AppUtils.nodeKey(selectedNode)}, {replace: true})}
                                     style={{marginLeft: 'auto', marginRight: '5px'}}
                                     className='argo-button argo-button--base'>
-                                    <i className='fa fa-sync-alt' /> <span className='show-for-large'>SYNC</span>
+                                    <i className='fa fa-sync-alt' /> SYNC
                                 </button>
-                                <button
-                                    onClick={() => AppUtils.deletePopup(appContext, selectedNode, application)}
-                                    style={{marginRight: '5px'}}
-                                    className='argo-button argo-button--base'>
-                                    <i className='fa fa-trash' /> <span className='show-for-large'>DELETE</span>
+                                <button onClick={() => AppUtils.deletePopup(appContext, selectedNode, application)} className='argo-button argo-button--base'>
+                                    <i className='fa fa-trash' /> DELETE
                                 </button>
+<<<<<<< HEAD
                                 <DropDown
                                     isMenu={true}
                                     anchor={() => (
@@ -321,6 +323,8 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                                     )}>
                                     {() => AppUtils.renderResourceActionMenu(selectedNode, application, appContext)}
                                 </DropDown>
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                             </div>
                             <Tabs
                                 navTransparent={true}
@@ -335,15 +339,7 @@ export const ResourceDetails = (props: ResourceDetailsProps) => {
                                             title: 'SUMMARY',
                                             icon: 'fa fa-file-alt',
                                             key: 'summary',
-                                            content: (
-                                                <ApplicationNodeInfo
-                                                    application={application}
-                                                    live={data.liveState}
-                                                    controlled={data.controlledState}
-                                                    node={selectedNode}
-                                                    links={data.links}
-                                                />
-                                            )
+                                            content: <ApplicationNodeInfo application={application} live={data.liveState} controlled={data.controlledState} node={selectedNode} />
                                         }
                                     ],
                                     data.execEnabled,

@@ -12,6 +12,7 @@ import (
 type Context struct {
 	t *testing.T
 	// seconds
+<<<<<<< HEAD
 	timeout     int
 	name        string
 	project     string
@@ -19,6 +20,13 @@ type Context struct {
 	upsert      bool
 	namespaces  []string
 	bearerToken string
+=======
+	timeout int
+	name    string
+	project string
+	server  string
+	upsert  bool
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func Given(t *testing.T) *Context {
@@ -44,11 +52,6 @@ func (c *Context) Name(name string) *Context {
 
 func (c *Context) Server(server string) *Context {
 	c.server = server
-	return c
-}
-
-func (c *Context) Namespaces(namespaces []string) *Context {
-	c.namespaces = namespaces
 	return c
 }
 

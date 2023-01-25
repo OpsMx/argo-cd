@@ -134,6 +134,7 @@ Using the UI:
 !!!note
     When pasting GitHub App private key in the UI, make sure there are no unintended line breaks or additional characters in the text area
 
+<<<<<<< HEAD
 ### Google Cloud Source
 
 Private repositories hosted on Google Cloud Source can be accessed using Google Cloud service account key in JSON format. Consult [Google Cloud documentation](https://cloud.google.com/iam/docs/creating-managing-service-accounts) on how to create a service account.
@@ -161,6 +162,8 @@ Using the UI:
 
 3. Click `Connect` to test the connection and have the repository added
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 ## Credential templates
 
 You can also set up credentials to serve as templates for connecting repositories, without having to repeat credential configuration. For example, if you setup credential templates for the URL prefix `https://github.com/argoproj`, these credentials will be used for all repositories with this URL as prefix (e.g. `https://github.com/argoproj/argocd-example-apps`) that do not have their own credentials configured.

@@ -5,9 +5,13 @@ import {Application, ApplicationTree, State} from '../models';
 
 const extensions = {
     resourceExtentions: new Array<ResourceTabExtension>(),
+<<<<<<< HEAD
     systemLevelExtensions: new Array<SystemLevelExtension>(),
     appViewExtensions: new Array<AppViewExtension>(),
     statusPanelExtensions: new Array<StatusPanelExtension>()
+=======
+    systemLevelExtensions: new Array<SystemLevelExtension>()
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 };
 
 function registerResourceExtension(component: ExtensionComponent, group: string, kind: string, tabTitle: string, opts?: {icon: string}) {
@@ -18,6 +22,7 @@ function registerSystemLevelExtension(component: ExtensionComponent, title: stri
     extensions.systemLevelExtensions.push({component, title, icon, path});
 }
 
+<<<<<<< HEAD
 function registerAppViewExtension(component: ExtensionComponent, title: string, icon: string) {
     extensions.appViewExtensions.push({component, title, icon});
 }
@@ -26,6 +31,8 @@ function registerStatusPanelExtension(component: StatusPanelExtensionComponent, 
     extensions.statusPanelExtensions.push({component, flyout, title, id});
 }
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 let legacyInitialized = false;
 
 function initLegacyExtensions() {
@@ -55,6 +62,7 @@ export interface SystemLevelExtension {
     path?: string;
 }
 
+<<<<<<< HEAD
 export interface AppViewExtension {
     component: AppViewExtensionComponent;
     title: string;
@@ -73,6 +81,10 @@ export type SystemExtensionComponent = React.ComponentType;
 export type AppViewExtensionComponent = React.ComponentType<AppViewComponentProps>;
 export type StatusPanelExtensionComponent = React.ComponentType<StatusPanelComponentProps>;
 export type StatusPanelExtensionFlyoutComponent = React.ComponentType<StatusPanelFlyoutProps>;
+=======
+export type ExtensionComponent = React.ComponentType<ExtensionComponentProps>;
+export type SystemExtensionComponent = React.ComponentType;
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 export interface Extension {
     component: ExtensionComponent;
@@ -84,6 +96,7 @@ export interface ExtensionComponentProps {
     application: Application;
 }
 
+<<<<<<< HEAD
 export interface AppViewComponentProps {
     application: Application;
     tree: ApplicationTree;
@@ -99,6 +112,8 @@ export interface StatusPanelFlyoutProps {
     tree: ApplicationTree;
 }
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 export class ExtensionsService {
     public getResourceTabs(group: string, kind: string): ResourceTabExtension[] {
         initLegacyExtensions();
@@ -109,6 +124,7 @@ export class ExtensionsService {
     public getSystemExtensions(): SystemLevelExtension[] {
         return extensions.systemLevelExtensions.slice();
     }
+<<<<<<< HEAD
 
     public getAppViewExtensions(): AppViewExtension[] {
         return extensions.appViewExtensions.slice();
@@ -117,6 +133,8 @@ export class ExtensionsService {
     public getStatusPanelExtensions(): StatusPanelExtension[] {
         return extensions.statusPanelExtensions.slice();
     }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 ((window: any) => {
@@ -124,8 +142,12 @@ export class ExtensionsService {
     window.extensions = {resources: {}};
     window.extensionsAPI = {
         registerResourceExtension,
+<<<<<<< HEAD
         registerSystemLevelExtension,
         registerAppViewExtension,
         registerStatusPanelExtension
+=======
+        registerSystemLevelExtension
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
     };
 })(window);

@@ -21,6 +21,8 @@ Helm chart versions are [Semantic Versions](https://semver.org/). As a result, y
 | Use the latest (e.g. in local development) | Use star range |  `*` or `>=0.0.0` |
 | Use the latest including pre-releases | Use star range with `-0` suffix |  `*-0` or `>=0.0.0-0` |
 
+**Note for OCI Helm repositories**: the only available strategy is "Pin to a version".
+
 [Read about version ranges](https://www.telerik.com/blogs/the-mystical-magical-semver-ranges-used-by-npm-bower)
 
 ## Git

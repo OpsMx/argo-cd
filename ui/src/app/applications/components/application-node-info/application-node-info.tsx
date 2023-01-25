@@ -3,12 +3,11 @@ import classNames from 'classnames';
 import * as deepMerge from 'deepmerge';
 import * as React from 'react';
 
-import {YamlEditor, ClipboardText} from '../../../shared/components';
-import {DeepLinks} from '../../../shared/components/deep-links';
+import {YamlEditor} from '../../../shared/components';
 import * as models from '../../../shared/models';
 import {services} from '../../../shared/services';
-import {ResourceTreeNode} from '../application-resource-tree/application-resource-tree';
 import {ApplicationResourcesDiff} from '../application-resources-diff/application-resources-diff';
+<<<<<<< HEAD
 import {ComparisonStatusIcon, formatCreationTimestamp, getPodReadinessGatesState, getPodStateReason, HealthStatusIcon} from '../utils';
 import './application-node-info.scss';
 import {ReadinessGatesNotPassedWarning} from './readiness-gates-not-passed-warning';
@@ -88,22 +87,26 @@ const RenderContainerState = (props: {container: any}) => {
         </div>
     );
 };
+=======
+import {ComparisonStatusIcon, formatCreationTimestamp, getPodStateReason, HealthStatusIcon} from '../utils';
+
+require('./application-node-info.scss');
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 export const ApplicationNodeInfo = (props: {
     application: models.Application;
     node: models.ResourceNode;
     live: models.State;
-    links: models.LinksResponse;
     controlled: {summary: models.ResourceStatus; state: models.ResourceDiff};
 }) => {
     const attributes: {title: string; value: any}[] = [
         {title: 'KIND', value: props.node.kind},
-        {title: 'NAME', value: <ClipboardText text={props.node.name} />},
-        {title: 'NAMESPACE', value: <ClipboardText text={props.node.namespace} />}
+        {title: 'NAME', value: props.node.name},
+        {title: 'NAMESPACE', value: props.node.namespace}
     ];
     if (props.node.createdAt) {
         attributes.push({
-            title: 'CREATED AT',
+            title: 'CREATED_AT',
             value: formatCreationTimestamp(props.node.createdAt)
         });
     }
@@ -149,8 +152,11 @@ export const ApplicationNodeInfo = (props: {
                 hostNames = (status.loadBalancer.ingress || []).map((item: any) => item.hostname || item.ip).join(', ');
             }
             attributes.push({title: 'HOSTNAMES', value: hostNames});
+<<<<<<< HEAD
         } else if (props.node.kind === 'ReplicaSet') {
             attributes.push({title: 'REPLICAS', value: `${props.live.spec?.replicas || 0}/${props.live.status?.readyReplicas || 0}/${props.live.status?.replicas || 0}`});
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         }
     }
 
@@ -178,6 +184,7 @@ export const ApplicationNodeInfo = (props: {
                 attributes.push({title: 'HEALTH DETAILS', value: props.controlled.summary.health.message});
             }
         }
+<<<<<<< HEAD
     } else if (props.node && (props.node as ResourceTreeNode).health) {
         const treeNode = props.node as ResourceTreeNode;
         if (treeNode && treeNode.health) {
@@ -197,6 +204,8 @@ export const ApplicationNodeInfo = (props: {
             title: 'LINKS',
             value: <DeepLinks links={props.links.items} />
         });
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
     }
 
     const tabs: Tab[] = [

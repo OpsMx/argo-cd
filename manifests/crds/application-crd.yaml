@@ -143,14 +143,6 @@ spec:
                       which to sync the application to If omitted, will use the revision
                       specified in app spec.
                     type: string
-                  revisions:
-                    description: Revisions is the list of revision (Git) or chart
-                      version (Helm) which to sync each source in sources field for
-                      the application to If omitted, will use the revision specified
-                      in app spec.
-                    items:
-                      type: string
-                    type: array
                   source:
                     description: Source overrides the source definition set in the
                       application. This is typically set in a Rollback operation and
@@ -441,35 +433,7 @@ spec:
                             type: array
                           name:
                             type: string
-                          parameters:
-                            items:
-                              properties:
-                                array:
-                                  description: Array is the value of an array type
-                                    parameter.
-                                  items:
-                                    type: string
-                                  type: array
-                                map:
-                                  additionalProperties:
-                                    type: string
-                                  description: Map is the value of a map type parameter.
-                                  type: object
-                                name:
-                                  description: Name is the name identifying a parameter.
-                                  type: string
-                                string:
-                                  description: String_ is the value of a string type
-                                    parameter.
-                                  type: string
-                              type: object
-                            type: array
                         type: object
-                      ref:
-                        description: Ref is reference to another source within sources
-                          field. This field will not be used if used with a `source`
-                          tag.
-                        type: string
                       repoURL:
                         description: RepoURL is the URL to the repository (Git or
                           Helm) that contains the application manifests
@@ -483,6 +447,7 @@ spec:
                     required:
                     - repoURL
                     type: object
+<<<<<<< HEAD
                   sources:
                     description: Sources overrides the source definition set in the
                       application. This is typically set in a Rollback operation and
@@ -824,6 +789,8 @@ spec:
                       - repoURL
                       type: object
                     type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   syncOptions:
                     description: SyncOptions provide per-sync sync-options, e.g. Validate=false
                     items:
@@ -1232,32 +1199,7 @@ spec:
                         type: array
                       name:
                         type: string
-                      parameters:
-                        items:
-                          properties:
-                            array:
-                              description: Array is the value of an array type parameter.
-                              items:
-                                type: string
-                              type: array
-                            map:
-                              additionalProperties:
-                                type: string
-                              description: Map is the value of a map type parameter.
-                              type: object
-                            name:
-                              description: Name is the name identifying a parameter.
-                              type: string
-                            string:
-                              description: String_ is the value of a string type parameter.
-                              type: string
-                          type: object
-                        type: array
                     type: object
-                  ref:
-                    description: Ref is reference to another source within sources
-                      field. This field will not be used if used with a `source` tag.
-                    type: string
                   repoURL:
                     description: RepoURL is the URL to the repository (Git or Helm)
                       that contains the application manifests
@@ -1271,6 +1213,7 @@ spec:
                 required:
                 - repoURL
                 type: object
+<<<<<<< HEAD
               sources:
                 description: Sources is a reference to the location of the application's
                   manifests or chart
@@ -1604,6 +1547,8 @@ spec:
                   - repoURL
                   type: object
                 type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
               syncPolicy:
                 description: SyncPolicy controls when and how a sync will be performed
                 properties:
@@ -1625,19 +1570,6 @@ spec:
                           back to their desired state upon modification in the cluster
                           (default: false)'
                         type: boolean
-                    type: object
-                  managedNamespaceMetadata:
-                    description: ManagedNamespaceMetadata controls metadata in the
-                      given namespace (if CreateNamespace=true)
-                    properties:
-                      annotations:
-                        additionalProperties:
-                          type: string
-                        type: object
-                      labels:
-                        additionalProperties:
-                          type: string
-                        type: object
                     type: object
                   retry:
                     description: Retry controls failed sync retry behavior
@@ -1676,6 +1608,7 @@ spec:
             required:
             - destination
             - project
+            - source
             type: object
           status:
             description: ApplicationStatus contains status information for the application
@@ -1758,12 +1691,6 @@ spec:
                       description: Revision holds the revision the sync was performed
                         against
                       type: string
-                    revisions:
-                      description: Revisions holds the revision of each source in
-                        sources field the sync was performed against
-                      items:
-                        type: string
-                      type: array
                     source:
                       description: Source is a reference to the application source
                         used for the sync operation
@@ -2057,35 +1984,7 @@ spec:
                               type: array
                             name:
                               type: string
-                            parameters:
-                              items:
-                                properties:
-                                  array:
-                                    description: Array is the value of an array type
-                                      parameter.
-                                    items:
-                                      type: string
-                                    type: array
-                                  map:
-                                    additionalProperties:
-                                      type: string
-                                    description: Map is the value of a map type parameter.
-                                    type: object
-                                  name:
-                                    description: Name is the name identifying a parameter.
-                                    type: string
-                                  string:
-                                    description: String_ is the value of a string
-                                      type parameter.
-                                    type: string
-                                type: object
-                              type: array
                           type: object
-                        ref:
-                          description: Ref is reference to another source within sources
-                            field. This field will not be used if used with a `source`
-                            tag.
-                          type: string
                         repoURL:
                           description: RepoURL is the URL to the repository (Git or
                             Helm) that contains the application manifests
@@ -2100,6 +1999,7 @@ spec:
                       required:
                       - repoURL
                       type: object
+<<<<<<< HEAD
                     sources:
                       description: Sources is a reference to the application sources
                         used for the sync operation
@@ -2447,9 +2347,12 @@ spec:
                         - repoURL
                         type: object
                       type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   required:
                   - deployedAt
                   - id
+                  - revision
                   type: object
                 type: array
               observedAt:
@@ -2572,14 +2475,6 @@ spec:
                               (Helm) which to sync the application to If omitted,
                               will use the revision specified in app spec.
                             type: string
-                          revisions:
-                            description: Revisions is the list of revision (Git) or
-                              chart version (Helm) which to sync each source in sources
-                              field for the application to If omitted, will use the
-                              revision specified in app spec.
-                            items:
-                              type: string
-                            type: array
                           source:
                             description: Source overrides the source definition set
                               in the application. This is typically set in a Rollback
@@ -2890,37 +2785,7 @@ spec:
                                     type: array
                                   name:
                                     type: string
-                                  parameters:
-                                    items:
-                                      properties:
-                                        array:
-                                          description: Array is the value of an array
-                                            type parameter.
-                                          items:
-                                            type: string
-                                          type: array
-                                        map:
-                                          additionalProperties:
-                                            type: string
-                                          description: Map is the value of a map type
-                                            parameter.
-                                          type: object
-                                        name:
-                                          description: Name is the name identifying
-                                            a parameter.
-                                          type: string
-                                        string:
-                                          description: String_ is the value of a string
-                                            type parameter.
-                                          type: string
-                                      type: object
-                                    type: array
                                 type: object
-                              ref:
-                                description: Ref is reference to another source within
-                                  sources field. This field will not be used if used
-                                  with a `source` tag.
-                                type: string
                               repoURL:
                                 description: RepoURL is the URL to the repository
                                   (Git or Helm) that contains the application manifests
@@ -2935,6 +2800,7 @@ spec:
                             required:
                             - repoURL
                             type: object
+<<<<<<< HEAD
                           sources:
                             description: Sources overrides the source definition set
                               in the application. This is typically set in a Rollback
@@ -3299,6 +3165,8 @@ spec:
                               - repoURL
                               type: object
                             type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                           syncOptions:
                             description: SyncOptions provide per-sync sync-options,
                               e.g. Validate=false
@@ -3421,12 +3289,6 @@ spec:
                         description: Revision holds the revision this sync operation
                           was performed to
                         type: string
-                      revisions:
-                        description: Revisions holds the revision this sync operation
-                          was performed for respective indexed source in sources field
-                        items:
-                          type: string
-                        type: array
                       source:
                         description: Source records the application source information
                           of the sync, used for comparing auto-sync
@@ -3725,37 +3587,7 @@ spec:
                                 type: array
                               name:
                                 type: string
-                              parameters:
-                                items:
-                                  properties:
-                                    array:
-                                      description: Array is the value of an array
-                                        type parameter.
-                                      items:
-                                        type: string
-                                      type: array
-                                    map:
-                                      additionalProperties:
-                                        type: string
-                                      description: Map is the value of a map type
-                                        parameter.
-                                      type: object
-                                    name:
-                                      description: Name is the name identifying a
-                                        parameter.
-                                      type: string
-                                    string:
-                                      description: String_ is the value of a string
-                                        type parameter.
-                                      type: string
-                                  type: object
-                                type: array
                             type: object
-                          ref:
-                            description: Ref is reference to another source within
-                              sources field. This field will not be used if used with
-                              a `source` tag.
-                            type: string
                           repoURL:
                             description: RepoURL is the URL to the repository (Git
                               or Helm) that contains the application manifests
@@ -3770,6 +3602,7 @@ spec:
                         required:
                         - repoURL
                         type: object
+<<<<<<< HEAD
                       sources:
                         description: Source records the application source information
                           of the sync, used for comparing auto-sync
@@ -4126,6 +3959,8 @@ spec:
                           - repoURL
                           type: object
                         type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                     required:
                     - revision
                     type: object
@@ -4189,14 +4024,6 @@ spec:
               sourceType:
                 description: SourceType specifies the type of this application
                 type: string
-              sourceTypes:
-                description: SourceTypes specifies the type of the sources included
-                  in the application
-                items:
-                  description: ApplicationSourceType specifies the type of the application's
-                    source
-                  type: string
-                type: array
               summary:
                 description: Summary contains a list of URLs and container images
                   used by this application
@@ -4576,37 +4403,7 @@ spec:
                                 type: array
                               name:
                                 type: string
-                              parameters:
-                                items:
-                                  properties:
-                                    array:
-                                      description: Array is the value of an array
-                                        type parameter.
-                                      items:
-                                        type: string
-                                      type: array
-                                    map:
-                                      additionalProperties:
-                                        type: string
-                                      description: Map is the value of a map type
-                                        parameter.
-                                      type: object
-                                    name:
-                                      description: Name is the name identifying a
-                                        parameter.
-                                      type: string
-                                    string:
-                                      description: String_ is the value of a string
-                                        type parameter.
-                                      type: string
-                                  type: object
-                                type: array
                             type: object
-                          ref:
-                            description: Ref is reference to another source within
-                              sources field. This field will not be used if used with
-                              a `source` tag.
-                            type: string
                           repoURL:
                             description: RepoURL is the URL to the repository (Git
                               or Helm) that contains the application manifests
@@ -4621,6 +4418,7 @@ spec:
                         required:
                         - repoURL
                         type: object
+<<<<<<< HEAD
                       sources:
                         description: Sources is a reference to the application's multiple
                           sources used for comparison
@@ -4977,19 +4775,16 @@ spec:
                           - repoURL
                           type: object
                         type: array
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                     required:
                     - destination
+                    - source
                     type: object
                   revision:
                     description: Revision contains information about the revision
                       the comparison has been performed to
                     type: string
-                  revisions:
-                    description: Revisions contains information about the revisions
-                      of multiple sources the comparison has been performed to
-                    items:
-                      type: string
-                    type: array
                   status:
                     description: Status is the sync state of the comparison
                     type: string

@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -24,9 +25,7 @@ import (
 	"github.com/argoproj/argo-cd/v2/util/argo"
 	"github.com/argoproj/argo-cd/v2/util/db"
 	"github.com/argoproj/argo-cd/v2/util/rbac"
-	"github.com/argoproj/argo-cd/v2/util/security"
 	sessionmgr "github.com/argoproj/argo-cd/v2/util/session"
-	"github.com/argoproj/argo-cd/v2/util/settings"
 )
 
 type terminalHandler struct {
@@ -37,6 +36,7 @@ type terminalHandler struct {
 	appResourceTreeFn func(ctx context.Context, app *appv1.Application) (*appv1.ApplicationTree, error)
 	allowedShells     []string
 	namespace         string
+<<<<<<< HEAD
 	enabledNamespaces []string
 	sessionManager    *util_session.SessionManager
 }
@@ -44,6 +44,13 @@ type terminalHandler struct {
 // NewHandler returns a new terminal handler.
 func NewHandler(appLister applisters.ApplicationLister, namespace string, enabledNamespaces []string, db db.ArgoDB, enf *rbac.Enforcer, cache *servercache.Cache,
 	appResourceTree AppResourceTreeFn, allowedShells []string, sessionManager *util_session.SessionManager) *terminalHandler {
+=======
+}
+
+// NewHandler returns a new terminal handler.
+func NewHandler(appLister applisters.ApplicationLister, namespace string, db db.ArgoDB, enf *rbac.Enforcer, cache *servercache.Cache,
+	appResourceTree AppResourceTreeFn, allowedShells []string) *terminalHandler {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	return &terminalHandler{
 		appLister:         appLister,
 		db:                db,
@@ -52,8 +59,11 @@ func NewHandler(appLister applisters.ApplicationLister, namespace string, enable
 		appResourceTreeFn: appResourceTree,
 		allowedShells:     allowedShells,
 		namespace:         namespace,
+<<<<<<< HEAD
 		enabledNamespaces: enabledNamespaces,
 		sessionManager:    sessionManager,
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	}
 }
 
@@ -68,6 +78,7 @@ func (s *terminalHandler) getApplicationClusterRawConfig(ctx context.Context, a 
 	return clst.RawRestConfig(), nil
 }
 
+<<<<<<< HEAD
 type GetSettingsFunc func() (*settings.ArgoCDSettings, error)
 
 // WithFeatureFlagMiddleware is an HTTP middleware to verify if the terminal
@@ -86,6 +97,37 @@ func (s *terminalHandler) WithFeatureFlagMiddleware(getSettings GetSettingsFunc)
 		}
 		s.ServeHTTP(w, r)
 	})
+=======
+// isValidPodName checks that a podName is valid
+func isValidPodName(name string) bool {
+	// https://github.com/kubernetes/kubernetes/blob/976a940f4a4e84fe814583848f97b9aafcdb083f/pkg/apis/core/validation/validation.go#L241
+	validationErrors := apimachineryvalidation.NameIsDNSSubdomain(name, false)
+	return len(validationErrors) == 0
+}
+
+func isValidAppName(name string) bool {
+	// app names have the same rules as pods.
+	return isValidPodName(name)
+}
+
+func isValidProjectName(name string) bool {
+	// project names have the same rules as pods.
+	return isValidPodName(name)
+}
+
+// isValidNamespaceName checks that a namespace name is valid
+func isValidNamespaceName(name string) bool {
+	// https://github.com/kubernetes/kubernetes/blob/976a940f4a4e84fe814583848f97b9aafcdb083f/pkg/apis/core/validation/validation.go#L262
+	validationErrors := apimachineryvalidation.ValidateNamespaceName(name, false)
+	return len(validationErrors) == 0
+}
+
+// isValidContainerName checks that a containerName is valid
+func isValidContainerName(name string) bool {
+	// https://github.com/kubernetes/kubernetes/blob/53a9d106c4aabcd550cc32ae4e8004f32fb0ae7b/pkg/api/validation/validation.go#L280
+	validationErrors := apimachineryvalidation.NameIsDNSLabel(name, false)
+	return len(validationErrors) == 0
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func (s *terminalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -102,9 +144,13 @@ func (s *terminalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+<<<<<<< HEAD
 	appNamespace := q.Get("appNamespace")
 
 	if !argo.IsValidPodName(podName) {
+=======
+	if !isValidPodName(podName) {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 		http.Error(w, "Pod name is not valid", http.StatusBadRequest)
 		return
 	}
@@ -124,6 +170,7 @@ func (s *terminalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Namespace name is not valid", http.StatusBadRequest)
 		return
 	}
+<<<<<<< HEAD
 	if !argo.IsValidNamespaceName(appNamespace) {
 		http.Error(w, "App namespace name is not valid", http.StatusBadRequest)
 		return
@@ -139,11 +186,17 @@ func (s *terminalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	shell := q.Get("shell") // No need to validate. Will only be used if it's in the allow-list.
 
 	ctx := r.Context()
 
+<<<<<<< HEAD
 	appRBACName := security.RBACName(s.namespace, project, appNamespace, app)
+=======
+	appRBACName := fmt.Sprintf("%s/%s", project, app)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	if err := s.enf.EnforceErr(ctx.Value("claims"), rbacpolicy.ResourceApplications, rbacpolicy.ActionGet, appRBACName); err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -155,9 +208,9 @@ func (s *terminalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fieldLog := log.WithFields(log.Fields{"application": app, "userName": sessionmgr.Username(ctx), "container": container,
-		"podName": podName, "namespace": namespace, "project": project, "appNamespace": appNamespace})
+		"podName": podName, "namespace": namespace, "cluster": project})
 
-	a, err := s.appLister.Applications(ns).Get(app)
+	a, err := s.appLister.Applications(s.namespace).Get(app)
 	if err != nil {
 		if apierr.IsNotFound(err) {
 			http.Error(w, "App not found", http.StatusNotFound)

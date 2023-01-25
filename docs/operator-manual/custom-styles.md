@@ -113,8 +113,6 @@ metadata:
 data:
     ui.bannercontent: "Banner message linked to a URL"
     ui.bannerurl: "www.bannerlink.com"
-    ui.bannerpermanent: "true"
-    ui.bannerposition: "bottom"
 ```
 
 ![banner with link](../assets/banner.png)

@@ -3,7 +3,6 @@ package test
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -85,6 +84,7 @@ func YamlToUnstructured(yamlStr string) *unstructured.Unstructured {
 	return &unstructured.Unstructured{Object: obj}
 }
 
+<<<<<<< HEAD
 func YamlToApplication(yamlStr string) *v1alpha1.Application {
 	app := v1alpha1.Application{}
 	err := yaml.Unmarshal([]byte(yamlStr), &app)
@@ -108,6 +108,8 @@ func ToMap(obj interface{}) map[string]interface{} {
 	return res
 }
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 // GetTestDir will return the full directory path of the
 // calling test file.
 func GetTestDir(t *testing.T) string {

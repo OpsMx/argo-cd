@@ -6,7 +6,6 @@ package apiclient
 import (
 	context "context"
 	fmt "fmt"
-	apiclient "github.com/argoproj/argo-cd/v2/reposerver/apiclient"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -431,7 +430,7 @@ func (m *File) Reset()         { *m = File{} }
 func (m *File) String() string { return proto.CompactTextString(m) }
 func (*File) ProtoMessage()    {}
 func (*File) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b21875a7079a06ed, []int{6}
+	return fileDescriptor_b21875a7079a06ed, []int{5}
 }
 func (m *File) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -473,7 +472,6 @@ func init() {
 	proto.RegisterType((*EnvEntry)(nil), "plugin.EnvEntry")
 	proto.RegisterType((*ManifestResponse)(nil), "plugin.ManifestResponse")
 	proto.RegisterType((*RepositoryResponse)(nil), "plugin.RepositoryResponse")
-	proto.RegisterType((*ParametersAnnouncementResponse)(nil), "plugin.ParametersAnnouncementResponse")
 	proto.RegisterType((*File)(nil), "plugin.File")
 }
 
@@ -536,8 +534,6 @@ type ConfigManagementPluginServiceClient interface {
 	GenerateManifest(ctx context.Context, opts ...grpc.CallOption) (ConfigManagementPluginService_GenerateManifestClient, error)
 	// MatchRepository returns whether or not the given application is supported by the plugin
 	MatchRepository(ctx context.Context, opts ...grpc.CallOption) (ConfigManagementPluginService_MatchRepositoryClient, error)
-	// GetParametersAnnouncement gets a list of parameter announcements for the given app
-	GetParametersAnnouncement(ctx context.Context, opts ...grpc.CallOption) (ConfigManagementPluginService_GetParametersAnnouncementClient, error)
 }
 
 type configManagementPluginServiceClient struct {
@@ -616,40 +612,6 @@ func (x *configManagementPluginServiceMatchRepositoryClient) CloseAndRecv() (*Re
 	return m, nil
 }
 
-func (c *configManagementPluginServiceClient) GetParametersAnnouncement(ctx context.Context, opts ...grpc.CallOption) (ConfigManagementPluginService_GetParametersAnnouncementClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_ConfigManagementPluginService_serviceDesc.Streams[2], "/plugin.ConfigManagementPluginService/GetParametersAnnouncement", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &configManagementPluginServiceGetParametersAnnouncementClient{stream}
-	return x, nil
-}
-
-type ConfigManagementPluginService_GetParametersAnnouncementClient interface {
-	Send(*AppStreamRequest) error
-	CloseAndRecv() (*ParametersAnnouncementResponse, error)
-	grpc.ClientStream
-}
-
-type configManagementPluginServiceGetParametersAnnouncementClient struct {
-	grpc.ClientStream
-}
-
-func (x *configManagementPluginServiceGetParametersAnnouncementClient) Send(m *AppStreamRequest) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *configManagementPluginServiceGetParametersAnnouncementClient) CloseAndRecv() (*ParametersAnnouncementResponse, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(ParametersAnnouncementResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // ConfigManagementPluginServiceServer is the server API for ConfigManagementPluginService service.
 type ConfigManagementPluginServiceServer interface {
 	// GenerateManifests receive a stream containing a tgz archive with all required files necessary
@@ -657,8 +619,6 @@ type ConfigManagementPluginServiceServer interface {
 	GenerateManifest(ConfigManagementPluginService_GenerateManifestServer) error
 	// MatchRepository returns whether or not the given application is supported by the plugin
 	MatchRepository(ConfigManagementPluginService_MatchRepositoryServer) error
-	// GetParametersAnnouncement gets a list of parameter announcements for the given app
-	GetParametersAnnouncement(ConfigManagementPluginService_GetParametersAnnouncementServer) error
 }
 
 // UnimplementedConfigManagementPluginServiceServer can be embedded to have forward compatible implementations.
@@ -670,9 +630,6 @@ func (*UnimplementedConfigManagementPluginServiceServer) GenerateManifest(srv Co
 }
 func (*UnimplementedConfigManagementPluginServiceServer) MatchRepository(srv ConfigManagementPluginService_MatchRepositoryServer) error {
 	return status.Errorf(codes.Unimplemented, "method MatchRepository not implemented")
-}
-func (*UnimplementedConfigManagementPluginServiceServer) GetParametersAnnouncement(srv ConfigManagementPluginService_GetParametersAnnouncementServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetParametersAnnouncement not implemented")
 }
 
 func RegisterConfigManagementPluginServiceServer(s *grpc.Server, srv ConfigManagementPluginServiceServer) {
@@ -731,32 +688,6 @@ func (x *configManagementPluginServiceMatchRepositoryServer) Recv() (*AppStreamR
 	return m, nil
 }
 
-func _ConfigManagementPluginService_GetParametersAnnouncement_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ConfigManagementPluginServiceServer).GetParametersAnnouncement(&configManagementPluginServiceGetParametersAnnouncementServer{stream})
-}
-
-type ConfigManagementPluginService_GetParametersAnnouncementServer interface {
-	SendAndClose(*ParametersAnnouncementResponse) error
-	Recv() (*AppStreamRequest, error)
-	grpc.ServerStream
-}
-
-type configManagementPluginServiceGetParametersAnnouncementServer struct {
-	grpc.ServerStream
-}
-
-func (x *configManagementPluginServiceGetParametersAnnouncementServer) SendAndClose(m *ParametersAnnouncementResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *configManagementPluginServiceGetParametersAnnouncementServer) Recv() (*AppStreamRequest, error) {
-	m := new(AppStreamRequest)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 var _ConfigManagementPluginService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "plugin.ConfigManagementPluginService",
 	HandlerType: (*ConfigManagementPluginServiceServer)(nil),
@@ -770,11 +701,6 @@ var _ConfigManagementPluginService_serviceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "MatchRepository",
 			Handler:       _ConfigManagementPluginService_MatchRepository_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "GetParametersAnnouncement",
-			Handler:       _ConfigManagementPluginService_GetParametersAnnouncement_Handler,
 			ClientStreams: true,
 		},
 	},
@@ -1057,47 +983,6 @@ func (m *RepositoryResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ParametersAnnouncementResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ParametersAnnouncementResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ParametersAnnouncementResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.ParameterAnnouncements) > 0 {
-		for iNdEx := len(m.ParameterAnnouncements) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.ParameterAnnouncements[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintPlugin(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
 func (m *File) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1268,24 +1153,6 @@ func (m *RepositoryResponse) Size() (n int) {
 	}
 	if m.IsDiscoveryEnabled {
 		n += 2
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *ParametersAnnouncementResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.ParameterAnnouncements) > 0 {
-		for _, e := range m.ParameterAnnouncements {
-			l = e.Size()
-			n += 1 + l + sovPlugin(uint64(l))
-		}
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -1935,91 +1802,6 @@ func (m *RepositoryResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.IsDiscoveryEnabled = bool(v != 0)
-		default:
-			iNdEx = preIndex
-			skippy, err := skipPlugin(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthPlugin
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ParametersAnnouncementResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowPlugin
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ParametersAnnouncementResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ParametersAnnouncementResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParameterAnnouncements", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowPlugin
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthPlugin
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthPlugin
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ParameterAnnouncements = append(m.ParameterAnnouncements, &apiclient.ParameterAnnouncement{})
-			if err := m.ParameterAnnouncements[len(m.ParameterAnnouncements)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipPlugin(dAtA[iNdEx:])

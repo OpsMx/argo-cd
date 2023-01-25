@@ -13,7 +13,7 @@ import (
 	"github.com/argoproj/gitops-engine/pkg/health"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/robfig/cron/v3"
+	"github.com/robfig/cron"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/labels"
 
@@ -196,10 +196,7 @@ func NewMetricsServer(addr string, appLister applister.ApplicationLister, appFil
 		redisRequestCounter:     redisRequestCounter,
 		redisRequestHistogram:   redisRequestHistogram,
 		hostname:                hostname,
-		// This cron is used to expire the metrics cache.
-		// Currently clearing the metrics cache is logging and deleting from the map
-		// so there is no possibility of panic, but we will add a chain to keep robfig/cron v1 behavior.
-		cron: cron.New(cron.WithChain(cron.Recover(cron.PrintfLogger(log.StandardLogger())))),
+		cron:                    cron.New(),
 	}, nil
 }
 
@@ -287,7 +284,7 @@ func (m *MetricsServer) SetExpiration(cacheExpiration time.Duration) error {
 		return errors.New("Expiration is already set")
 	}
 
-	_, err := m.cron.AddFunc(fmt.Sprintf("@every %s", cacheExpiration), func() {
+	err := m.cron.AddFunc(fmt.Sprintf("@every %s", cacheExpiration), func() {
 		log.Infof("Reset Prometheus metrics based on existing expiration '%v'", cacheExpiration)
 		m.syncCounter.Reset()
 		m.kubectlExecCounter.Reset()

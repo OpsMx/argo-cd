@@ -22,7 +22,7 @@ import (
 	"github.com/argoproj/argo-cd/v2/util/resource"
 )
 
-func populateNodeInfo(un *unstructured.Unstructured, res *ResourceInfo, customLabels []string) {
+func populateNodeInfo(un *unstructured.Unstructured, res *ResourceInfo) {
 	gvk := un.GroupVersionKind()
 	revision := resource.GetRevision(un)
 	if revision > 0 {

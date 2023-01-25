@@ -288,6 +288,7 @@ message ManagedResourcesResponse {
 	repeated github.com.argoproj.argo_cd.v2.pkg.apis.application.v1alpha1.ResourceDiff items = 1;
 }
 
+<<<<<<< HEAD
 message LinkInfo {
 	required string title = 1;
 	required string url = 2;
@@ -306,6 +307,8 @@ message ListAppLinksRequest {
 }
 
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 // ApplicationService
 service ApplicationService {
 
@@ -471,15 +474,5 @@ service ApplicationService {
 				get: "/api/v1/applications/{name}/logs"
 			}
 		};
-	}
-
-	// ListLinks returns the list of all application deep links
-	rpc ListLinks(ListAppLinksRequest) returns (LinksResponse) {
-		option (google.api.http).get = "/api/v1/applications/{name}/links";
-	}
-
-	// ListResourceLinks returns the list of all resource deep links
-	rpc ListResourceLinks(ApplicationResourceRequest) returns (LinksResponse) {
-		option (google.api.http).get = "/api/v1/applications/{name}/resource/links";
 	}
 }

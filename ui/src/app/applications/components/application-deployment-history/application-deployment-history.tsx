@@ -7,7 +7,8 @@ import * as models from '../../../shared/models';
 import {services} from '../../../shared/services';
 import {ApplicationParameters} from '../application-parameters/application-parameters';
 import {RevisionMetadataRows} from './revision-metadata-rows';
-import './application-deployment-history.scss';
+
+require('./application-deployment-history.scss');
 
 export const ApplicationDeploymentHistory = ({
     app,
@@ -33,13 +34,21 @@ export const ApplicationDeploymentHistory = ({
                 <div className='row application-deployment-history__item' key={info.deployedAt} onClick={() => selectDeployment(index)}>
                     <div className='columns small-3'>
                         <div>
+<<<<<<< HEAD
                             <i className='fa fa-clock' /> <span className='show-for-large'>Deployed At:</span>
+=======
+                            <i className='fa fa-clock' /> Deployed At:
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                             <br />
                             <Timestamp date={info.deployedAt} />
                         </div>
                         <div>
                             <br />
+<<<<<<< HEAD
                             <i className='fa fa-hourglass-half' /> <span className='show-for-large'>Time to deploy:</span>
+=======
+                            <i className='fa fa-hourglass-half' /> Time to deploy:
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                             <br />
                             {(info.deployStartedAt && <Duration durationMs={moment(info.deployedAt).diff(moment(info.deployStartedAt)) / 1000} />) || 'Unknown'}
                         </div>

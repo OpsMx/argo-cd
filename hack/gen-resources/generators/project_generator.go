@@ -2,7 +2,12 @@ package generator
 
 import (
 	"context"
+<<<<<<< HEAD
 	"fmt"
+=======
+	"log"
+
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log"
 
@@ -35,7 +40,7 @@ func (pg *ProjectGenerator) Generate(opts *util.GenerateOpts) error {
 		}, v1.CreateOptions{})
 		if err != nil {
 			log.Printf("Project #%v failed to generate", i)
-			return fmt.Errorf("error in generated-project: %w", err)
+			return err
 		}
 	}
 	return nil

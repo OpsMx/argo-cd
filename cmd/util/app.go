@@ -430,7 +430,7 @@ func SetParameterOverrides(app *argoappv1.Application, parameters []string, inde
 	}
 	source := app.Spec.GetSourcePtr(index)
 	var sourceType argoappv1.ApplicationSourceType
-	if st, _ := source.ExplicitType(); st != nil {
+	if st, _ := app.Spec.Source.ExplicitType(); st != nil {
 		sourceType = *st
 	} else if app.Status.SourceType != "" {
 		sourceType = app.Status.SourceType
@@ -442,8 +442,8 @@ func SetParameterOverrides(app *argoappv1.Application, parameters []string, inde
 
 	switch sourceType {
 	case argoappv1.ApplicationSourceTypeHelm:
-		if source.Helm == nil {
-			source.Helm = &argoappv1.ApplicationSourceHelm{}
+		if app.Spec.Source.Helm == nil {
+			app.Spec.Source.Helm = &argoappv1.ApplicationSourceHelm{}
 		}
 		for _, p := range parameters {
 			newParam, err := argoappv1.NewHelmParameter(p, false)
@@ -451,7 +451,7 @@ func SetParameterOverrides(app *argoappv1.Application, parameters []string, inde
 				log.Error(err)
 				continue
 			}
-			source.Helm.AddParameter(*newParam)
+			app.Spec.Source.Helm.AddParameter(*newParam)
 		}
 	default:
 		log.Fatalf("Parameters can only be set against Helm applications")
@@ -535,9 +535,6 @@ func constructAppsBaseOnName(appName string, labels, annotations, args []string,
 		ObjectMeta: v1.ObjectMeta{
 			Name:      appName,
 			Namespace: appNs,
-		},
-		Spec: argoappv1.ApplicationSpec{
-			Source: &argoappv1.ApplicationSource{},
 		},
 	}
 	SetAppSpecOptions(flags, &app.Spec, &appOpts, 0)

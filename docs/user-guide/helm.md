@@ -63,6 +63,7 @@ argocd app set helm-guestbook --values values-production.yaml
     As of `v2.6`, values files can be sourced from a separate repository than the Helm chart
     by taking advantage of [multiple sources for Applications](./multiple_sources.md#helm-value-files-from-external-git-repository).
 
+<<<<<<< HEAD
 In the declarative syntax:
 
 ```yaml
@@ -116,6 +117,8 @@ source:
               - mydomain.example.com
 ```
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 ## Helm Parameters
 
 Helm has the ability to set parameter values, which override any values in
@@ -132,6 +135,7 @@ in the form of `-p PARAM=VALUE`. For example:
 argocd app set helm-guestbook -p service.type=LoadBalancer
 ```
 
+<<<<<<< HEAD
 In the declarative syntax:
 
 ```yaml
@@ -201,6 +205,8 @@ the result will be param1=value5
     The list of parameters seen in the ui is not what is used for resources, rather it is the values/valuesObject merged with parameters (see [this issue](https://github.com/argoproj/argo-cd/issues/9213) incase it has been resolved)
     As a workaround using parameters instead of values/valuesObject will provide a better overview of what will be used for resources
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 ## Helm Release Name
 
 By default, the Helm release name is equal to the Application name to which it belongs. Sometimes, especially on a centralised Argo CD,
@@ -261,7 +267,7 @@ Unsupported hooks are ignored. In Argo CD, hooks are created by using `kubectl a
 * Annotate  `pre-install` and `post-install` with `hook-weight: "-1"`. This will make sure it runs to success before any upgrade hooks.
 * Annotate `pre-upgrade` and `post-upgrade` with `hook-delete-policy: before-hook-creation` to make sure it runs on every sync.
 
-Read more about [Argo hooks](resource_hooks.md) and [Helm hooks](https://helm.sh/docs/topics/charts_hooks/).
+Read more about [Argo hooks](resource_hooks.md) and [Helm hooks](https://github.com/helm/helm/blob/dev-v2/docs/charts_hooks.md).
 
 ## Random Data
 

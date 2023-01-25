@@ -44,7 +44,6 @@ type Context struct {
 	helmPassCredentials    bool
 	helmSkipCrds           bool
 	trackingMethod         v1alpha1.TrackingMethod
-	sources                []v1alpha1.ApplicationSource
 }
 
 type ContextArgs struct {
@@ -364,9 +363,4 @@ func (c *Context) SetTrackingMethod(trackingMethod string) *Context {
 
 func (c *Context) GetTrackingMethod() v1alpha1.TrackingMethod {
 	return c.trackingMethod
-}
-
-func (c *Context) Sources(sources []v1alpha1.ApplicationSource) *Context {
-	c.sources = sources
-	return c
 }

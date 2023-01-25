@@ -26,7 +26,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 	k8scache "k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
@@ -753,7 +752,7 @@ func (r *ApplicationSetReconciler) createInCluster(ctx context.Context, logCtx *
 	var createApps []argov1alpha1.Application
 	current, err := r.getCurrentApplications(ctx, applicationSet)
 	if err != nil {
-		return fmt.Errorf("error getting current applications: %w", err)
+		return err
 	}
 
 	m := make(map[string]bool) // Will holds the app names that are current in the cluster
@@ -793,13 +792,13 @@ func (r *ApplicationSetReconciler) deleteInCluster(ctx context.Context, logCtx *
 	// clusterList, err := argoDB.ListClusters(ctx)
 	clusterList, err := utils.ListClusters(ctx, r.KubeClientset, r.ArgoCDNamespace)
 	if err != nil {
-		return fmt.Errorf("error listing clusters: %w", err)
+		return err
 	}
 
 	// Save current applications to be able to delete the ones that are not in appList
 	current, err := r.getCurrentApplications(ctx, applicationSet)
 	if err != nil {
-		return fmt.Errorf("error getting current applications: %w", err)
+		return err
 	}
 
 	m := make(map[string]bool) // Will holds the app names in appList for the deletion process

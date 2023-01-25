@@ -32,7 +32,7 @@ func Transform(requestedGenerator argoprojiov1alpha1.ApplicationSetGenerator, al
 	// so that, among other things, we can match on cluster urls.
 	selector, err := utils.LabelSelectorAsSelector(requestedGenerator.Selector)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing label selector: %w", err)
+		return nil, err
 	}
 
 	res := []TransformResult{}

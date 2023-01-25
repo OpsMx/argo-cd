@@ -55,9 +55,14 @@ type indexCache interface {
 
 type Client interface {
 	CleanChartCache(chart string, version string) error
+<<<<<<< HEAD
 	ExtractChart(chart string, version string, passCredentials bool, manifestMaxExtractedSize int64, disableManifestMaxExtractedSize bool) (string, argoio.Closer, error)
 	GetIndex(noCache bool, maxIndexSize int64) (*Index, error)
 	GetTags(chart string, noCache bool) (*TagsList, error)
+=======
+	ExtractChart(chart string, version string, passCredentials bool) (string, argoio.Closer, error)
+	GetIndex(noCache bool) (*Index, error)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	TestHelmOCI() (bool, error)
 }
 
@@ -69,7 +74,7 @@ func WithIndexCache(indexCache indexCache) ClientOpts {
 	}
 }
 
-func WithChartPaths(chartPaths argoio.TempPaths) ClientOpts {
+func WithChartPaths(chartPaths *argoio.TempPaths) ClientOpts {
 	return func(c *nativeHelmChart) {
 		c.chartCachePaths = chartPaths
 	}
@@ -86,7 +91,7 @@ func NewClientWithLock(repoURL string, creds Creds, repoLock sync.KeyLock, enabl
 		repoLock:        repoLock,
 		enableOci:       enableOci,
 		proxy:           proxy,
-		chartCachePaths: argoio.NewRandomizedTempPaths(os.TempDir()),
+		chartCachePaths: argoio.NewTempPaths(os.TempDir()),
 	}
 	for i := range opts {
 		opts[i](c)
@@ -97,7 +102,7 @@ func NewClientWithLock(repoURL string, creds Creds, repoLock sync.KeyLock, enabl
 var _ Client = &nativeHelmChart{}
 
 type nativeHelmChart struct {
-	chartCachePaths argoio.TempPaths
+	chartCachePaths *argoio.TempPaths
 	repoURL         string
 	creds           Creds
 	repoLock        sync.KeyLock
@@ -402,6 +407,7 @@ func getIndexURL(rawURL string) (string, error) {
 	repoURL.RawPath = path.Join(repoURL.RawPath, indexFile)
 	return repoURL.String(), nil
 }
+<<<<<<< HEAD
 
 func (c *nativeHelmChart) GetTags(chart string, noCache bool) (*TagsList, error) {
 	if !c.enableOci {
@@ -478,3 +484,5 @@ func (c *nativeHelmChart) GetTags(chart string, noCache bool) (*TagsList, error)
 
 	return tags, nil
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

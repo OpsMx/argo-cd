@@ -163,6 +163,7 @@ func TestGetHealthScriptWithOverride(t *testing.T) {
 	assert.Equal(t, newHealthStatusFunction, script)
 }
 
+<<<<<<< HEAD
 func TestGetHealthScriptWithKindWildcardOverride(t *testing.T) {
 	testObj := StrToUnstructured(objJSON)
 	vm := VM{
@@ -214,6 +215,8 @@ func TestGetHealthScriptWithGroupAndKindWildcardOverride(t *testing.T) {
 	assert.Equal(t, newHealthStatusFunction, script)
 }
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 func TestGetHealthScriptPredefined(t *testing.T) {
 	testObj := StrToUnstructured(objJSON)
 	vm := VM{}

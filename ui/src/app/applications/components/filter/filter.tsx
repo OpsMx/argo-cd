@@ -15,7 +15,6 @@ interface FilterProps {
     retry?: () => void;
     loading?: boolean;
     radio?: boolean;
-    collapsed?: boolean;
 }
 
 export interface CheckboxOption {
@@ -77,7 +76,7 @@ export const Filter = (props: FilterProps) => {
     const [values, setValues] = React.useState(init);
     const [tags, setTags] = React.useState([]);
     const [input, setInput] = React.useState('');
-    const [collapsed, setCollapsed] = React.useState(props.collapsed || false);
+    const [collapsed, setCollapsed] = React.useState(false);
     const [options, setOptions] = React.useState(props.options);
 
     React.useEffect(() => {

@@ -21,16 +21,24 @@ import {services} from '../../../shared/services';
 
 import {ApplicationSyncOptionsField} from '../application-sync-options/application-sync-options';
 import {RevisionFormField} from '../revision-form-field/revision-form-field';
+<<<<<<< HEAD
 import {ComparisonStatusIcon, HealthStatusIcon, syncStatusMessage, urlPattern, formatCreationTimestamp, getAppDefaultSource, getAppSpecDefaultSource, helpTip} from '../utils';
+=======
+import {ComparisonStatusIcon, HealthStatusIcon, syncStatusMessage, urlPattern, formatCreationTimestamp} from '../utils';
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 import {ApplicationRetryOptions} from '../application-retry-options/application-retry-options';
 import {ApplicationRetryView} from '../application-retry-view/application-retry-view';
 import {Link} from 'react-router-dom';
 import {EditNotificationSubscriptions, useEditNotificationSubscriptions} from './edit-notification-subscriptions';
 import {EditAnnotations} from './edit-annotations';
 
+<<<<<<< HEAD
 import './application-summary.scss';
 import {DeepLinks} from '../../../shared/components/deep-links';
 import {ExternalLinks} from '../application-urls';
+=======
+require('./application-summary.scss');
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 function swap(array: any[], a: number, b: number) {
     array = array.slice();
@@ -55,8 +63,7 @@ export interface ApplicationSummaryProps {
 
 export const ApplicationSummary = (props: ApplicationSummaryProps) => {
     const app = JSON.parse(JSON.stringify(props.app)) as models.Application;
-    const source = getAppDefaultSource(app);
-    const isHelm = source.hasOwnProperty('chart');
+    const isHelm = app.spec.source.hasOwnProperty('chart');
     const initialState = app.spec.destination.server === undefined ? 'NAME' : 'URL';
     const useAuthSettingsCtx = React.useContext(AuthSettingsCtx);
     const [destFormat, setDestFormat] = React.useState(initialState);
@@ -167,11 +174,12 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
             edit: (formApi: FormApi) => <FormField formApi={formApi} field='spec.destination.namespace' component={Text} />
         },
         {
-            title: 'CREATED AT',
+            title: 'CREATED_AT',
             view: formatCreationTimestamp(app.metadata.creationTimestamp)
         },
         {
             title: 'REPO URL',
+<<<<<<< HEAD
             view: <Repo url={source.repoURL} />,
             edit: (formApi: FormApi) =>
                 hasMultipleSources ? (
@@ -179,6 +187,10 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                 ) : (
                     <FormField formApi={formApi} field='spec.source.repoURL' component={Text} />
                 )
+=======
+            view: <Repo url={app.spec.source.repoURL} />,
+            edit: (formApi: FormApi) => <FormField formApi={formApi} field='spec.source.repoURL' component={Text} />
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         },
         ...(isHelm
             ? [
@@ -186,9 +198,10 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                       title: 'CHART',
                       view: (
                           <span>
-                              {source.chart}:{source.targetRevision}
+                              {app.spec.source.chart}:{app.spec.source.targetRevision}
                           </span>
                       ),
+<<<<<<< HEAD
                       edit: (formApi: FormApi) =>
                           hasMultipleSources ? (
                               helpTip('CHART is not editable for applications with multiple sources. You can edit them in the "Manifest" tab.')
@@ -233,11 +246,55 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                                   )}
                               </DataLoader>
                           )
+=======
+                      edit: (formApi: FormApi) => (
+                          <DataLoader
+                              input={{repoURL: formApi.getFormState().values.spec.source.repoURL}}
+                              load={src => services.repos.charts(src.repoURL).catch(() => new Array<models.HelmChart>())}>
+                              {(charts: models.HelmChart[]) => (
+                                  <div className='row'>
+                                      <div className='columns small-10'>
+                                          <FormField
+                                              formApi={formApi}
+                                              field='spec.source.chart'
+                                              component={AutocompleteField}
+                                              componentProps={{
+                                                  items: charts.map(chart => chart.name),
+                                                  filterSuggestions: true
+                                              }}
+                                          />
+                                      </div>
+                                      <DataLoader
+                                          input={{charts, chart: formApi.getFormState().values.spec.source.chart}}
+                                          load={async data => {
+                                              const chartInfo = data.charts.find(chart => chart.name === data.chart);
+                                              return (chartInfo && chartInfo.versions) || new Array<string>();
+                                          }}>
+                                          {(versions: string[]) => (
+                                              <div className='columns small-2'>
+                                                  <FormField
+                                                      formApi={formApi}
+                                                      field='spec.source.targetRevision'
+                                                      component={AutocompleteField}
+                                                      componentProps={{
+                                                          items: versions
+                                                      }}
+                                                  />
+                                                  <RevisionHelpIcon type='helm' top='0' />
+                                              </div>
+                                          )}
+                                      </DataLoader>
+                                  </div>
+                              )}
+                          </DataLoader>
+                      )
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   }
               ]
             : [
                   {
                       title: 'TARGET REVISION',
+<<<<<<< HEAD
                       view: <Revision repoUrl={source.repoURL} revision={source.targetRevision || 'HEAD'} />,
                       edit: (formApi: FormApi) =>
                           hasMultipleSources ? (
@@ -259,6 +316,15 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                           ) : (
                               <FormField formApi={formApi} field='spec.source.path' component={Text} />
                           )
+=======
+                      view: <Revision repoUrl={app.spec.source.repoURL} revision={app.spec.source.targetRevision || 'HEAD'} />,
+                      edit: (formApi: FormApi) => <RevisionFormField helpIconTop={'0'} hideLabel={true} formApi={formApi} repoURL={app.spec.source.repoURL} />
+                  },
+                  {
+                      title: 'PATH',
+                      view: app.spec.source.path,
+                      edit: (formApi: FormApi) => <FormField formApi={formApi} field='spec.source.path' component={Text} />
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                   }
               ]),
 
@@ -332,6 +398,7 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                     <HealthStatusIcon state={app.status.health} /> {app.status.health.status}
                 </span>
             )
+<<<<<<< HEAD
         },
         {
             title: 'LINKS',
@@ -340,6 +407,8 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                     {(links: models.LinksResponse) => <DeepLinks links={links.items} />}
                 </DataLoader>
             )
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         }
     ];
     const urls = ExternalLinks(app.status.summary.externalURLs);
@@ -491,6 +560,16 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
 
     return (
         <div className='application-summary'>
+<<<<<<< HEAD
+=======
+            {app.spec.source.plugin && typeof app.spec.source.plugin.name === 'string' && app.spec.source.plugin.name !== '' && (
+                <div className='white-box'>
+                    <i className='fa fa-exclamation-triangle' style={{color: ARGO_WARNING_COLOR}} /> This Application uses a plugin which will no longer be supported starting with
+                    Argo CD version 2.6. Contact your Argo CD administrator to make sure they upgrade the '{app.spec.source.plugin.name}' plugin before upgrading to Argo CD 2.6.
+                    See the <a href='https://argo-cd.readthedocs.io/en/latest/operator-manual/upgrading/2.4-2.5/'>2.4-to-2.5 upgrade notes</a> for details.
+                </div>
+            )}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
             <EditablePanel
                 save={updateApp}
                 validate={input => ({

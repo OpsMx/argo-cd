@@ -71,6 +71,6 @@ Every commit to master is built and published to `ghcr.io/argoproj/argo-cd/argoc
 !!! note
     GitHub docker registry [requires](https://github.community/t5/GitHub-Actions/docker-pull-from-public-GitHub-Package-Registry-fail-with-quot/m-p/32888#M1294) authentication to read
     even publicly available packages. Follow the steps from Kubernetes [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry)
-    to configure image pull secret if you want to use `ghcr.io/argoproj/argo-cd/argocd` image.
+    to configure image pull secret if you want to use `ghcr.io/argoproj/argocd` image.
 
 The image is automatically deployed to the dev Argo CD instance: [https://cd.apps.argoproj.io/](https://cd.apps.argoproj.io/)

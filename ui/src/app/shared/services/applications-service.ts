@@ -3,7 +3,6 @@ import {Observable} from 'rxjs';
 import {map, repeat, retry} from 'rxjs/operators';
 
 import * as models from '../models';
-import {isValidURL} from '../utils';
 import requests from './requests';
 
 interface QueryOptions {
@@ -299,29 +298,23 @@ export class ApplicationsService {
             .then(res => JSON.parse(res.manifest) as models.State);
     }
 
-    public getResourceActions(name: string, appNamespace: string, resource: models.ResourceNode): Promise<models.ResourceAction[]> {
+    public getResourceActions(name: string, appNamspace: string, resource: models.ResourceNode): Promise<models.ResourceAction[]> {
         return requests
             .get(`/applications/${name}/resource/actions`)
             .query({
-                appNamespace,
                 namespace: resource.namespace,
                 resourceName: resource.name,
                 version: resource.version,
                 kind: resource.kind,
                 group: resource.group
             })
-            .then(res => {
-                const actions = (res.body.actions as models.ResourceAction[]) || [];
-                actions.sort((actionA, actionB) => actionA.name.localeCompare(actionB.name));
-                return actions;
-            });
+            .then(res => (res.body.actions as models.ResourceAction[]) || []);
     }
 
-    public runResourceAction(name: string, appNamespace: string, resource: models.ResourceNode, action: string): Promise<models.ResourceAction[]> {
+    public runResourceAction(name: string, appNamspace: string, resource: models.ResourceNode, action: string): Promise<models.ResourceAction[]> {
         return requests
             .post(`/applications/${name}/resource/actions`)
             .query({
-                appNamespace,
                 namespace: resource.namespace,
                 resourceName: resource.name,
                 version: resource.version,
@@ -400,11 +393,11 @@ export class ApplicationsService {
     public terminateOperation(applicationName: string, appNamespace: string): Promise<boolean> {
         return requests
             .delete(`/applications/${applicationName}/operation`)
-            .query({appNamespace})
             .send()
             .then(() => true);
     }
 
+<<<<<<< HEAD
     public getLinks(applicationName: string, namespace: string): Promise<models.LinksResponse> {
         return requests
             .get(`/applications/${applicationName}/links`)
@@ -454,6 +447,20 @@ export class ApplicationsService {
     }): URLSearchParams {
         const {appNamespace, containerName, namespace, podName, resource, tail, sinceSeconds, untilTime, filter, previous} = query;
         let {follow} = query;
+=======
+    private getLogsQuery(
+        namespace: string,
+        appNamespace: string,
+        podName: string,
+        resource: {group: string; kind: string; name: string},
+        containerName: string,
+        tail?: number,
+        follow?: boolean,
+        untilTime?: string,
+        filter?: string,
+        previous?: boolean
+    ): URLSearchParams {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         if (follow === undefined || follow === null) {
             follow = true;
         }

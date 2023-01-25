@@ -203,24 +203,6 @@ func TestGitGenerateParamsFromDirectories(t *testing.T) {
 			expectedError: nil,
 		},
 		{
-			name:            "It prefixes path parameters with PathParamPrefix",
-			directories:     []argoprojiov1alpha1.GitDirectoryGeneratorItem{{Path: "*"}},
-			pathParamPrefix: "myRepo",
-			repoApps: []string{
-				"app1",
-				"app2",
-				"app_3",
-				"p1/app4",
-			},
-			repoError: nil,
-			expected: []map[string]interface{}{
-				{"myRepo.path": "app1", "myRepo.path.basename": "app1", "myRepo.path.basenameNormalized": "app1", "myRepo.path[0]": "app1"},
-				{"myRepo.path": "app2", "myRepo.path.basename": "app2", "myRepo.path.basenameNormalized": "app2", "myRepo.path[0]": "app2"},
-				{"myRepo.path": "app_3", "myRepo.path.basename": "app_3", "myRepo.path.basenameNormalized": "app-3", "myRepo.path[0]": "app_3"},
-			},
-			expectedError: nil,
-		},
-		{
 			name:        "It filters application according to the paths",
 			directories: []argoprojiov1alpha1.GitDirectoryGeneratorItem{{Path: "p1/*"}, {Path: "p1/*/*"}},
 			repoApps: []string{
@@ -354,13 +336,12 @@ func TestGitGenerateParamsFromDirectories(t *testing.T) {
 func TestGitGenerateParamsFromDirectoriesGoTemplate(t *testing.T) {
 
 	cases := []struct {
-		name            string
-		directories     []argoprojiov1alpha1.GitDirectoryGeneratorItem
-		pathParamPrefix string
-		repoApps        []string
-		repoError       error
-		expected        []map[string]interface{}
-		expectedError   error
+		name          string
+		directories   []argoprojiov1alpha1.GitDirectoryGeneratorItem
+		repoApps      []string
+		repoError     error
+		expected      []map[string]interface{}
+		expectedError error
 	}{
 		{
 			name:        "happy flow - created apps",
@@ -400,57 +381,6 @@ func TestGitGenerateParamsFromDirectoriesGoTemplate(t *testing.T) {
 						"basenameNormalized": "app-3",
 						"segments": []string{
 							"app_3",
-						},
-					},
-				},
-			},
-			expectedError: nil,
-		},
-		{
-			name:            "It prefixes path parameters with PathParamPrefix",
-			directories:     []argoprojiov1alpha1.GitDirectoryGeneratorItem{{Path: "*"}},
-			pathParamPrefix: "myRepo",
-			repoApps: []string{
-				"app1",
-				"app2",
-				"app_3",
-				"p1/app4",
-			},
-			repoError: nil,
-			expected: []map[string]interface{}{
-				{
-					"myRepo": map[string]interface{}{
-						"path": map[string]interface{}{
-							"path":               "app1",
-							"basename":           "app1",
-							"basenameNormalized": "app1",
-							"segments": []string{
-								"app1",
-							},
-						},
-					},
-				},
-				{
-					"myRepo": map[string]interface{}{
-						"path": map[string]interface{}{
-							"path":               "app2",
-							"basename":           "app2",
-							"basenameNormalized": "app2",
-							"segments": []string{
-								"app2",
-							},
-						},
-					},
-				},
-				{
-					"myRepo": map[string]interface{}{
-						"path": map[string]interface{}{
-							"path":               "app_3",
-							"basename":           "app_3",
-							"basenameNormalized": "app-3",
-							"segments": []string{
-								"app_3",
-							},
 						},
 					},
 				},
@@ -624,10 +554,9 @@ func TestGitGenerateParamsFromDirectoriesGoTemplate(t *testing.T) {
 					GoTemplate: true,
 					Generators: []argoprojiov1alpha1.ApplicationSetGenerator{{
 						Git: &argoprojiov1alpha1.GitGenerator{
-							RepoURL:         "RepoURL",
-							Revision:        "Revision",
-							Directories:     testCaseCopy.directories,
-							PathParamPrefix: testCaseCopy.pathParamPrefix,
+							RepoURL:     "RepoURL",
+							Revision:    "Revision",
+							Directories: testCaseCopy.directories,
 						},
 					}},
 				},

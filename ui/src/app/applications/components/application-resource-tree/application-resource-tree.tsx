@@ -17,6 +17,7 @@ import {
     ComparisonStatusIcon,
     deletePodAction,
     getAppOverridesCount,
+    getExternalUrls,
     HealthStatusIcon,
     isAppNode,
     isYoungerThanXMinutes,
@@ -27,7 +28,10 @@ import {
 } from '../utils';
 import {NodeUpdateAnimation} from './node-update-animation';
 import {PodGroup} from '../application-pod-view/pod-view';
+<<<<<<< HEAD
 import './application-resource-tree.scss';
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 import {ArrowConnector} from './arrow-connector';
 
 function treeNodeKey(node: NodeId & {uid?: string}) {
@@ -35,6 +39,8 @@ function treeNodeKey(node: NodeId & {uid?: string}) {
 }
 
 const color = require('color');
+
+require('./application-resource-tree.scss');
 
 export interface ResourceTreeNode extends models.ResourceNode {
     status?: models.SyncStatusCode;
@@ -412,7 +418,10 @@ function renderPodGroup(props: ApplicationResourceTreeProps, id: string, node: R
     }
     const appNode = isAppNode(node);
     const rootNode = !node.root;
-    const extLinks: string[] = props.app.status.summary.externalURLs;
+    let extLinks: string[] = props.app.status.summary.externalURLs;
+    if (rootNode) {
+        extLinks = getExternalUrls(props.app.metadata.annotations, props.app.status.summary.externalURLs);
+    }
     const podGroupChildren = childMap.get(treeNodeKey(node));
     const nonPodChildren = podGroupChildren?.reduce((acc, child) => {
         if (child.kind !== 'Pod') {
@@ -492,7 +501,7 @@ function renderPodGroup(props: ApplicationResourceTreeProps, id: string, node: R
                         {appNode && !rootNode && (
                             <Consumer>
                                 {ctx => (
-                                    <a href={ctx.baseHref + 'applications/' + node.namespace + '/' + node.name} title='Open application'>
+                                    <a href={ctx.baseHref + 'applications/' + node.name} title='Open application'>
                                         <i className='fa fa-external-link-alt' />
                                     </a>
                                 )}
@@ -753,8 +762,11 @@ function renderResourceNode(props: ApplicationResourceTreeProps, id: string, nod
     }
     const appNode = isAppNode(node);
     const rootNode = !node.root;
-    const extLinks: string[] = props.app.status.summary.externalURLs;
+    let extLinks: string[] = props.app.status.summary.externalURLs;
     const childCount = nodesHavingChildren.get(node.uid);
+    if (rootNode) {
+        extLinks = getExternalUrls(props.app.metadata.annotations, props.app.status.summary.externalURLs);
+    }
     return (
         <div
             onClick={() => props.onNodeClick && props.onNodeClick(fullName)}
@@ -796,7 +808,7 @@ function renderResourceNode(props: ApplicationResourceTreeProps, id: string, nod
                     {appNode && !rootNode && (
                         <Consumer>
                             {ctx => (
-                                <a href={ctx.baseHref + 'applications/' + node.namespace + '/' + node.name} title='Open application'>
+                                <a href={ctx.baseHref + 'applications/' + node.name} title='Open application'>
                                     <i className='fa fa-external-link-alt' />
                                 </a>
                             )}

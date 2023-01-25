@@ -65,12 +65,3 @@ func (g *GiteaService) List(ctx context.Context) ([]*PullRequest, error) {
 	}
 	return list, nil
 }
-
-// Get the Gitea pull request label names.
-func getGiteaPRLabelNames(giteaLabels []*gitea.Label) []string {
-	var labelNames []string
-	for _, giteaLabel := range giteaLabels {
-		labelNames = append(labelNames, giteaLabel.Name)
-	}
-	return labelNames
-}

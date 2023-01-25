@@ -174,11 +174,7 @@ func (g *GitGenerator) generateParamsFromGitFile(filePath string, fileContent []
 			paramPath["basenameNormalized"] = utils.SanitizeName(path.Base(paramPath["path"].(string)))
 			paramPath["filenameNormalized"] = utils.SanitizeName(path.Base(paramPath["filename"].(string)))
 			paramPath["segments"] = strings.Split(paramPath["path"].(string), "/")
-			if pathParamPrefix != "" {
-				params[pathParamPrefix] = map[string]interface{}{"path": paramPath}
-			} else {
-				params["path"] = paramPath
-			}
+			params["path"] = paramPath
 		} else {
 			flat, err := flatten.Flatten(objectFound, "", flatten.DotStyle)
 			if err != nil {
@@ -198,7 +194,7 @@ func (g *GitGenerator) generateParamsFromGitFile(filePath string, fileContent []
 			params[pathParamName+".filenameNormalized"] = utils.SanitizeName(path.Base(params[pathParamName+".filename"].(string)))
 			for k, v := range strings.Split(params[pathParamName].(string), "/") {
 				if len(v) > 0 {
-					params[pathParamName+"["+strconv.Itoa(k)+"]"] = v
+					params["path["+strconv.Itoa(k)+"]"] = v
 				}
 			}
 		}
@@ -212,6 +208,7 @@ func (g *GitGenerator) generateParamsFromGitFile(filePath string, fileContent []
 	}
 
 	return res, nil
+
 }
 
 func (g *GitGenerator) filterApps(Directories []argoprojiov1alpha1.GitDirectoryGeneratorItem, allPaths []string) []string {
@@ -254,11 +251,7 @@ func (g *GitGenerator) generateParamsFromApps(requestedApps []string, appSetGene
 			paramPath["basename"] = path.Base(a)
 			paramPath["basenameNormalized"] = utils.SanitizeName(path.Base(a))
 			paramPath["segments"] = strings.Split(paramPath["path"].(string), "/")
-			if appSetGenerator.Git.PathParamPrefix != "" {
-				params[appSetGenerator.Git.PathParamPrefix] = map[string]interface{}{"path": paramPath}
-			} else {
-				params["path"] = paramPath
-			}
+			params["path"] = paramPath
 		} else {
 			pathParamName := "path"
 			if appSetGenerator.Git.PathParamPrefix != "" {
@@ -269,7 +262,7 @@ func (g *GitGenerator) generateParamsFromApps(requestedApps []string, appSetGene
 			params[pathParamName+".basenameNormalized"] = utils.SanitizeName(path.Base(a))
 			for k, v := range strings.Split(params[pathParamName].(string), "/") {
 				if len(v) > 0 {
-					params[pathParamName+"["+strconv.Itoa(k)+"]"] = v
+					params["path["+strconv.Itoa(k)+"]"] = v
 				}
 			}
 		}

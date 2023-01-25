@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/argoproj/argo-cd/v2/util/io/files"
-
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	log "github.com/sirupsen/logrus"
 
@@ -35,7 +33,11 @@ func Discover(ctx context.Context, appPath, repoPath string, enableGenerateManif
 	apps := make(map[string]string)
 
 	// Check if it is CMP
+<<<<<<< HEAD
 	conn, _, err := DetectConfigManagementPlugin(ctx, appPath, repoPath, "", env, tarExcludedGlobs)
+=======
+	conn, _, err := DetectConfigManagementPlugin(ctx, repoPath, []string{}, tarExcludedGlobs)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	if err == nil {
 		// Found CMP
 		io.Close(conn)
@@ -79,6 +81,7 @@ func AppType(ctx context.Context, appPath, repoPath string, enableGenerateManife
 	return "Directory", nil
 }
 
+<<<<<<< HEAD
 // if pluginName is provided setup connection to that cmp-server
 // else
 // list all plugins in /plugins folder and foreach plugin
@@ -86,9 +89,16 @@ func AppType(ctx context.Context, appPath, repoPath string, enableGenerateManife
 // if supported return conn for the cmp-server
 
 func DetectConfigManagementPlugin(ctx context.Context, appPath, repoPath, pluginName string, env []string, tarExcludedGlobs []string) (io.Closer, pluginclient.ConfigManagementPluginServiceClient, error) {
+=======
+// 1. list all plugins in /plugins folder
+// 2. foreach plugin setup connection with respective cmp-server
+// 3. check isSupported(path)?
+// 4.a if no then close connection
+// 4.b if yes then return conn for detected plugin
+func DetectConfigManagementPlugin(ctx context.Context, repoPath string, env []string, tarExcludedGlobs []string) (io.Closer, pluginclient.ConfigManagementPluginServiceClient, error) {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	var conn io.Closer
 	var cmpClient pluginclient.ConfigManagementPluginServiceClient
-	var connFound bool
 
 	pluginSockFilePath := common.GetPluginSockFilePath()
 	log.WithFields(log.Fields{
@@ -96,6 +106,7 @@ func DetectConfigManagementPlugin(ctx context.Context, appPath, repoPath, plugin
 		common.SecurityCWEField: common.SecurityCWEMissingReleaseOfFileDescriptor,
 	}).Debugf("pluginSockFilePath is: %s", pluginSockFilePath)
 
+<<<<<<< HEAD
 	if pluginName != "" {
 		// check if the given plugin supports the repo
 		conn, cmpClient, connFound = cmpSupports(ctx, pluginSockFilePath, appPath, repoPath, fmt.Sprintf("%v.sock", pluginName), env, tarExcludedGlobs, true)
@@ -113,13 +124,54 @@ func DetectConfigManagementPlugin(ctx context.Context, appPath, repoPath, plugin
 				if connFound {
 					break
 				}
+=======
+	files, err := os.ReadDir(pluginSockFilePath)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var connFound bool
+	for _, file := range files {
+		if file.Type() == os.ModeSocket {
+			address := filepath.Join(pluginSockFilePath, file.Name())
+			cmpclientset := pluginclient.NewConfigManagementPluginClientSet(address)
+
+			conn, cmpClient, err = cmpclientset.NewConfigManagementPluginClient()
+			if err != nil {
+				log.WithFields(log.Fields{
+					common.SecurityField:    common.SecurityMedium,
+					common.SecurityCWEField: 775,
+				}).Errorf("error dialing to cmp-server for plugin %s, %v", file.Name(), err)
+				continue
+			}
+
+			isSupported, err := matchRepositoryCMP(ctx, repoPath, cmpClient, env, tarExcludedGlobs)
+			if err != nil {
+				log.WithFields(log.Fields{
+					common.SecurityField:    common.SecurityMedium,
+					common.SecurityCWEField: 775,
+				}).Errorf("repository %s is not the match because %v", repoPath, err)
+				continue
+			}
+
+			if !isSupported {
+				log.WithFields(log.Fields{
+					common.SecurityField:    common.SecurityLow,
+					common.SecurityCWEField: 775,
+				}).Debugf("Reponse from socket file %s is not supported", file.Name())
+				io.Close(conn)
+			} else {
+				connFound = true
+				break
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 			}
 		}
-		if !connFound {
-			return nil, nil, fmt.Errorf("could not find plugin supporting the given repository")
-		}
 	}
-	return conn, cmpClient, nil
+
+	if !connFound {
+		return nil, nil, fmt.Errorf("Couldn't find cmp-server plugin supporting repository %s", repoPath)
+	}
+	return conn, cmpClient, err
 }
 
 // matchRepositoryCMP will send the repoPath to the cmp-server. The cmp-server will
@@ -141,6 +193,7 @@ func matchRepositoryCMP(ctx context.Context, appPath, repoPath string, client pl
 	}
 	return resp.GetIsSupported(), resp.GetIsDiscoveryEnabled(), nil
 }
+<<<<<<< HEAD
 
 func cmpSupports(ctx context.Context, pluginSockFilePath, appPath, repoPath, fileName string, env []string, tarExcludedGlobs []string, namedPlugin bool) (io.Closer, pluginclient.ConfigManagementPluginServiceClient, bool) {
 	absPluginSockFilePath, err := filepath.Abs(pluginSockFilePath)
@@ -189,3 +242,5 @@ func cmpSupports(ctx context.Context, pluginSockFilePath, appPath, repoPath, fil
 	}
 	return conn, cmpClient, true
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

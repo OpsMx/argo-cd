@@ -1,8 +1,9 @@
-# Webhook
+## Configuration
 
 The webhook notification service allows sending a generic HTTP request using the templatized request body and URL.
 Using Webhook you might trigger a Jenkins job, update GitHub commit status.
 
+<<<<<<< HEAD
 ## Parameters
 
 The Webhook notification service configuration includes following settings:
@@ -23,6 +24,8 @@ The wait time between retries is between `retryWaitMin` and `retryWaitMax`. If a
 
 ## Configuration
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 Use the following steps to configure webhook:
 
 1 Register webhook in `argocd-notifications-cm` ConfigMap:
@@ -41,7 +44,6 @@ data:
     basicAuth: #optional username password
       username: <username>
       password: <api-key>
-    insecureSkipVerify: true #optional bool
 ```
 
 2 Define template that customizes webhook request method, path and body:

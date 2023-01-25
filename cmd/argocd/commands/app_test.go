@@ -682,7 +682,7 @@ func TestPrintAppSummaryTable(t *testing.T) {
 				},
 				Project:     "default",
 				Destination: v1alpha1.ApplicationDestination{Server: "local", Namespace: "argocd"},
-				Source: &v1alpha1.ApplicationSource{
+				Source: v1alpha1.ApplicationSource{
 					RepoURL:        "test",
 					TargetRevision: "master",
 					Path:           "/test",
@@ -887,7 +887,7 @@ func TestPrintParams(t *testing.T) {
 	output, _ := captureOutput(func() error {
 		app := &v1alpha1.Application{
 			Spec: v1alpha1.ApplicationSpec{
-				Source: &v1alpha1.ApplicationSource{
+				Source: v1alpha1.ApplicationSource{
 					Helm: &v1alpha1.ApplicationSourceHelm{
 						Parameters: []v1alpha1.HelmParameter{
 							{
@@ -1420,14 +1420,10 @@ func TestFilterAppResources(t *testing.T) {
 }
 
 func TestParseSelectedResources(t *testing.T) {
-	resources := []string{"v1alpha:Application:test",
-		"v1alpha:Application:namespace/test",
-		"!v1alpha:Application:test",
-		"apps:Deployment:default/test",
-		"!*:*:*"}
+	resources := []string{"v1alpha:Application:test", "v1alpha:Application:namespace/test"}
 	operationResources, err := parseSelectedResources(resources)
 	assert.NoError(t, err)
-	assert.Len(t, operationResources, 5)
+	assert.Len(t, operationResources, 2)
 	assert.Equal(t, *operationResources[0], v1alpha1.SyncOperationResource{
 		Namespace: "",
 		Name:      "test",
@@ -1439,27 +1435,6 @@ func TestParseSelectedResources(t *testing.T) {
 		Name:      "test",
 		Kind:      application.ApplicationKind,
 		Group:     "v1alpha",
-	})
-	assert.Equal(t, *operationResources[2], v1alpha1.SyncOperationResource{
-		Namespace: "",
-		Name:      "test",
-		Kind:      "Application",
-		Group:     "v1alpha",
-		Exclude:   true,
-	})
-	assert.Equal(t, *operationResources[3], v1alpha1.SyncOperationResource{
-		Namespace: "default",
-		Name:      "test",
-		Kind:      "Deployment",
-		Group:     "apps",
-		Exclude:   false,
-	})
-	assert.Equal(t, *operationResources[4], v1alpha1.SyncOperationResource{
-		Namespace: "",
-		Name:      "*",
-		Kind:      "*",
-		Group:     "*",
-		Exclude:   true,
 	})
 }
 
@@ -1525,7 +1500,7 @@ func TestPrintApplicationTableWide(t *testing.T) {
 					Server:    "http://localhost:8080",
 					Namespace: "default",
 				},
-				Source: &v1alpha1.ApplicationSource{
+				Source: v1alpha1.ApplicationSource{
 					RepoURL:        "https://github.com/argoproj/argocd-example-apps",
 					Path:           "guestbook",
 					TargetRevision: "123",

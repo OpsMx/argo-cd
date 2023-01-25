@@ -3,9 +3,12 @@ package git
 import (
 	"context"
 	"crypto/sha256"
+<<<<<<< HEAD
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	"fmt"
 	"io"
 	"net/url"
@@ -14,14 +17,10 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
-
-	gocache "github.com/patrickmn/go-cache"
-
 	argoio "github.com/argoproj/gitops-engine/pkg/utils/io"
 	"github.com/argoproj/gitops-engine/pkg/utils/text"
 	"github.com/bradleyfalzon/ghinstallation/v2"
+	gocache "github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/argoproj/argo-cd/v2/common"
@@ -32,8 +31,6 @@ import (
 var (
 	// In memory cache for storing github APP api token credentials
 	githubAppTokenCache *gocache.Cache
-	// In memory cache for storing oauth2.TokenSource used to generate Google Cloud OAuth tokens
-	googleCloudTokenSource *gocache.Cache
 )
 
 const (
@@ -53,8 +50,6 @@ func init() {
 	}
 
 	githubAppTokenCache = gocache.New(githubAppCredsExp, 1*time.Minute)
-	// oauth2.TokenSource handles fetching new Tokens once they are expired. The oauth2.TokenSource itself does not expire.
-	googleCloudTokenSource = gocache.New(gocache.NoExpiration, 0)
 }
 
 type NoopCredsStore struct {
@@ -472,6 +467,7 @@ func (g GitHubAppCreds) GetClientCertData() string {
 func (g GitHubAppCreds) GetClientCertKey() string {
 	return g.clientCertKey
 }
+<<<<<<< HEAD
 
 // GoogleCloudCreds to authenticate to Google Cloud Source repositories
 type GoogleCloudCreds struct {
@@ -567,3 +563,5 @@ func (c GoogleCloudCreds) getAccessToken() (string, error) {
 
 	return token.AccessToken, nil
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

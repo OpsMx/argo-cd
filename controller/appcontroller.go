@@ -488,27 +488,28 @@ func isKnownOrphanedResourceExclusion(key kube.ResourceKey, proj *appv1.AppProje
 
 func (ctrl *ApplicationController) getResourceTree(a *appv1.Application, managedResources []*appv1.ResourceDiff) (*appv1.ApplicationTree, error) {
 	nodes := make([]appv1.ResourceNode, 0)
+
 	proj, err := ctrl.getAppProj(a)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get project: %w", err)
+		return nil, err
 	}
-
 	orphanedNodesMap := make(map[kube.ResourceKey]appv1.ResourceNode)
 	warnOrphaned := true
 	if proj.Spec.OrphanedResources != nil {
 		orphanedNodesMap, err = ctrl.stateCache.GetNamespaceTopLevelResources(a.Spec.Destination.Server, a.Spec.Destination.Namespace)
 		if err != nil {
-			return nil, fmt.Errorf("failed to get namespace top-level resources: %w", err)
+			return nil, err
 		}
 		warnOrphaned = proj.Spec.OrphanedResources.IsWarn()
 	}
+
 	for i := range managedResources {
 		managedResource := managedResources[i]
 		delete(orphanedNodesMap, kube.NewResourceKey(managedResource.Group, managedResource.Kind, managedResource.Namespace, managedResource.Name))
 		var live = &unstructured.Unstructured{}
 		err := json.Unmarshal([]byte(managedResource.LiveState), &live)
 		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal live state of managed resources: %w", err)
+			return nil, err
 		}
 
 		if live == nil {
@@ -529,11 +530,7 @@ func (ctrl *ApplicationController) getResourceTree(a *appv1.Application, managed
 		} else {
 			err := ctrl.stateCache.IterateHierarchy(a.Spec.Destination.Server, kube.GetResourceKey(live), func(child appv1.ResourceNode, appName string) bool {
 				permitted, _ := proj.IsResourcePermitted(schema.GroupKind{Group: child.ResourceRef.Group, Kind: child.ResourceRef.Kind}, child.Namespace, a.Spec.Destination, func(project string) ([]*appv1.Cluster, error) {
-					clusters, err := ctrl.db.GetProjectClusters(context.TODO(), project)
-					if err != nil {
-						return nil, fmt.Errorf("failed to get project clusters: %w", err)
-					}
-					return clusters, nil
+					return ctrl.db.GetProjectClusters(context.TODO(), project)
 				})
 				if !permitted {
 					return false
@@ -542,7 +539,7 @@ func (ctrl *ApplicationController) getResourceTree(a *appv1.Application, managed
 				return true
 			})
 			if err != nil {
-				return nil, fmt.Errorf("failed to iterate resource hierarchy: %w", err)
+				return nil, err
 			}
 		}
 	}
@@ -591,7 +588,7 @@ func (ctrl *ApplicationController) getResourceTree(a *appv1.Application, managed
 
 	hosts, err := ctrl.getAppHosts(a, nodes)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get app hosts: %w", err)
+		return nil, err
 	}
 	return &appv1.ApplicationTree{Nodes: nodes, OrphanedNodes: orphanedNodes, Hosts: hosts}, nil
 }
@@ -845,7 +842,6 @@ func (ctrl *ApplicationController) Run(ctx context.Context, statusProcessors int
 // needs to be the qualified name of the application, i.e. <namespace>/<name>.
 func (ctrl *ApplicationController) requestAppRefresh(appName string, compareWith *CompareWith, after *time.Duration) {
 	key := ctrl.toAppKey(appName)
-
 	if compareWith != nil && after != nil {
 		ctrl.appComparisonTypeRefreshQueue.AddAfter(fmt.Sprintf("%s/%d", key, compareWith), *after)
 	} else {
@@ -1001,7 +997,7 @@ func (ctrl *ApplicationController) processProjectQueueItem() (processNext bool) 
 func (ctrl *ApplicationController) finalizeProjectDeletion(proj *appv1.AppProject) error {
 	apps, err := ctrl.appLister.Applications(ctrl.namespace).List(labels.Everything())
 	if err != nil {
-		return fmt.Errorf("error listing applications: %w", err)
+		return err
 	}
 	appsCount := 0
 	for i := range apps {
@@ -1206,7 +1202,7 @@ func (ctrl *ApplicationController) finalizeApplicationDeletion(app *appv1.Applic
 func (ctrl *ApplicationController) updateFinalizers(app *appv1.Application) error {
 	_, err := ctrl.getAppProj(app)
 	if err != nil {
-		return fmt.Errorf("error getting project: %w", err)
+		return err
 	}
 
 	var patch []byte
@@ -1472,6 +1468,7 @@ func (ctrl *ApplicationController) processAppRefreshQueueItem() (processNext boo
 		}
 		ctrl.appRefreshQueue.Done(appKey)
 	}()
+
 	obj, exists, err := ctrl.appInformer.GetIndexer().GetByKey(appKey.(string))
 	if err != nil {
 		log.Errorf("Failed to get application '%s' from informer index: %+v", appKey, err)
@@ -1492,6 +1489,7 @@ func (ctrl *ApplicationController) processAppRefreshQueueItem() (processNext boo
 	if !needRefresh {
 		return
 	}
+
 	app := origApp.DeepCopy()
 	logCtx := log.WithFields(log.Fields{
 		"application":    app.QualifiedName(),
@@ -1519,7 +1517,7 @@ func (ctrl *ApplicationController) processAppRefreshQueueItem() (processNext boo
 		} else {
 			var tree *appv1.ApplicationTree
 			if tree, err = ctrl.getResourceTree(app, managedResources); err == nil {
-				app.Status.Summary = tree.GetSummary(app)
+				app.Status.Summary = tree.GetSummary()
 				if err := ctrl.cache.SetAppResourcesTree(app.InstanceName(ctrl.namespace), tree); err != nil {
 					logCtx.Errorf("Failed to cache resources tree: %v", err)
 					return
@@ -1551,32 +1549,11 @@ func (ctrl *ApplicationController) processAppRefreshQueueItem() (processNext boo
 		localManifests = opState.Operation.Sync.Manifests
 	}
 
-	revisions := make([]string, 0)
-	sources := make([]appv1.ApplicationSource, 0)
-
-	hasMultipleSources := app.Spec.HasMultipleSources()
-
-	// If we have multiple sources, we use all the sources under `sources` field and ignore source under `source` field.
-	// else we use the source under the source field.
-	if hasMultipleSources {
-		for _, source := range app.Spec.Sources {
-			// We do not perform any filtering of duplicate sources.
-			// Argo CD will apply and update the resources generated from the sources automatically
-			// based on the order in which manifests were generated
-			sources = append(sources, source)
-			revisions = append(revisions, source.TargetRevision)
-		}
-		if comparisonLevel == CompareWithRecent {
-			revisions = app.Status.Sync.Revisions
-		}
-	} else {
-		revision := app.Spec.GetSource().TargetRevision
-		if comparisonLevel == CompareWithRecent {
-			revision = app.Status.Sync.Revision
-		}
-		revisions = append(revisions, revision)
-		sources = append(sources, app.Spec.GetSource())
+	revision := app.Spec.Source.TargetRevision
+	if comparisonLevel == CompareWithRecent {
+		revision = app.Status.Sync.Revision
 	}
+
 	now := metav1.Now()
 
 	compareResult, err := ctrl.appStateManager.CompareAppState(app, project, revisions, sources,
@@ -1598,7 +1575,7 @@ func (ctrl *ApplicationController) processAppRefreshQueueItem() (processNext boo
 	if err != nil {
 		logCtx.Errorf("Failed to cache app resources: %v", err)
 	} else {
-		app.Status.Summary = tree.GetSummary(app)
+		app.Status.Summary = tree.GetSummary()
 	}
 
 	if project.Spec.SyncWindows.Matches(app).CanSync(false) {
@@ -1708,6 +1685,16 @@ func (ctrl *ApplicationController) needRefreshAppStatus(app *appv1.Application, 
 			compareWith = level
 			reason = "controller refresh requested"
 		}
+		reason = fmt.Sprintf("comparison expired, requesting refresh. reconciledAt: %v, expiry: %v", reconciledAtStr, statusRefreshTimeout)
+		if hardExpired {
+			reason = fmt.Sprintf("comparison expired, requesting hard refresh. reconciledAt: %v, expiry: %v", reconciledAtStr, statusHardRefreshTimeout)
+			refreshType = appv1.RefreshTypeHard
+		}
+	} else if !app.Spec.Destination.Equals(app.Status.Sync.ComparedTo.Destination) {
+		reason = "spec.destination differs"
+	} else if requested, level := ctrl.isRefreshRequested(app.QualifiedName()); requested {
+		compareWith = level
+		reason = "controller refresh requested"
 	}
 
 	if reason != "" {
@@ -1744,9 +1731,7 @@ func (ctrl *ApplicationController) refreshAppConditions(app *appv1.Application) 
 func (ctrl *ApplicationController) normalizeApplication(orig, app *appv1.Application) {
 	logCtx := log.WithFields(log.Fields{"application": app.QualifiedName()})
 	app.Spec = *argo.NormalizeApplicationSpec(&app.Spec)
-
 	patch, modified, err := diff.CreateTwoWayMergePatch(orig, app, appv1.Application{})
-
 	if err != nil {
 		logCtx.Errorf("error constructing app spec patch: %v", err)
 	} else if modified {
@@ -1809,7 +1794,6 @@ func (ctrl *ApplicationController) autoSync(app *appv1.Application, syncStatus *
 		return nil, 0
 	}
 	logCtx := log.WithFields(log.Fields{"application": app.QualifiedName()})
-
 	if app.Operation != nil {
 		logCtx.Infof("Skipping auto-sync: another operation is in progress")
 		return nil, 0
@@ -1841,15 +1825,13 @@ func (ctrl *ApplicationController) autoSync(app *appv1.Application, syncStatus *
 	}
 
 	desiredCommitSHA := syncStatus.Revision
-	desiredCommitSHAsMS := syncStatus.Revisions
-	alreadyAttempted, attemptPhase := alreadyAttemptedSync(app, desiredCommitSHA, desiredCommitSHAsMS, app.Spec.HasMultipleSources())
+	alreadyAttempted, attemptPhase := alreadyAttemptedSync(app, desiredCommitSHA)
 	selfHeal := app.Spec.SyncPolicy.Automated.SelfHeal
 	op := appv1.Operation{
 		Sync: &appv1.SyncOperation{
 			Revision:    desiredCommitSHA,
 			Prune:       app.Spec.SyncPolicy.Automated.Prune,
 			SyncOptions: app.Spec.SyncPolicy.SyncOptions,
-			Revisions:   desiredCommitSHAsMS,
 		},
 		InitiatedBy: appv1.OperationInitiator{Automated: true},
 		Retry:       appv1.RetryStrategy{Limit: 5},
@@ -1927,41 +1909,20 @@ func (ctrl *ApplicationController) autoSync(app *appv1.Application, syncStatus *
 
 // alreadyAttemptedSync returns whether the most recent sync was performed against the
 // commitSHA and with the same app source config which are currently set in the app
-func alreadyAttemptedSync(app *appv1.Application, commitSHA string, commitSHAsMS []string, hasMultipleSources bool) (bool, synccommon.OperationPhase) {
+func alreadyAttemptedSync(app *appv1.Application, commitSHA string) (bool, synccommon.OperationPhase) {
 	if app.Status.OperationState == nil || app.Status.OperationState.Operation.Sync == nil || app.Status.OperationState.SyncResult == nil {
 		return false, ""
 	}
-	if hasMultipleSources {
-		if !reflect.DeepEqual(app.Status.OperationState.SyncResult.Revisions, commitSHAsMS) {
-			return false, ""
-		}
-	} else {
-		if app.Status.OperationState.SyncResult.Revision != commitSHA {
-			return false, ""
-		}
+	if app.Status.OperationState.SyncResult.Revision != commitSHA {
+		return false, ""
 	}
-
-	if hasMultipleSources {
-		// Ignore differences in target revision, since we already just verified commitSHAs are equal,
-		// and we do not want to trigger auto-sync due to things like HEAD != master
-		specSources := app.Spec.Sources.DeepCopy()
-		syncSources := app.Status.OperationState.SyncResult.Sources.DeepCopy()
-		for _, source := range specSources {
-			source.TargetRevision = ""
-		}
-		for _, source := range syncSources {
-			source.TargetRevision = ""
-		}
-		return reflect.DeepEqual(app.Spec.Sources, app.Status.OperationState.SyncResult.Sources), app.Status.OperationState.Phase
-	} else {
-		// Ignore differences in target revision, since we already just verified commitSHAs are equal,
-		// and we do not want to trigger auto-sync due to things like HEAD != master
-		specSource := app.Spec.Source.DeepCopy()
-		specSource.TargetRevision = ""
-		syncResSource := app.Status.OperationState.SyncResult.Source.DeepCopy()
-		syncResSource.TargetRevision = ""
-		return reflect.DeepEqual(app.Spec.GetSource(), app.Status.OperationState.SyncResult.Source), app.Status.OperationState.Phase
-	}
+	// Ignore differences in target revision, since we already just verified commitSHAs are equal,
+	// and we do not want to trigger auto-sync due to things like HEAD != master
+	specSource := app.Spec.Source.DeepCopy()
+	specSource.TargetRevision = ""
+	syncResSource := app.Status.OperationState.SyncResult.Source.DeepCopy()
+	syncResSource.TargetRevision = ""
+	return reflect.DeepEqual(app.Spec.Source, app.Status.OperationState.SyncResult.Source), app.Status.OperationState.Phase
 }
 
 func (ctrl *ApplicationController) shouldSelfHeal(app *appv1.Application) (bool, time.Duration) {

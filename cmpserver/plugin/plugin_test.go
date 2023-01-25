@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -14,15 +13,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/metadata"
-	"gopkg.in/yaml.v2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/argoproj/argo-cd/v2/cmpserver/apiclient"
-	repoclient "github.com/argoproj/argo-cd/v2/reposerver/apiclient"
 	"github.com/argoproj/argo-cd/v2/test"
-	"github.com/argoproj/argo-cd/v2/util/cmp"
-	"github.com/argoproj/argo-cd/v2/util/tgzstream"
 )
 
 func newService(configFilePath string) (*Service, error) {
@@ -39,11 +33,6 @@ func newService(configFilePath string) (*Service, error) {
 		initConstants: initConstants,
 	}
 	return service, nil
-}
-
-func (s *Service) WithGenerateCommand(command Command) *Service {
-	s.initConstants.PluginConfig.Spec.Generate = command
-	return s
 }
 
 type pluginOpt func(*CMPServerInitConstants)
@@ -303,49 +292,17 @@ func Test_Negative_ConfigFile_DoesnotExist(t *testing.T) {
 
 func TestGenerateManifest(t *testing.T) {
 	configFilePath := "./testdata/kustomize/config"
-
-	t.Run("successful generate", func(t *testing.T) {
-		service, err := newService(configFilePath)
-		require.NoError(t, err)
-
-		res1, err := service.generateManifest(context.Background(), "testdata/kustomize", nil)
-		require.NoError(t, err)
-		require.NotNil(t, res1)
-
-		expectedOutput := "{\"apiVersion\":\"v1\",\"data\":{\"foo\":\"bar\"},\"kind\":\"ConfigMap\",\"metadata\":{\"name\":\"my-map\"}}"
-		if res1 != nil {
-			require.Equal(t, expectedOutput, res1.Manifests[0])
-		}
-	})
-	t.Run("bad generate command", func(t *testing.T) {
-		service, err := newService(configFilePath)
-		require.NoError(t, err)
-		service.WithGenerateCommand(Command{Command: []string{"bad-command"}})
-
-		res, err := service.generateManifest(context.Background(), "testdata/kustomize", nil)
-		assert.ErrorContains(t, err, "executable file not found")
-		assert.Nil(t, res.Manifests)
-	})
-	t.Run("bad yaml output", func(t *testing.T) {
-		service, err := newService(configFilePath)
-		require.NoError(t, err)
-		service.WithGenerateCommand(Command{Command: []string{"echo", "invalid yaml: }"}})
-
-		res, err := service.generateManifest(context.Background(), "testdata/kustomize", nil)
-		assert.ErrorContains(t, err, "failed to unmarshal manifest")
-		assert.Nil(t, res.Manifests)
-	})
-}
-
-func TestGenerateManifest_deadline_exceeded(t *testing.T) {
-	configFilePath := "./testdata/kustomize/config"
 	service, err := newService(configFilePath)
 	require.NoError(t, err)
 
-	expiredCtx, cancel := context.WithTimeout(context.Background(), time.Second*0)
-	defer cancel()
-	_, err = service.generateManifest(expiredCtx, "", nil)
-	assert.ErrorContains(t, err, "context deadline exceeded")
+	res1, err := service.generateManifest(context.Background(), "", nil)
+	require.NoError(t, err)
+	require.NotNil(t, res1)
+
+	expectedOutput := "{\"apiVersion\":\"v1\",\"data\":{\"foo\":\"bar\"},\"kind\":\"ConfigMap\",\"metadata\":{\"name\":\"my-map\"}}"
+	if res1 != nil {
+		require.Equal(t, expectedOutput, res1.Manifests[0])
+	}
 }
 
 // TestRunCommandContextTimeout makes sure the command dies at timeout rather than sleeping past the timeout.

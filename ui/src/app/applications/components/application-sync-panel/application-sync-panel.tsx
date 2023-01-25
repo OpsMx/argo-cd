@@ -7,6 +7,7 @@ import {Consumer} from '../../../shared/context';
 import * as models from '../../../shared/models';
 import {services} from '../../../shared/services';
 import {ApplicationRetryOptions} from '../application-retry-options/application-retry-options';
+<<<<<<< HEAD
 import {
     ApplicationManualSyncFlags,
     ApplicationSyncOptions,
@@ -16,8 +17,12 @@ import {
     PRUNE_ALL_WARNING
 } from '../application-sync-options/application-sync-options';
 import {ComparisonStatusIcon, getAppDefaultSource, nodeKey} from '../utils';
+=======
+import {ApplicationManualSyncFlags, ApplicationSyncOptions, FORCE_WARNING, SyncFlags, REPLACE_WARNING} from '../application-sync-options/application-sync-options';
+import {ComparisonStatusIcon, nodeKey} from '../utils';
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
-import './application-sync-panel.scss';
+require('./application-sync-panel.scss');
 
 export const ApplicationSyncPanel = ({application, selectedResource, hide}: {application: models.Application; selectedResource: string; hide: () => any}) => {
     const [form, setForm] = React.useState<FormApi>(null);
@@ -28,7 +33,6 @@ export const ApplicationSyncPanel = ({application, selectedResource, hide}: {app
     const syncResIndex = appResources.findIndex(item => nodeKey(item) === selectedResource);
     const syncStrategy = {} as models.SyncStrategy;
     const [isPending, setPending] = React.useState(false);
-    const source = getAppDefaultSource(application);
 
     return (
         <Consumer>
@@ -55,7 +59,11 @@ export const ApplicationSyncPanel = ({application, selectedResource, hide}: {app
                     {isVisible && (
                         <Form
                             defaultValues={{
+<<<<<<< HEAD
                                 revision: new URLSearchParams(ctx.history.location.search).get('revision') || source.targetRevision || 'HEAD',
+=======
+                                revision: application.spec.source.targetRevision || 'HEAD',
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                 resources: appResources.map((_, i) => i === syncResIndex || syncResIndex === -1),
                                 syncOptions: application.spec.syncPolicy ? application.spec.syncPolicy.syncOptions : []
                             }}
@@ -142,7 +150,7 @@ export const ApplicationSyncPanel = ({application, selectedResource, hide}: {app
                             {formApi => (
                                 <form role='form' className='width-control' onSubmit={formApi.submitForm}>
                                     <h6>
-                                        Synchronizing application manifests from <a href={source.repoURL}>{source.repoURL}</a>
+                                        Synchronizing application manifests from <a href={application.spec.source.repoURL}>{application.spec.source.repoURL}</a>
                                     </h6>
                                     <div className='argo-form-row'>
                                         <FormField formApi={formApi} label='Revision' field='revision' component={Text} />

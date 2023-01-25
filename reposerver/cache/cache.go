@@ -65,13 +65,11 @@ func AddCacheFlagsToCmd(cmd *cobra.Command, opts ...cacheutil.Options) func() (*
 	}
 }
 
-type refTargetForCacheKey struct {
-	RepoURL        string `json:"repoURL"`
-	Project        string `json:"project"`
-	TargetRevision string `json:"targetRevision"`
-	Chart          string `json:"chart"`
+func appSourceKey(appSrc *appv1.ApplicationSource) uint32 {
+	return hash.FNVa(appSourceKeyJSON(appSrc))
 }
 
+<<<<<<< HEAD
 func refTargetForCacheKeyFromRefTarget(refTarget *appv1.RefTarget) refTargetForCacheKey {
 	return refTargetForCacheKey{
 		RepoURL:        refTarget.Repo.Repo,
@@ -107,16 +105,23 @@ type appSourceKeyStruct struct {
 }
 
 func appSourceKeyJSON(appSrc *appv1.ApplicationSource, srcRefs appv1.RefTargetRevisionMapping, refSourceCommitSHAs ResolvedRevisions) string {
+=======
+func appSourceKeyJSON(appSrc *appv1.ApplicationSource) string {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	appSrc = appSrc.DeepCopy()
 	if !appSrc.IsHelm() {
 		appSrc.RepoURL = ""        // superseded by commitSHA
 		appSrc.TargetRevision = "" // superseded by commitSHA
 	}
+<<<<<<< HEAD
 	appSrcStr, _ := json.Marshal(appSourceKeyStruct{
 		AppSrc:            appSrc,
 		SrcRefs:           getRefTargetRevisionMappingForCacheKey(srcRefs),
 		ResolvedRevisions: refSourceCommitSHAs,
 	})
+=======
+	appSrcStr, _ := json.Marshal(appSrc)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	return string(appSrcStr)
 }
 
@@ -203,6 +208,7 @@ func GitRefCacheItemToReferences(cacheItem [][2]string) *[]*plumbing.Reference {
 	return &res
 }
 
+<<<<<<< HEAD
 // TryLockGitRefCache attempts to lock the key for the Git repository references if the key doesn't exist, returns the value of
 // GetGitReferences after calling the SET
 func (c *Cache) TryLockGitRefCache(repo string, lockId string, references *[]*plumbing.Reference) (string, error) {
@@ -292,6 +298,11 @@ func manifestCacheKey(revision string, appSrc *appv1.ApplicationSource, srcRefs 
 	//       when the _resolved_ revisions are already part of the key.
 	trackingKey := trackingKey(appLabelKey, trackingMethod)
 	return fmt.Sprintf("mfst|%s|%s|%s|%s|%d", trackingKey, appName, revision, namespace, appSourceKey(appSrc, srcRefs, refSourceCommitSHAs)+clusterRuntimeInfoKey(info))
+=======
+func manifestCacheKey(revision string, appSrc *appv1.ApplicationSource, namespace string, trackingMethod string, appLabelKey string, appName string, info ClusterRuntimeInfo) string {
+	trackingKey := trackingKey(appLabelKey, trackingMethod)
+	return fmt.Sprintf("mfst|%s|%s|%s|%s|%d", trackingKey, appName, revision, namespace, appSourceKey(appSrc)+clusterRuntimeInfoKey(info))
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func trackingKey(appLabelKey string, trackingMethod string) string {
@@ -304,11 +315,19 @@ func trackingKey(appLabelKey string, trackingMethod string) string {
 
 // LogDebugManifestCacheKeyFields logs all the information included in a manifest cache key. It's intended to be run
 // before every manifest cache operation to help debug cache misses.
+<<<<<<< HEAD
 func LogDebugManifestCacheKeyFields(message string, reason string, revision string, appSrc *appv1.ApplicationSource, srcRefs appv1.RefTargetRevisionMapping, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, refSourceCommitSHAs ResolvedRevisions) {
 	if log.IsLevelEnabled(log.DebugLevel) {
 		log.WithFields(log.Fields{
 			"revision":    revision,
 			"appSrc":      appSourceKeyJSON(appSrc, srcRefs, refSourceCommitSHAs),
+=======
+func LogDebugManifestCacheKeyFields(message string, reason string, revision string, appSrc *appv1.ApplicationSource, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string) {
+	if log.IsLevelEnabled(log.DebugLevel) {
+		log.WithFields(log.Fields{
+			"revision":    revision,
+			"appSrc":      appSourceKeyJSON(appSrc),
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 			"namespace":   namespace,
 			"trackingKey": trackingKey(appLabelKey, trackingMethod),
 			"appName":     appName,
@@ -318,6 +337,7 @@ func LogDebugManifestCacheKeyFields(message string, reason string, revision stri
 	}
 }
 
+<<<<<<< HEAD
 func (c *Cache) SetNewRevisionManifests(newRevision string, revision string, appSrc *appv1.ApplicationSource, srcRefs appv1.RefTargetRevisionMapping, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, refSourceCommitSHAs ResolvedRevisions) error {
 	oldKey := manifestCacheKey(revision, appSrc, srcRefs, namespace, trackingMethod, appLabelKey, appName, clusterInfo, refSourceCommitSHAs)
 	newKey := manifestCacheKey(newRevision, appSrc, srcRefs, namespace, trackingMethod, appLabelKey, appName, clusterInfo, refSourceCommitSHAs)
@@ -326,6 +346,10 @@ func (c *Cache) SetNewRevisionManifests(newRevision string, revision string, app
 
 func (c *Cache) GetManifests(revision string, appSrc *appv1.ApplicationSource, srcRefs appv1.RefTargetRevisionMapping, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, res *CachedManifestResponse, refSourceCommitSHAs ResolvedRevisions) error {
 	err := c.cache.GetItem(manifestCacheKey(revision, appSrc, srcRefs, namespace, trackingMethod, appLabelKey, appName, clusterInfo, refSourceCommitSHAs), res)
+=======
+func (c *Cache) GetManifests(revision string, appSrc *appv1.ApplicationSource, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, res *CachedManifestResponse) error {
+	err := c.cache.GetItem(manifestCacheKey(revision, appSrc, namespace, trackingMethod, appLabelKey, appName, clusterInfo), res)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 	if err != nil {
 		return err
@@ -340,9 +364,15 @@ func (c *Cache) GetManifests(revision string, appSrc *appv1.ApplicationSource, s
 	if hash != res.CacheEntryHash || res.ManifestResponse == nil && res.MostRecentError == "" {
 		log.Warnf("Manifest hash did not match expected value or cached manifests response is empty, treating as a cache miss: %s", appName)
 
+<<<<<<< HEAD
 		LogDebugManifestCacheKeyFields("deleting manifests cache", "manifest hash did not match or cached response is empty", revision, appSrc, srcRefs, clusterInfo, namespace, trackingMethod, appLabelKey, appName, refSourceCommitSHAs)
 
 		err = c.DeleteManifests(revision, appSrc, srcRefs, clusterInfo, namespace, trackingMethod, appLabelKey, appName, refSourceCommitSHAs)
+=======
+		LogDebugManifestCacheKeyFields("deleting manifests cache", "manifest hash did not match or cached response is empty", revision, appSrc, clusterInfo, namespace, trackingMethod, appLabelKey, appName)
+
+		err = c.DeleteManifests(revision, appSrc, clusterInfo, namespace, trackingMethod, appLabelKey, appName)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 		if err != nil {
 			return fmt.Errorf("Unable to delete manifest after hash mismatch, %v", err)
 		}
@@ -357,7 +387,11 @@ func (c *Cache) GetManifests(revision string, appSrc *appv1.ApplicationSource, s
 	return nil
 }
 
+<<<<<<< HEAD
 func (c *Cache) SetManifests(revision string, appSrc *appv1.ApplicationSource, srcRefs appv1.RefTargetRevisionMapping, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, res *CachedManifestResponse, refSourceCommitSHAs ResolvedRevisions) error {
+=======
+func (c *Cache) SetManifests(revision string, appSrc *appv1.ApplicationSource, clusterInfo ClusterRuntimeInfo, namespace string, trackingMethod string, appLabelKey string, appName string, res *CachedManifestResponse) error {
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	// Generate and apply the cache entry hash, before writing
 	if res != nil {
 		res = res.shallowCopy()
@@ -368,6 +402,7 @@ func (c *Cache) SetManifests(revision string, appSrc *appv1.ApplicationSource, s
 		res.CacheEntryHash = hash
 	}
 
+<<<<<<< HEAD
 	return c.cache.SetItem(
 		manifestCacheKey(revision, appSrc, srcRefs, namespace, trackingMethod, appLabelKey, appName, clusterInfo, refSourceCommitSHAs),
 		res,
@@ -401,6 +436,28 @@ func (c *Cache) SetAppDetails(revision string, appSrc *appv1.ApplicationSource, 
 		&cacheutil.CacheActionOpts{
 			Expiration: c.repoCacheExpiration,
 			Delete:     res == nil})
+=======
+	return c.cache.SetItem(manifestCacheKey(revision, appSrc, namespace, trackingMethod, appLabelKey, appName, clusterInfo), res, c.repoCacheExpiration, res == nil)
+}
+
+func (c *Cache) DeleteManifests(revision string, appSrc *appv1.ApplicationSource, clusterInfo ClusterRuntimeInfo, namespace, trackingMethod, appLabelKey, appName string) error {
+	return c.cache.SetItem(manifestCacheKey(revision, appSrc, namespace, trackingMethod, appLabelKey, appName, clusterInfo), "", c.repoCacheExpiration, true)
+}
+
+func appDetailsCacheKey(revision string, appSrc *appv1.ApplicationSource, trackingMethod appv1.TrackingMethod) string {
+	if trackingMethod == "" {
+		trackingMethod = argo.TrackingMethodLabel
+	}
+	return fmt.Sprintf("appdetails|%s|%d|%s", revision, appSourceKey(appSrc), trackingMethod)
+}
+
+func (c *Cache) GetAppDetails(revision string, appSrc *appv1.ApplicationSource, res *apiclient.RepoAppDetailsResponse, trackingMethod appv1.TrackingMethod) error {
+	return c.cache.GetItem(appDetailsCacheKey(revision, appSrc, trackingMethod), res)
+}
+
+func (c *Cache) SetAppDetails(revision string, appSrc *appv1.ApplicationSource, res *apiclient.RepoAppDetailsResponse, trackingMethod appv1.TrackingMethod) error {
+	return c.cache.SetItem(appDetailsCacheKey(revision, appSrc, trackingMethod), res, c.repoCacheExpiration, res == nil)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func revisionMetadataKey(repoURL, revision string) string {

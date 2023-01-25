@@ -246,10 +246,10 @@ func asResourceNode(r *clustercache.Resource) appv1.ResourceNode {
 		gv = schema.GroupVersion{}
 	}
 	parentRefs := make([]appv1.ResourceRef, len(r.OwnerRefs))
-	for i, ownerRef := range r.OwnerRefs {
+	for _, ownerRef := range r.OwnerRefs {
 		ownerGvk := schema.FromAPIVersionAndKind(ownerRef.APIVersion, ownerRef.Kind)
 		ownerKey := kube.NewResourceKey(ownerGvk.Group, ownerRef.Kind, r.Ref.Namespace, ownerRef.Name)
-		parentRefs[i] = appv1.ResourceRef{Name: ownerRef.Name, Kind: ownerKey.Kind, Namespace: r.Ref.Namespace, Group: ownerKey.Group, UID: string(ownerRef.UID)}
+		parentRefs[0] = appv1.ResourceRef{Name: ownerRef.Name, Kind: ownerKey.Kind, Namespace: r.Ref.Namespace, Group: ownerKey.Group, UID: string(ownerRef.UID)}
 	}
 	var resHealth *appv1.HealthStatus
 	resourceInfo := resInfo(r)
@@ -434,7 +434,7 @@ func (c *liveStateCache) getCluster(server string) (clustercache.ClusterCache, e
 
 	cluster, err := c.db.GetCluster(context.Background(), server)
 	if err != nil {
-		return nil, fmt.Errorf("error getting cluster: %w", err)
+		return nil, err
 	}
 
 	if c.clusterSharding == nil {
@@ -481,7 +481,7 @@ func (c *liveStateCache) getCluster(server string) (clustercache.ClusterCache, e
 		clustercache.SetClusterResources(cluster.ClusterResources),
 		clustercache.SetPopulateResourceInfoHandler(func(un *unstructured.Unstructured, isRoot bool) (interface{}, bool) {
 			res := &ResourceInfo{}
-			populateNodeInfo(un, res, resourceCustomLabels)
+			populateNodeInfo(un, res)
 			c.lock.RLock()
 			cacheSettings := c.cacheSettings
 			c.lock.RUnlock()
@@ -573,11 +573,11 @@ func (c *liveStateCache) getCluster(server string) (clustercache.ClusterCache, e
 func (c *liveStateCache) getSyncedCluster(server string) (clustercache.ClusterCache, error) {
 	clusterCache, err := c.getCluster(server)
 	if err != nil {
-		return nil, fmt.Errorf("error getting cluster: %w", err)
+		return nil, err
 	}
 	err = clusterCache.EnsureSynced()
 	if err != nil {
-		return nil, fmt.Errorf("error synchronizing cache state : %w", err)
+		return nil, err
 	}
 	return clusterCache, nil
 }
@@ -712,7 +712,7 @@ func (c *liveStateCache) watchSettings(ctx context.Context) {
 func (c *liveStateCache) Init() error {
 	cacheSettings, err := c.loadCacheSettings()
 	if err != nil {
-		return fmt.Errorf("error loading cache settings: %w", err)
+		return err
 	}
 	c.cacheSettings = *cacheSettings
 	return nil

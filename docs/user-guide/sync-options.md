@@ -38,8 +38,8 @@ metadata:
     argocd.argoproj.io/sync-options: Validate=false
 ```
 
-If you want to exclude a whole class of objects globally, consider setting `resource.customizations` in [system level configuration](../user-guide/diffing.md#system-level-configuration).
-
+If you want to exclude a whole class of objects globally, consider setting `resource.customizations` in [system level configuration](../user-guide/diffing.md#system-level-configuration). 
+    
 ## Skip Dry Run for new custom resources types
 
 When syncing a custom resource which is not yet known to the cluster, there are generally two options:
@@ -72,9 +72,9 @@ metadata:
 
 ## Selective Sync
 
-Currently when syncing using auto sync Argo CD applies every object in the application.
+Currently when syncing using auto sync Argo CD applies every object in the application. 
 For applications containing thousands of objects this takes quite a long time and puts undue pressure on the api server.
-Turning on selective sync option which will sync only out-of-sync resources.
+Turning on selective sync option which will sync only out-of-sync resources. 
 
 You can add this option by following ways
 
@@ -89,7 +89,7 @@ spec:
   syncPolicy:
     syncOptions:
     - ApplyOutOfSyncOnly=true
-```
+``` 
 
 2) Set sync option via argocd cli
 
@@ -116,8 +116,8 @@ spec:
 
 ## Prune Last
 
-This feature is to allow the ability for resource pruning to happen as a final, implicit wave of a sync operation,
-after the other resources have been deployed and become healthy, and after all other waves completed successfully.
+This feature is to allow the ability for resource pruning to happen as a final, implicit wave of a sync operation, 
+after the other resources have been deployed and become healthy, and after all other waves completed successfully. 
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -153,10 +153,6 @@ spec:
 ```
 
 If the `Replace=true` sync option is set the Argo CD will use `kubectl replace` or `kubectl create` command to apply changes.
-
-!!! warning
-      During the sync process, the resources will be synchronized using the 'kubectl replace/create' command.
-      This sync option has the potential to be destructive and might lead to resources having to be recreated, which could cause an outage for your application.
 
 This can also be configured at individual resource level.
 ```yaml
@@ -278,43 +274,13 @@ The example above shows how an Argo CD Application can be configured so it will 
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  namespace: argocd
-spec:
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: some-namespace
-  syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
-```
-
-The example above shows how an Argo CD Application can be configured so it will create the namespace specified in `spec.destination.namespace` if it doesn't exist already. Without this either declared in the Application manifest or passed in the CLI via `--sync-option CreateNamespace=true`, the Application will fail to sync if the namespace doesn't exist.
-
-Note that the namespace to be created must be informed in the `spec.destination.namespace` field of the Application resource. The `metadata.namespace` field in the Application's child manifests must match this value, or can be omitted, so resources are created in the proper destination.
-
-### Namespace Metadata
-
-We can also add labels and annotations to the namespace through `managedNamespaceMetadata`. If we extend the example above
-we could potentially do something like below:
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   namespace: test
 spec:
   syncPolicy:
-    managedNamespaceMetadata:
-      labels: # The labels to set on the application namespace
-        any: label
-        you: like
-      annotations: # The annotations to set on the application namespace
-        the: same
-        applies: for
-        annotations: on-the-namespace
     syncOptions:
     - CreateNamespace=true
 ```
+<<<<<<< HEAD
 
 In order for Argo CD to manage the labels and annotations on the namespace, `CreateNamespace=true` needs to be set as a
 sync option, otherwise nothing will happen. If the namespace doesn't already exist, or if it already exists and doesn't
@@ -380,3 +346,6 @@ The resulting namespace will have its annotations set to
     foo: bar
     something: completely-different
 ```
+=======
+The example above shows how an Argo CD Application can be configured so it will create namespaces for the Application resources if the namespaces don't exist already. Without this either declared in the Application manifest or passed in the cli via `--sync-option CreateNamespace=true`, the Application will fail to sync if the resources' namespaces do not exist.
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

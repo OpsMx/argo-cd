@@ -50,13 +50,12 @@ func NewRepoCredsCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command 
 // NewRepoCredsAddCommand returns a new instance of an `argocd repocreds add` command
 func NewRepoCredsAddCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 	var (
-		repo                     appsv1.RepoCreds
-		upsert                   bool
-		sshPrivateKeyPath        string
-		tlsClientCertPath        string
-		tlsClientCertKeyPath     string
-		githubAppPrivateKeyPath  string
-		gcpServiceAccountKeyPath string
+		repo                    appsv1.RepoCreds
+		upsert                  bool
+		sshPrivateKeyPath       string
+		tlsClientCertPath       string
+		tlsClientCertKeyPath    string
+		githubAppPrivateKeyPath string
 	)
 
 	// For better readability and easier formatting
@@ -74,9 +73,6 @@ func NewRepoCredsAddCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comma
 
   # Add credentials with helm oci registry so that these oci registry urls do not need to be added as repos individually.
   argocd repocreds add localhost:5000/myrepo --enable-oci --type helm 
-
-  # Add credentials with GCP credentials for all repositories under https://source.developers.google.com/p/my-google-cloud-project/r/
-  argocd repocreds add https://source.developers.google.com/p/my-google-cloud-project/r/ --gcp-service-account-key-path service-account-key.json
 `
 
 	var command = &cobra.Command{
@@ -138,18 +134,6 @@ func NewRepoCredsAddCommand(clientOpts *argocdclient.ClientOptions) *cobra.Comma
 					repo.GithubAppPrivateKey = string(githubAppPrivateKey)
 				} else {
 					err := fmt.Errorf("--github-app-private-key-path is only supported for HTTPS repositories")
-					errors.CheckError(err)
-				}
-			}
-
-			// Specifying gcpServiceAccountKeyPath is only valid for HTTPS repositories
-			if gcpServiceAccountKeyPath != "" {
-				if git.IsHTTPSURL(repo.URL) {
-					gcpServiceAccountKey, err := os.ReadFile(gcpServiceAccountKeyPath)
-					errors.CheckError(err)
-					repo.GCPServiceAccountKey = string(gcpServiceAccountKey)
-				} else {
-					err := fmt.Errorf("--gcp-service-account-key-path is only supported for HTTPS repositories")
 					errors.CheckError(err)
 				}
 			}

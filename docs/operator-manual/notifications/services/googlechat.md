@@ -51,7 +51,7 @@ You can send [simple text](https://developers.google.com/chat/reference/message-
 
 ```yaml
 template.app-sync-succeeded: |
-  message: The app {{ .app.metadata.name }} has successfully synced!
+  message: The app {{ .app.metadata.name }} has succesfully synced!
 ```
 
 A card message can be defined as follows:

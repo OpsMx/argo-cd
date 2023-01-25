@@ -329,7 +329,7 @@ func TestUseJWTToken(t *testing.T) {
 			Name: appName,
 		},
 		Spec: v1alpha1.ApplicationSpec{
-			Source: &v1alpha1.ApplicationSource{
+			Source: v1alpha1.ApplicationSource{
 				RepoURL: fixture.RepoURL(fixture.RepoURLTypeFile),
 				Path:    "guestbook",
 			},
@@ -377,9 +377,9 @@ func TestUseJWTToken(t *testing.T) {
 
 	roleGetResult, err = fixture.RunCli("proj", "role", "get", projectName, roleName)
 	assert.NoError(t, err)
-	assert.True(t, strings.Contains(roleGetResult, strconv.FormatInt(newProj.Status.JWTTokensByRole[roleName].Items[0].IssuedAt, 10)))
+	assert.True(t, strings.Contains(roleGetResult, strconv.FormatInt((newProj.Status.JWTTokensByRole[roleName].Items[0].IssuedAt), 10)))
 
-	_, err = fixture.RunCli("proj", "role", "delete-token", projectName, roleName, strconv.FormatInt(newProj.Status.JWTTokensByRole[roleName].Items[0].IssuedAt, 10))
+	_, err = fixture.RunCli("proj", "role", "delete-token", projectName, roleName, strconv.FormatInt((newProj.Status.JWTTokensByRole[roleName].Items[0].IssuedAt), 10))
 	assert.NoError(t, err)
 	newProj, err = fixture.AppClientset.ArgoprojV1alpha1().AppProjects(fixture.TestNamespace()).Get(context.Background(), projectName, metav1.GetOptions{})
 	assert.NoError(t, err)
@@ -564,11 +564,15 @@ func TestGetVirtualProjectNoMatch(t *testing.T) {
 		"--path", guestbookPath, "--project", proj.Name, "--dest-server", v1alpha1.KubernetesInternalAPIServerAddr, "--dest-namespace", fixture.DeploymentNamespace())
 	assert.NoError(t, err)
 
+<<<<<<< HEAD
 	// Waiting for the app to be successfully created.
 	// Else the sync would fail to retrieve the app resources.
 	time.Sleep(time.Second * 2)
 
 	// App trying to sync a resource which is not blacked listed anywhere
+=======
+	//App trying to sync a resource which is not blacked listed anywhere
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	_, err = fixture.RunCli("app", "sync", fixture.Name(), "--resource", "apps:Deployment:guestbook-ui", "--timeout", fmt.Sprintf("%v", 10))
 	assert.NoError(t, err)
 
@@ -605,11 +609,15 @@ func TestGetVirtualProjectMatch(t *testing.T) {
 		"--path", guestbookPath, "--project", proj.Name, "--dest-server", v1alpha1.KubernetesInternalAPIServerAddr, "--dest-namespace", fixture.DeploymentNamespace())
 	assert.NoError(t, err)
 
+<<<<<<< HEAD
 	// Waiting for the app to be successfully created.
 	// Else the sync would fail to retrieve the app resources.
 	time.Sleep(time.Second * 2)
 
 	// App trying to sync a resource which is not blacked listed anywhere
+=======
+	//App trying to sync a resource which is not blacked listed anywhere
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	_, err = fixture.RunCli("app", "sync", fixture.Name(), "--resource", "apps:Deployment:guestbook-ui", "--timeout", fmt.Sprintf("%v", 10))
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "blocked by sync window")

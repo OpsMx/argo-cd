@@ -34,6 +34,7 @@ The Slack notification service configuration includes following settings:
 1. Invite your slack bot to this channel **otherwise slack bot won't be able to deliver notifications to this channel**
 1. Store Oauth access token in `argocd-notifications-secret` secret
 
+<<<<<<< HEAD
     ```yaml
       apiVersion: v1
       kind: Secret
@@ -54,9 +55,28 @@ The Slack notification service configuration includes following settings:
         service.slack: |
           token: $slack-token
     ```
+=======
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: <secret-name>
+        stringData:
+          slack-token: <Oauth-access-token>
+
+1. Define service type slack in data section of `argocd-notifications-cm` configmap:
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: <config-map-name>
+        data:
+          service.slack: |
+            token: $slack-token
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 1. Add annotation in application yaml file to enable notifications for specific argocd app.  The following example uses the [on-sync-succeeded trigger](../catalog.md#triggers):
 
+<<<<<<< HEAD
     ```yaml
       apiVersion: argoproj.io/v1alpha1
       kind: Application
@@ -64,9 +84,17 @@ The Slack notification service configuration includes following settings:
         annotations:
           notifications.argoproj.io/subscribe.on-sync-succeeded.slack: my_channel
     ```
+=======
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          annotations:
+            notifications.argoproj.io/subscribe.on-sync-succeeded.slack: my_channel
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 1. Annotation with more than one [trigger](../catalog.md#triggers), with multiple destinations and recipients
 
+<<<<<<< HEAD
     ```yaml
       apiVersion: argoproj.io/v1alpha1
       kind: Application
@@ -84,6 +112,23 @@ The Slack notification service configuration includes following settings:
                 - service: slack
                   recipients: [my-channel-21, my-channel-22]
     ```
+=======
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          annotations:
+            notifications.argoproj.io/subscriptions: |
+              - trigger: [on-scaling-replica-set, on-rollout-updated, on-rollout-step-completed]
+                destinations:
+                  - service: slack
+                    recipients: [my-channel-1, my-channel-2]
+                  - service: email
+                    recipients: [recipient-1, recipient-2, recipient-3 ]
+              - trigger: [on-rollout-aborted, on-analysis-run-failed, on-analysis-run-error]
+                destinations:
+                  - service: slack
+                    recipients: [my-channel-21, my-channel-22]
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 ## Templates
 

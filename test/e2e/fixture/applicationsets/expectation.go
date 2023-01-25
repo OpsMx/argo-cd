@@ -190,11 +190,19 @@ func filterFields(input v1alpha1.Application) v1alpha1.Application {
 			Namespace:   metaCopy.Namespace,
 			Finalizers:  metaCopy.Finalizers,
 		},
+<<<<<<< HEAD
 		Spec: v1alpha1.ApplicationSpec{
 			Source: &v1alpha1.ApplicationSource{
 				Path:           spec.GetSource().Path,
 				RepoURL:        spec.GetSource().RepoURL,
 				TargetRevision: spec.GetSource().TargetRevision,
+=======
+		Spec: argov1alpha1.ApplicationSpec{
+			Source: argov1alpha1.ApplicationSource{
+				Path:           spec.Source.Path,
+				RepoURL:        spec.Source.RepoURL,
+				TargetRevision: spec.Source.TargetRevision,
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 			},
 			Destination: v1alpha1.ApplicationDestination{
 				Server:    spec.Destination.Server,

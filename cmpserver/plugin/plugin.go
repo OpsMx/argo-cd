@@ -3,7 +3,6 @@ package plugin
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -16,9 +15,7 @@ import (
 
 	"github.com/argoproj/pkg/rand"
 
-	"github.com/argoproj/argo-cd/v2/cmpserver/apiclient"
 	"github.com/argoproj/argo-cd/v2/common"
-	repoclient "github.com/argoproj/argo-cd/v2/reposerver/apiclient"
 	"github.com/argoproj/argo-cd/v2/util/buffered_context"
 	"github.com/argoproj/argo-cd/v2/util/cmp"
 	"github.com/argoproj/argo-cd/v2/util/io/files"
@@ -27,6 +24,8 @@ import (
 	"github.com/cyphar/filepath-securejoin"
 	"github.com/mattn/go-zglob"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/argoproj/argo-cd/v2/cmpserver/apiclient"
 )
 
 // cmpTimeoutBuffer is the amount of time before the request deadline to timeout server-side work. It makes sure there's
@@ -49,14 +48,15 @@ func NewService(initConstants CMPServerInitConstants) *Service {
 	}
 }
 
-func (s *Service) Init(workDir string) error {
+func (s *Service) Init() error {
+	workDir := common.GetCMPWorkDir()
 	err := os.RemoveAll(workDir)
 	if err != nil {
-		return fmt.Errorf("error removing workdir %q: %w", workDir, err)
+		return fmt.Errorf("error removing workdir %q: %s", workDir, err)
 	}
 	err = os.MkdirAll(workDir, 0700)
 	if err != nil {
-		return fmt.Errorf("error creating workdir %q: %w", workDir, err)
+		return fmt.Errorf("error creating workdir %q: %s", workDir, err)
 	}
 	return nil
 }
@@ -215,21 +215,22 @@ type GenerateManifestStream interface {
 
 // GenerateManifest runs generate command from plugin config file and returns generated manifest files
 func (s *Service) GenerateManifest(stream apiclient.ConfigManagementPluginService_GenerateManifestServer) error {
-	return s.generateManifestGeneric(stream)
-}
-
-func (s *Service) generateManifestGeneric(stream GenerateManifestStream) error {
 	ctx, cancel := buffered_context.WithEarlierDeadline(stream.Context(), cmpTimeoutBuffer)
 	defer cancel()
-	workDir, cleanup, err := getTempDirMustCleanup(common.GetCMPWorkDir())
+	workDir, err := files.CreateTempDir(common.GetCMPWorkDir())
 	if err != nil {
-		return fmt.Errorf("error creating workdir for manifest generation: %w", err)
+		return fmt.Errorf("error creating temp dir: %s", err)
 	}
-	defer cleanup()
+	defer func() {
+		if err := os.RemoveAll(workDir); err != nil {
+			// we panic here as the workDir may contain sensitive information
+			panic(fmt.Sprintf("error removing generate manifest workdir: %s", err))
+		}
+	}()
 
 	metadata, err := cmp.ReceiveRepoStream(ctx, stream, workDir, s.initConstants.PluginConfig.Spec.PreserveFileMode)
 	if err != nil {
-		return fmt.Errorf("generate manifest error receiving stream: %w", err)
+		return fmt.Errorf("generate manifest error receiving stream: %s", err)
 	}
 
 	appPath := filepath.Clean(filepath.Join(workDir, metadata.AppRelPath))
@@ -238,11 +239,11 @@ func (s *Service) generateManifestGeneric(stream GenerateManifestStream) error {
 	}
 	response, err := s.generateManifest(ctx, appPath, metadata.GetEnv())
 	if err != nil {
-		return fmt.Errorf("error generating manifests: %w", err)
+		return fmt.Errorf("error generating manifests: %s", err)
 	}
 	err = stream.SendAndClose(response)
 	if err != nil {
-		return fmt.Errorf("error sending manifest response: %w", err)
+		return fmt.Errorf("error sending manifest response: %s", err)
 	}
 	return nil
 }
@@ -285,46 +286,42 @@ func (s *Service) generateManifest(ctx context.Context, appDir string, envEntrie
 	}, err
 }
 
-type MatchRepositoryStream interface {
-	Stream
-	SendAndClose(response *apiclient.RepositoryResponse) error
-}
-
 // MatchRepository receives the application stream and checks whether
 // its repository type is supported by the config management plugin
 // server.
-// The checks are implemented in the following order:
-//  1. If spec.Discover.FileName is provided it finds for a name match in Applications files
-//  2. If spec.Discover.Find.Glob is provided if finds for a glob match in Applications files
-//  3. Otherwise it runs the spec.Discover.Find.Command
+//The checks are implemented in the following order:
+//   1. If spec.Discover.FileName is provided it finds for a name match in Applications files
+//   2. If spec.Discover.Find.Glob is provided if finds for a glob match in Applications files
+//   3. Otherwise it runs the spec.Discover.Find.Command
 func (s *Service) MatchRepository(stream apiclient.ConfigManagementPluginService_MatchRepositoryServer) error {
-	return s.matchRepositoryGeneric(stream)
-}
-
-func (s *Service) matchRepositoryGeneric(stream MatchRepositoryStream) error {
 	bufferedCtx, cancel := buffered_context.WithEarlierDeadline(stream.Context(), cmpTimeoutBuffer)
 	defer cancel()
 
-	workDir, cleanup, err := getTempDirMustCleanup(common.GetCMPWorkDir())
+	workDir, err := files.CreateTempDir(common.GetCMPWorkDir())
 	if err != nil {
-		return fmt.Errorf("error creating workdir for repository matching: %w", err)
+		return fmt.Errorf("error creating match repository workdir: %s", err)
 	}
-	defer cleanup()
+	defer func() {
+		if err := os.RemoveAll(workDir); err != nil {
+			// we panic here as the workDir may contain sensitive information
+			panic(fmt.Sprintf("error removing match repository workdir: %s", err))
+		}
+	}()
 
 	metadata, err := cmp.ReceiveRepoStream(bufferedCtx, stream, workDir, s.initConstants.PluginConfig.Spec.PreserveFileMode)
 	if err != nil {
-		return fmt.Errorf("match repository error receiving stream: %w", err)
+		return fmt.Errorf("match repository error receiving stream: %s", err)
 	}
 
 	isSupported, isDiscoveryEnabled, err := s.matchRepository(bufferedCtx, workDir, metadata.GetEnv(), metadata.GetAppRelPath())
 	if err != nil {
-		return fmt.Errorf("match repository error: %w", err)
+		return fmt.Errorf("match repository error: %s", err)
 	}
 	repoResponse := &apiclient.RepositoryResponse{IsSupported: isSupported, IsDiscoveryEnabled: isDiscoveryEnabled}
 
 	err = stream.SendAndClose(repoResponse)
 	if err != nil {
-		return fmt.Errorf("error sending match repository response: %w", err)
+		return fmt.Errorf("error sending match repository response: %s", err)
 	}
 	return nil
 }
@@ -345,7 +342,7 @@ func (s *Service) matchRepository(ctx context.Context, workdir string, envEntrie
 		pattern := filepath.Join(appPath, config.Spec.Discover.FileName)
 		matches, err := filepath.Glob(pattern)
 		if err != nil {
-			e := fmt.Errorf("error finding filename match for pattern %q: %w", pattern, err)
+			e := fmt.Errorf("error finding filename match for pattern %q: %s", pattern, err)
 			log.Debug(e)
 			return false, true, e
 		}
@@ -359,7 +356,7 @@ func (s *Service) matchRepository(ctx context.Context, workdir string, envEntrie
 		// https://github.com/golang/go/issues/11862
 		matches, err := zglob.Glob(pattern)
 		if err != nil {
-			e := fmt.Errorf("error finding glob match for pattern %q: %w", pattern, err)
+			e := fmt.Errorf("error finding glob match for pattern %q: %s", pattern, err)
 			log.Debug(e)
 			return false, true, e
 		}

@@ -2,17 +2,18 @@ package helm
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"math"
 	"net/url"
 	"os"
-	"strings"
 	"testing"
 
+<<<<<<< HEAD
 	"net/http"
 	"net/http/httptest"
 
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v2"
@@ -164,6 +165,7 @@ func TestGetIndexURL(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
+<<<<<<< HEAD
 
 func TestGetTagsFromUrl(t *testing.T) {
 	t.Run("should return tags correctly while following the link header", func(t *testing.T) {
@@ -292,3 +294,5 @@ func TestGetTagsFromURLPrivateRepoAuthentication(t *testing.T) {
 		})
 	}
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

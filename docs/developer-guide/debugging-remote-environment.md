@@ -57,6 +57,7 @@ telepresence --swap-deployment argocd-server --namespace argocd --env-file .envr
 * `--env-file` writes all the environment variables of the remote pod into a local file, the variables are also set on the subprocess of the `--run` command
 * `--run` defines which command to run once a connection is established, use `bash`, `zsh` or others
 
+
 ## Debug
 Once a connection is established, use your favorite tools to start the server locally.
 
@@ -65,23 +66,21 @@ Once a connection is established, use your favorite tools to start the server lo
 * Run `./dist/argocd-server`
 
 ### VSCode
-In VSCode use the following launch configuration to run argocd-server:
-
+In VSCode use the integrated terminal to run the Telepresence command to connect. Then, to run argocd-server service use the following configuration.
+Update the configuration file to point to kubeconfig file: `KUBECONFIG=` (required)
 ```json
         {
-            "name": "Launch argocd-server",
+            "name": "Launch",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/cmd/main.go",
+            "program": "${workspaceFolder}/cmd/argocd-server",
             "envFile": [
                 "${workspaceFolder}/.envrc.remote",
             ],
             "env": {
-                "ARGOCD_BINARY_NAME": "argocd-server",
                 "CGO_ENABLED": "0",
                 "KUBECONFIG": "/path/to/kube/config"
             }
         }
 ```
-

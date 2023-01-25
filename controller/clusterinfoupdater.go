@@ -116,7 +116,7 @@ func (c *clusterInfoUpdater) updateClusters() {
 func (c *clusterInfoUpdater) updateClusterInfo(ctx context.Context, cluster appv1.Cluster, info *cache.ClusterInfo) error {
 	apps, err := c.appLister.List(labels.Everything())
 	if err != nil {
-		return fmt.Errorf("error while fetching the apps list: %w", err)
+		return err
 	}
 
 	updated := c.getUpdatedClusterInfo(ctx, apps, cluster, info, metav1.Now())
@@ -145,7 +145,7 @@ func (c *clusterInfoUpdater) getUpdatedClusterInfo(ctx context.Context, apps []*
 	}
 	if info != nil {
 		clusterInfo.ServerVersion = info.K8SVersion
-		clusterInfo.APIVersions = argo.APIResourcesToStrings(info.APIResources, true)
+		clusterInfo.APIVersions = argo.APIResourcesToStrings(info.APIResources, false)
 		if info.LastCacheSyncTime == nil {
 			clusterInfo.ConnectionState.Status = appv1.ConnectionStatusUnknown
 		} else if info.SyncError == nil {

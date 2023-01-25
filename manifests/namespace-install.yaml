@@ -649,6 +649,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+<<<<<<< HEAD
         - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_LEADER_ELECTION
           valueFrom:
             configMapKeyRef:
@@ -764,6 +765,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: argocd-applicationset-controller
         ports:
@@ -886,7 +890,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /shared/argocd-dex
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         imagePullPolicy: Always
         name: copyutil
         securityContext:
@@ -941,6 +945,7 @@ spec:
         app.kubernetes.io/name: argocd-notifications-controller
     spec:
       containers:
+<<<<<<< HEAD
       - args:
         - /usr/local/bin/argocd-notifications
         env:
@@ -969,6 +974,11 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+      - command:
+        - argocd-notifications
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         livenessProbe:
           tcpSocket:
@@ -1045,7 +1055,11 @@ spec:
         - ""
         - --appendonly
         - "no"
+<<<<<<< HEAD
         image: redis:7.0.14-alpine
+=======
+        image: redis:7.0.5-alpine
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: redis
         ports:
@@ -1238,6 +1252,7 @@ spec:
               key: reposerver.streamed.manifest.max.extracted.size
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_REPO_SERVER_HELM_MANIFEST_MAX_EXTRACTED_SIZE
           valueFrom:
             configMapKeyRef:
@@ -1274,13 +1289,15 @@ spec:
               key: reposerver.git.request.timeout
               name: argocd-cmd-params-cm
               optional: true
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         - name: HELM_CACHE_HOME
           value: /helm-working-dir
         - name: HELM_CONFIG_HOME
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -1288,8 +1305,7 @@ spec:
             path: /healthz?full=true
             port: 8084
           initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
+          periodSeconds: 5
         name: argocd-repo-server
         ports:
         - containerPort: 8081
@@ -1332,7 +1348,7 @@ spec:
         - -n
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
-        image: quay.io/argoproj/argocd:latest
+        image: quay.io/argoproj/argocd:v2.5.4
         name: copyutil
         securityContext:
           allowPrivilegeEscalation: false
@@ -1625,6 +1641,7 @@ spec:
               key: application.namespaces
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_SERVER_ENABLE_PROXY_EXTENSION
           valueFrom:
             configMapKeyRef:
@@ -1650,6 +1667,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -1657,7 +1677,6 @@ spec:
             port: 8080
           initialDelaySeconds: 3
           periodSeconds: 30
-          timeoutSeconds: 5
         name: argocd-server
         ports:
         - containerPort: 8080
@@ -1907,6 +1926,7 @@ spec:
               key: application.namespaces
               name: argocd-cmd-params-cm
               optional: true
+<<<<<<< HEAD
         - name: ARGOCD_CONTROLLER_SHARDING_ALGORITHM
           valueFrom:
             configMapKeyRef:
@@ -1938,6 +1958,9 @@ spec:
               name: argocd-cmd-params-cm
               optional: true
         image: quay.io/argoproj/argocd:latest
+=======
+        image: quay.io/argoproj/argocd:v2.5.4
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         imagePullPolicy: Always
         name: argocd-application-controller
         ports:

@@ -229,6 +229,7 @@ spec:
               optional: true
         - name: ARGOCD_APPLICATION_NAMESPACES
           valueFrom:
+<<<<<<< HEAD
             configMapKeyRef:
               name: argocd-cmd-params-cm
               key: application.namespaces
@@ -257,6 +258,12 @@ spec:
               name: argocd-cmd-params-cm
               key: server.api.content.types
               optional: true
+=======
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         volumeMounts:
         - name: ssh-known-hosts
           mountPath: /app/config/ssh
@@ -279,7 +286,6 @@ spec:
             port: 8080
           initialDelaySeconds: 3
           periodSeconds: 30
-          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /healthz

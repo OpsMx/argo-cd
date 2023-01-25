@@ -44,9 +44,6 @@ argocd repo add REPOURL [flags]
   # Add a private Git repository on GitHub Enterprise via GitHub App
   argocd repo add https://ghe.example.com/repos/repo --github-app-id 1 --github-app-installation-id 2 --github-app-private-key-path test.private-key.pem --github-app-enterprise-base-url https://ghe.example.com/api/v3
 
-  # Add a private Git repository on Google Cloud Sources via GCP service account credentials
-  argocd repo add https://source.developers.google.com/p/my-google-cloud-project/r/my-repo --gcp-service-account-key-path service-account-key.json
-
 ```
 
 ### Options
@@ -54,8 +51,11 @@ argocd repo add REPOURL [flags]
 ```
       --enable-lfs                              enable git-lfs (Large File Support) on this repository
       --enable-oci                              enable helm-oci (Helm OCI-Based Repository)
+<<<<<<< HEAD
       --force-http-basic-auth                   whether to force use of basic auth when connecting repository via HTTP
       --gcp-service-account-key-path string     service account key for the Google Cloud Platform
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
       --github-app-enterprise-base-url string   base url to use when using GitHub Enterprise (e.g. https://ghe.example.com/api/v3
       --github-app-id int                       id of the GitHub Application
       --github-app-installation-id int          installation id of the GitHub Application

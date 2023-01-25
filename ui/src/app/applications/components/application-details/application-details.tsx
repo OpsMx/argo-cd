@@ -1,4 +1,4 @@
-import {DropDownMenu, NotificationType, SlidingPanel, Tooltip} from 'argo-ui';
+import {DropDownMenu, NotificationType, SlidingPanel} from 'argo-ui';
 import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
@@ -16,7 +16,7 @@ import {AppDetailsPreferences, AppsDetailsViewKey, AppsDetailsViewType, services
 import {ApplicationConditions} from '../application-conditions/application-conditions';
 import {ApplicationDeploymentHistory} from '../application-deployment-history/application-deployment-history';
 import {ApplicationOperationState} from '../application-operation-state/application-operation-state';
-import {PodGroupType, PodView} from '../application-pod-view/pod-view';
+import {PodView} from '../application-pod-view/pod-view';
 import {ApplicationResourceTree, ResourceTreeNode} from '../application-resource-tree/application-resource-tree';
 import {ApplicationStatusPanel} from '../application-status-panel/application-status-panel';
 import {ApplicationSyncPanel} from '../application-sync-panel/application-sync-panel';
@@ -24,6 +24,7 @@ import {ResourceDetails} from '../resource-details/resource-details';
 import * as AppUtils from '../utils';
 import {ApplicationResourceList} from './application-resource-list';
 import {Filters, FiltersProps} from './application-resource-filter';
+<<<<<<< HEAD
 import {getAppDefaultSource, urlPattern, helpTip} from '../utils';
 import {ChartDetails, ResourceStatus} from '../../../shared/models';
 import {ApplicationsDetailsAppDropdown} from './application-details-app-dropdown';
@@ -31,6 +32,14 @@ import {useSidebarTarget} from '../../../sidebar/sidebar';
 
 import './application-details.scss';
 import {AppViewExtension, StatusPanelExtension} from '../../../shared/services/extensions-service';
+=======
+import {urlPattern} from '../utils';
+import {ResourceStatus} from '../../../shared/models';
+import {ApplicationsDetailsAppDropdown} from './application-details-app-dropdown';
+import {useSidebarTarget} from '../../../sidebar/sidebar';
+
+require('./application-details.scss');
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 interface ApplicationDetailsState {
     page: number;
@@ -40,10 +49,13 @@ interface ApplicationDetailsState {
     filteredGraph?: any[];
     truncateNameOnRight?: boolean;
     collapsedNodes?: string[];
+<<<<<<< HEAD
     extensions?: AppViewExtension[];
     extensionsMap?: {[key: string]: AppViewExtension};
     statusExtensions?: StatusPanelExtension[];
     statusExtensionsMap?: {[key: string]: StatusPanelExtension};
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 interface FilterInput {
@@ -84,6 +96,7 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
 
     constructor(props: RouteComponentProps<{appnamespace: string; name: string}>) {
         super(props);
+<<<<<<< HEAD
         const extensions = services.extensions.getAppViewExtensions();
         const extensionsMap: {[key: string]: AppViewExtension} = {};
         extensions.forEach(ext => {
@@ -106,6 +119,9 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
             statusExtensions,
             statusExtensionsMap
         };
+=======
+        this.state = {page: 0, groupedResources: [], slidingPanelPage: 0, filteredGraph: [], truncateNameOnRight: false, collapsedNodes: []};
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
         if (typeof this.props.match.params.appnamespace === 'undefined') {
             this.appNamespace = '';
         } else {
@@ -191,7 +207,6 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                         load={name =>
                             combineLatest([this.loadAppInfo(name, this.appNamespace), services.viewPreferences.getPreferences(), q]).pipe(
                                 map(items => {
-                                    const application = items[0].application;
                                     const pref = items[1].appDetails;
                                     const params = items[2];
                                     if (params.get('resource') != null) {
@@ -202,26 +217,9 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                     }
                                     if (params.get('view') != null) {
                                         pref.view = params.get('view') as AppsDetailsViewType;
-                                    } else {
-                                        const appDefaultView = (application.metadata &&
-                                            application.metadata.annotations &&
-                                            application.metadata.annotations[appModels.AnnotationDefaultView]) as AppsDetailsViewType;
-                                        if (appDefaultView != null) {
-                                            pref.view = appDefaultView;
-                                        }
                                     }
                                     if (params.get('orphaned') != null) {
                                         pref.orphanedResources = params.get('orphaned') === 'true';
-                                    }
-                                    if (params.get('podSortMode') != null) {
-                                        pref.podView.sortMode = params.get('podSortMode') as PodGroupType;
-                                    } else {
-                                        const appDefaultPodSort = (application.metadata &&
-                                            application.metadata.annotations &&
-                                            application.metadata.annotations[appModels.AnnotationDefaultPodSort]) as PodGroupType;
-                                        if (appDefaultPodSort != null) {
-                                            pref.podView.sortMode = appDefaultPodSort;
-                                        }
                                     }
                                     return {...items[0], pref};
                                 })
@@ -244,8 +242,12 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                             const conditions = application.status.conditions || [];
                             const syncResourceKey = new URLSearchParams(this.props.history.location.search).get('deploy');
                             const tab = new URLSearchParams(this.props.history.location.search).get('tab');
+<<<<<<< HEAD
                             const source = getAppDefaultSource(application);
                             const showToolTip = pref?.userHelpTipMsgs.find(usrMsg => usrMsg.appName === application.metadata.name);
+=======
+
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                             const resourceNodes = (): any[] => {
                                 const statusByKey = new Map<string, models.ResourceStatus>();
                                 application.status.resources.forEach(res => statusByKey.set(AppUtils.nodeKey(res), res));
@@ -416,22 +418,11 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                                                 services.viewPreferences.updatePreferences({appDetails: {...pref, view: List}});
                                                             }}
                                                         />
-                                                        {this.state.extensions &&
-                                                            (this.state.extensions || []).map(ext => (
-                                                                <i
-                                                                    key={ext.title}
-                                                                    className={classNames(`fa ${ext.icon}`, {selected: pref.view === ext.title})}
-                                                                    title={ext.title}
-                                                                    onClick={() => {
-                                                                        this.appContext.apis.navigation.goto('.', {view: ext.title});
-                                                                        services.viewPreferences.updatePreferences({appDetails: {...pref, view: ext.title}});
-                                                                    }}
-                                                                />
-                                                            ))}
                                                     </div>
                                                 </React.Fragment>
                                             )
                                         }}>
+<<<<<<< HEAD
                                         <div className='application-details__wrapper'>
                                             <div className='application-details__status-panel'>
                                                 <ApplicationStatusPanel
@@ -447,6 +438,110 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                                 {refreshing && <p className='application-details__refreshing-label'>Refreshing</p>}
                                                 {((pref.view === 'tree' || pref.view === 'network') && (
                                                     <>
+=======
+                                        <div className='application-details__status-panel'>
+                                            <ApplicationStatusPanel
+                                                application={application}
+                                                showOperation={() => this.setOperationStatusVisible(true)}
+                                                showConditions={() => this.setConditionsStatusVisible(true)}
+                                                showMetadataInfo={revision => this.setState({...this.state, revision})}
+                                            />
+                                        </div>
+                                        <div className='application-details__tree'>
+                                            {refreshing && <p className='application-details__refreshing-label'>Refreshing</p>}
+                                            {((pref.view === 'tree' || pref.view === 'network') && (
+                                                <>
+                                                    <DataLoader load={() => services.viewPreferences.getPreferences()}>
+                                                        {viewPref => (
+                                                            <ApplicationDetailsFilters
+                                                                pref={pref}
+                                                                tree={tree}
+                                                                onSetFilter={setFilter}
+                                                                onClearFilter={clearFilter}
+                                                                collapsed={viewPref.hideSidebar}
+                                                                resourceNodes={this.state.filteredGraph}
+                                                            />
+                                                        )}
+                                                    </DataLoader>
+                                                    <div className='graph-options-panel'>
+                                                        <a
+                                                            className={`group-nodes-button`}
+                                                            onClick={() => {
+                                                                toggleNameDirection();
+                                                            }}
+                                                            title={this.state.truncateNameOnRight ? 'Truncate resource name right' : 'Truncate resource name left'}>
+                                                            <i
+                                                                className={classNames({
+                                                                    'fa fa-align-right': this.state.truncateNameOnRight,
+                                                                    'fa fa-align-left': !this.state.truncateNameOnRight
+                                                                })}
+                                                            />
+                                                        </a>
+                                                        {(pref.view === 'tree' || pref.view === 'network') && (
+                                                            <a
+                                                                className={`group-nodes-button group-nodes-button${!pref.groupNodes ? '' : '-on'}`}
+                                                                title={pref.view === 'tree' ? 'Group Nodes' : 'Collapse Pods'}
+                                                                onClick={() => this.toggleCompactView(pref)}>
+                                                                <i className={classNames('fa fa-object-group fa-fw')} />
+                                                            </a>
+                                                        )}
+                                                        <span className={`separator`} />
+                                                        <a className={`group-nodes-button`} onClick={() => expandAll()} title='Expand all child nodes of all parent nodes'>
+                                                            <i className='fa fa-plus fa-fw' />
+                                                        </a>
+                                                        <a className={`group-nodes-button`} onClick={() => collapseAll()} title='Collapse all child nodes of all parent nodes'>
+                                                            <i className='fa fa-minus fa-fw' />
+                                                        </a>
+                                                        <span className={`separator`} />
+                                                        <a className={`group-nodes-button`} onClick={() => setZoom(0.1)} title='Zoom in'>
+                                                            <i className='fa fa-search-plus fa-fw' />
+                                                        </a>
+                                                        <a className={`group-nodes-button`} onClick={() => setZoom(-0.1)} title='Zoom out'>
+                                                            <i className='fa fa-search-minus fa-fw' />
+                                                        </a>
+                                                        <div className={`zoom-value`}>{zoomNum}%</div>
+                                                    </div>
+                                                    <ApplicationResourceTree
+                                                        nodeFilter={node => this.filterTreeNode(node, treeFilter)}
+                                                        selectedNodeFullName={this.selectedNodeKey}
+                                                        onNodeClick={fullName => this.selectNode(fullName)}
+                                                        nodeMenu={node =>
+                                                            AppUtils.renderResourceMenu(node, application, tree, this.appContext, this.appChanged, () =>
+                                                                this.getApplicationActionMenu(application, false)
+                                                            )
+                                                        }
+                                                        showCompactNodes={pref.groupNodes}
+                                                        tree={tree}
+                                                        app={application}
+                                                        showOrphanedResources={pref.orphanedResources}
+                                                        useNetworkingHierarchy={pref.view === 'network'}
+                                                        onClearFilter={clearFilter}
+                                                        onGroupdNodeClick={groupdedNodeIds => openGroupNodeDetails(groupdedNodeIds)}
+                                                        zoom={pref.zoom}
+                                                        appContext={this.appContext}
+                                                        nameDirection={this.state.truncateNameOnRight}
+                                                        filters={pref.resourceFilter}
+                                                        setTreeFilterGraph={setFilterGraph}
+                                                        setNodeExpansion={(node, isExpanded) => this.setNodeExpansion(node, isExpanded)}
+                                                        getNodeExpansion={node => this.getNodeExpansion(node)}
+                                                    />
+                                                </>
+                                            )) ||
+                                                (pref.view === 'pods' && (
+                                                    <PodView
+                                                        tree={tree}
+                                                        app={application}
+                                                        onItemClick={fullName => this.selectNode(fullName)}
+                                                        nodeMenu={node =>
+                                                            AppUtils.renderResourceMenu(node, application, tree, this.appContext, this.appChanged, () =>
+                                                                this.getApplicationActionMenu(application, false)
+                                                            )
+                                                        }
+                                                        quickStarts={node => AppUtils.renderResourceButtons(node, application, tree, this.appContext, this.appChanged)}
+                                                    />
+                                                )) || (
+                                                    <div>
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                                         <DataLoader load={() => services.viewPreferences.getPreferences()}>
                                                             {viewPref => (
                                                                 <ApplicationDetailsFilters
@@ -653,6 +748,7 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                             {conditions && <ApplicationConditions conditions={conditions} />}
                                         </SlidingPanel>
                                         <SlidingPanel isShown={!!this.state.revision} isMiddle={true} onClose={() => this.setState({revision: null})}>
+<<<<<<< HEAD
                                             {this.state.revision &&
                                                 (source.chart ? (
                                                     <DataLoader
@@ -742,6 +838,20 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                                                         <div className='columns small-9' style={{display: 'flex', alignItems: 'center'}}>
                                                                             <div className='application-details__commit-message'>{renderCommitMessage(metadata.message)}</div>
                                                                         </div>
+=======
+                                            {this.state.revision && (
+                                                <DataLoader
+                                                    load={() =>
+                                                        services.applications.revisionMetadata(application.metadata.name, application.metadata.namespace, this.state.revision)
+                                                    }>
+                                                    {metadata => (
+                                                        <div className='white-box' style={{marginTop: '1.5em'}}>
+                                                            <div className='white-box__details'>
+                                                                <div className='row white-box__details-row'>
+                                                                    <div className='columns small-3'>SHA:</div>
+                                                                    <div className='columns small-9'>
+                                                                        <Revision repoUrl={application.spec.source.repoURL} revision={this.state.revision} />
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -770,7 +880,6 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
         const refreshing = app.metadata.annotations && app.metadata.annotations[appModels.AnnotationRefreshKey];
         const fullName = AppUtils.nodeKey({group: 'argoproj.io', kind: app.kind, name: app.metadata.name, namespace: app.metadata.namespace});
         const ActionMenuItem = (prop: {actionLabel: string}) => <span className={needOverlapLabelOnNarrowScreen ? 'show-for-large' : ''}>{prop.actionLabel}</span>;
-        const hasMultipleSources = app.spec.sources && app.spec.sources.length > 0;
         return [
             {
                 iconClassName: 'fa fa-info-circle',
@@ -796,18 +905,9 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
             },
             {
                 iconClassName: 'fa fa-history',
-                title: hasMultipleSources ? (
-                    <React.Fragment>
-                        <ActionMenuItem actionLabel=' History and rollback' />
-                        {helpTip('Rollback is not supported for apps with multiple sources')}
-                    </React.Fragment>
-                ) : (
-                    <ActionMenuItem actionLabel='History and rollback' />
-                ),
-                action: () => {
-                    this.setRollbackPanelVisible(0);
-                },
-                disabled: !app.status.operationState || hasMultipleSources
+                title: <ActionMenuItem actionLabel='History and rollback' />,
+                action: () => this.setRollbackPanelVisible(0),
+                disabled: !app.status.operationState
             },
             {
                 iconClassName: 'fa fa-times-circle',
@@ -1034,8 +1134,3 @@ Are you sure you want to disable auto-sync and rollback application '${this.prop
         await AppUtils.deleteApplication(this.props.match.params.name, this.appNamespace, this.appContext.apis);
     }
 }
-
-const ExtensionView = (props: {extension: AppViewExtension; application: models.Application; tree: models.ApplicationTree}) => {
-    const {extension, application, tree} = props;
-    return <extension.component application={application} tree={tree} />;
-};

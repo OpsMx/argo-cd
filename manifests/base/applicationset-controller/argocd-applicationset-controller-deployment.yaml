@@ -27,6 +27,7 @@ spec:
             - containerPort: 8080
               name: metrics
           env:
+<<<<<<< HEAD
             - name: ARGOCD_APPLICATIONSET_CONTROLLER_GLOBAL_PRESERVED_ANNOTATIONS
               valueFrom:
                 configMapKeyRef:
@@ -39,10 +40,13 @@ spec:
                   key: applicationsetcontroller.global.preserved.labels
                   name: argocd-cmd-params-cm
                   optional: true
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+<<<<<<< HEAD
             - name: ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_LEADER_ELECTION
               valueFrom:
                 configMapKeyRef:
@@ -157,6 +161,8 @@ spec:
                   name: argocd-cmd-params-cm
                   key: applicationsetcontroller.enable.scm.providers
                   optional: true
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
           volumeMounts:
             - mountPath: /app/config/ssh
               name: ssh-known-hosts

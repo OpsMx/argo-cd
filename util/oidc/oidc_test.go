@@ -13,8 +13,12 @@ import (
 	"testing"
 	"time"
 
+<<<<<<< HEAD
 	gooidc "github.com/coreos/go-oidc/v3/oidc"
 	"github.com/golang-jwt/jwt/v4"
+=======
+	gooidc "github.com/coreos/go-oidc"
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/oauth2"

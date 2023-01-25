@@ -93,6 +93,7 @@ func TestCache_GetManifests(t *testing.T) {
 	// cache miss
 	q := &apiclient.ManifestRequest{}
 	value := &CachedManifestResponse{}
+<<<<<<< HEAD
 	err := cache.GetManifests("my-revision", &ApplicationSource{}, q.RefSources, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", value, nil)
 	assert.Equal(t, ErrCacheMiss, err)
 	// populate cache
@@ -129,6 +130,33 @@ func TestCache_GetManifests(t *testing.T) {
 		assert.Equal(t, &CachedManifestResponse{ManifestResponse: &apiclient.ManifestResponse{SourceType: "my-source-type"}}, value)
 	})
 	mockCache.AssertCacheCalledTimes(t, &mocks.CacheCallCounts{ExternalSets: 1, ExternalGets: 8})
+=======
+	err := cache.GetManifests("my-revision", &ApplicationSource{}, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// populate cache
+	res := &CachedManifestResponse{ManifestResponse: &apiclient.ManifestResponse{SourceType: "my-source-type"}}
+	err = cache.SetManifests("my-revision", &ApplicationSource{}, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", res)
+	assert.NoError(t, err)
+	// cache miss
+	err = cache.GetManifests("other-revision", &ApplicationSource{}, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache miss
+	err = cache.GetManifests("my-revision", &ApplicationSource{Path: "other-path"}, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache miss
+	err = cache.GetManifests("my-revision", &ApplicationSource{}, q, "other-namespace", "", "my-app-label-key", "my-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache miss
+	err = cache.GetManifests("my-revision", &ApplicationSource{}, q, "my-namespace", "", "other-app-label-key", "my-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache miss
+	err = cache.GetManifests("my-revision", &ApplicationSource{}, q, "my-namespace", "", "my-app-label-key", "other-app-label-value", value)
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache hit
+	err = cache.GetManifests("my-revision", &ApplicationSource{}, q, "my-namespace", "", "my-app-label-key", "my-app-label-value", value)
+	assert.NoError(t, err)
+	assert.Equal(t, &CachedManifestResponse{ManifestResponse: &apiclient.ManifestResponse{SourceType: "my-source-type"}}, value)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 }
 
 func TestCache_GetAppDetails(t *testing.T) {
@@ -138,6 +166,7 @@ func TestCache_GetAppDetails(t *testing.T) {
 	mockCache := fixtures.mockCache
 	// cache miss
 	value := &apiclient.RepoAppDetailsResponse{}
+<<<<<<< HEAD
 	emptyRefSources := map[string]*RefTarget{}
 	err := cache.GetAppDetails("my-revision", &ApplicationSource{}, emptyRefSources, value, "", nil)
 	assert.Equal(t, ErrCacheMiss, err)
@@ -152,6 +181,21 @@ func TestCache_GetAppDetails(t *testing.T) {
 	assert.Equal(t, ErrCacheMiss, err)
 	// cache hit
 	err = cache.GetAppDetails("my-revision", &ApplicationSource{}, emptyRefSources, value, "", nil)
+=======
+	err := cache.GetAppDetails("my-revision", &ApplicationSource{}, value, "")
+	assert.Equal(t, ErrCacheMiss, err)
+	res := &apiclient.RepoAppDetailsResponse{Type: "my-type"}
+	err = cache.SetAppDetails("my-revision", &ApplicationSource{}, res, "")
+	assert.NoError(t, err)
+	//cache miss
+	err = cache.GetAppDetails("other-revision", &ApplicationSource{}, value, "")
+	assert.Equal(t, ErrCacheMiss, err)
+	//cache miss
+	err = cache.GetAppDetails("my-revision", &ApplicationSource{Path: "other-path"}, value, "")
+	assert.Equal(t, ErrCacheMiss, err)
+	// cache hit
+	err = cache.GetAppDetails("my-revision", &ApplicationSource{}, value, "")
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	assert.NoError(t, err)
 	assert.Equal(t, &apiclient.RepoAppDetailsResponse{Type: "my-type"}, value)
 	mockCache.AssertCacheCalledTimes(t, &mocks.CacheCallCounts{ExternalSets: 1, ExternalGets: 4})
@@ -191,8 +235,12 @@ func TestCachedManifestResponse_HashBehavior(t *testing.T) {
 		NumberOfCachedResponsesReturned: 0,
 		NumberOfConsecutiveFailures:     0,
 	}
+<<<<<<< HEAD
 	q := &apiclient.ManifestRequest{}
 	err := repoCache.SetManifests(response.Revision, appSrc, q.RefSources, q, response.Namespace, "", appKey, appValue, store, nil)
+=======
+	err := repoCache.SetManifests(response.Revision, appSrc, &apiclient.ManifestRequest{}, response.Namespace, "", appKey, appValue, store)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -223,7 +271,11 @@ func TestCachedManifestResponse_HashBehavior(t *testing.T) {
 
 	// Retrieve the value using 'GetManifests' and confirm it works
 	retrievedVal := &CachedManifestResponse{}
+<<<<<<< HEAD
 	err = repoCache.GetManifests(response.Revision, appSrc, q.RefSources, q, response.Namespace, "", appKey, appValue, retrievedVal, nil)
+=======
+	err = repoCache.GetManifests(response.Revision, appSrc, &apiclient.ManifestRequest{}, response.Namespace, "", appKey, appValue, retrievedVal)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -246,7 +298,11 @@ func TestCachedManifestResponse_HashBehavior(t *testing.T) {
 
 	// Retrieve the value using GetManifests and confirm it returns a cache miss
 	retrievedVal = &CachedManifestResponse{}
+<<<<<<< HEAD
 	err = repoCache.GetManifests(response.Revision, appSrc, q.RefSources, q, response.Namespace, "", appKey, appValue, retrievedVal, nil)
+=======
+	err = repoCache.GetManifests(response.Revision, appSrc, &apiclient.ManifestRequest{}, response.Namespace, "", appKey, appValue, retrievedVal)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 
 	assert.True(t, err == cacheutil.ErrCacheMiss)
 

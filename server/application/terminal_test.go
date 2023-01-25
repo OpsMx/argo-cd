@@ -10,8 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	appv1 "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1"
+<<<<<<< HEAD
 	"github.com/argoproj/argo-cd/v2/util/argo"
 	"github.com/argoproj/argo-cd/v2/util/security"
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 )
 
 func TestPodExists(t *testing.T) {
@@ -197,24 +200,28 @@ func TestTerminalHandler_ServeHTTP_empty_params(t *testing.T) {
 		for _, testValue := range testValues {
 			testValueCopy := testValue
 
-			t.Run(testKeyCopy+" "+testValueCopy, func(t *testing.T) {
+			t.Run(testKeyCopy+ " " + testValueCopy, func(t *testing.T) {
 				t.Parallel()
 
 				handler := terminalHandler{}
 				params := map[string]string{
-					"pod":       "valid",
+					"pod": "valid",
 					"container": "valid",
-					"app":       "valid",
-					"project":   "valid",
+					"app": "valid",
+					"project": "valid",
 					"namespace": "valid",
 				}
 				params[testKeyCopy] = testValueCopy
 				var paramsArray []string
 				for key, value := range params {
-					paramsArray = append(paramsArray, key+"="+value)
+					paramsArray = append(paramsArray, key + "=" + value)
 				}
 				paramsString := strings.Join(paramsArray, "&")
+<<<<<<< HEAD
 				request := httptest.NewRequest(http.MethodGet, "https://argocd.example.com/api/v1/terminal?"+paramsString, nil)
+=======
+				request := httptest.NewRequest("GET", "https://argocd.example.com/api/v1/terminal?" + paramsString, nil)
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 				recorder := httptest.NewRecorder()
 				handler.ServeHTTP(recorder, request)
 				response := recorder.Result()
@@ -223,6 +230,7 @@ func TestTerminalHandler_ServeHTTP_empty_params(t *testing.T) {
 		}
 	}
 }
+<<<<<<< HEAD
 
 func TestTerminalHandler_ServeHTTP_disallowed_namespace(t *testing.T) {
 	handler := terminalHandler{namespace: "argocd", enabledNamespaces: []string{"allowed"}}
@@ -233,3 +241,5 @@ func TestTerminalHandler_ServeHTTP_disallowed_namespace(t *testing.T) {
 	assert.Equal(t, http.StatusForbidden, response.StatusCode)
 	assert.Equal(t, security.NamespaceNotPermittedError("disallowed").Error()+"\n", recorder.Body.String())
 }
+=======
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)

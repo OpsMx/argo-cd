@@ -90,12 +90,19 @@ func TestCustomToolWithEnv(t *testing.T) {
 		Path("cmp-fileName").
 		When().
 		CreateFromFile(func(app *Application) {
+<<<<<<< HEAD
 			app.Spec.Source.Plugin = &ApplicationSourcePlugin{
 				Env: Env{{
 					Name:  "FOO",
 					Value: "bar",
 				}},
 			}
+=======
+			app.Spec.Source.Plugin.Env = Env{{
+				Name:  "FOO",
+				Value: "bar",
+			}}
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 		}).
 		Sync().
 		Then().
@@ -217,6 +224,7 @@ func TestCMPDiscoverWithFindGlob(t *testing.T) {
 		Expect(HealthIs(health.HealthStatusHealthy))
 }
 
+<<<<<<< HEAD
 // Discover by Plugin Name
 func TestCMPDiscoverWithPluginName(t *testing.T) {
 	Given(t).
@@ -239,6 +247,9 @@ func TestCMPDiscoverWithPluginName(t *testing.T) {
 }
 
 // Discover by Find command
+=======
+//Discover by Find command
+>>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 func TestCMPDiscoverWithFindCommandWithEnv(t *testing.T) {
 	pluginName := "cmp-find-command"
 	ctx := Given(t)
