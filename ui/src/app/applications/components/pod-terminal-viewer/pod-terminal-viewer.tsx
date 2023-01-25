@@ -11,7 +11,6 @@ import {Context} from '../../../shared/context';
 import {ErrorNotification, NotificationType} from 'argo-ui';
 export interface PodTerminalViewerProps {
     applicationName: string;
-    applicationNamespace: string;
     projectName: string;
     selectedNode: models.ResourceNode;
     podState: models.State;
@@ -25,15 +24,7 @@ export interface ShellFrame {
     cols?: number;
 }
 
-export const PodTerminalViewer: React.FC<PodTerminalViewerProps> = ({
-    selectedNode,
-    applicationName,
-    applicationNamespace,
-    projectName,
-    podState,
-    containerName,
-    onClickContainer
-}) => {
+export const PodTerminalViewer: React.FC<PodTerminalViewerProps> = ({selectedNode, applicationName, projectName, podState, containerName, onClickContainer}) => {
     const terminalRef = React.useRef(null);
     const appContext = React.useContext(Context); // used to show toast
     const fitAddon = new FitAddon();
@@ -154,7 +145,7 @@ export const PodTerminalViewer: React.FC<PodTerminalViewerProps> = ({
         webSocket = new WebSocket(
             `${
                 location.protocol === 'https:' ? 'wss' : 'ws'
-            }://${url}/terminal?pod=${name}&container=${containerName}&appName=${applicationName}&appNamespace=${applicationNamespace}&projectName=${projectName}&namespace=${namespace}`
+            }://${url}/terminal?pod=${name}&container=${containerName}&appName=${applicationName}&projectName=${projectName}&namespace=${namespace}`
         );
         webSocket.onopen = onConnectionOpen;
         webSocket.onclose = onConnectionClose;

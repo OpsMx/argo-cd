@@ -44,7 +44,6 @@ func NewAccountCommand(clientOpts *argocdclient.ClientOptions) *cobra.Command {
 	command.AddCommand(NewAccountGenerateTokenCommand(clientOpts))
 	command.AddCommand(NewAccountGetCommand(clientOpts))
 	command.AddCommand(NewAccountDeleteTokenCommand(clientOpts))
-	command.AddCommand(NewBcryptCmd())
 	return command
 }
 

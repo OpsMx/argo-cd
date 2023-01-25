@@ -456,12 +456,12 @@
               <div class="header-wrap">
                   <h1 class="project__header__title">Snyk test report</h1>
     
-                <p class="timestamp">January 22nd 2023, 12:17:30 am</p>
+                <p class="timestamp">September 7th 2022, 7:35:27 pm</p>
               </div>
                 <div class="source-panel">
                   <span>Scanned the following path:</span>
                   <ul>
-                    <li class="paths">/argo-cd/manifests/namespace-install.yaml (Kubernetes)</li>
+                    <li class="paths">/private/argo-cd/manifests/namespace-install.yaml (Kubernetes)</li>
                   </ul>
                 </div>
     
@@ -476,7 +476,7 @@
             <table class="metatable">
                 <tbody>
                 <tr class="meta-row"><th class="meta-row-label">Project</th> <td class="meta-row-value">manifests/namespace-install.yaml</td></tr>
-                <tr class="meta-row"><th class="meta-row-label">Path</th> <td class="meta-row-value">/argo-cd/manifests/namespace-install.yaml</td></tr>
+                <tr class="meta-row"><th class="meta-row-label">Path</th> <td class="meta-row-value">/private/argo-cd/manifests/namespace-install.yaml</td></tr>
                 <tr class="meta-row"><th class="meta-row-label">Project Type</th> <td class="meta-row-value">Kubernetes</td></tr>
                 </tbody>
             </table>
@@ -500,6 +500,8 @@
                           <li class="card__meta__item">Introduced through:
                                   [DocId: 7]
                                    <span class="list-paths__item__arrow">›</span> 
+                                  role
+                                   <span class="list-paths__item__arrow">›</span> 
                                   rules[0]
                                    <span class="list-paths__item__arrow">›</span> 
                                   resources
@@ -507,7 +509,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 77
+                              Line number: 65
                           </li>
                       </ul>
               
@@ -546,6 +548,8 @@
                           <li class="card__meta__item">Introduced through:
                                   [DocId: 8]
                                    <span class="list-paths__item__arrow">›</span> 
+                                  role
+                                   <span class="list-paths__item__arrow">›</span> 
                                   rules[4]
                                    <span class="list-paths__item__arrow">›</span> 
                                   resources
@@ -553,7 +557,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 154
+                              Line number: 104
                           </li>
                       </ul>
               
@@ -592,6 +596,8 @@
                           <li class="card__meta__item">Introduced through:
                                   [DocId: 9]
                                    <span class="list-paths__item__arrow">›</span> 
+                                  role
+                                   <span class="list-paths__item__arrow">›</span> 
                                   rules[0]
                                    <span class="list-paths__item__arrow">›</span> 
                                   resources
@@ -599,7 +605,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 182
+                              Line number: 170
                           </li>
                       </ul>
               
@@ -638,51 +644,7 @@
                           <li class="card__meta__item">Introduced through:
                                   [DocId: 10]
                                    <span class="list-paths__item__arrow">›</span> 
-                                  rules[3]
-                                   <span class="list-paths__item__arrow">›</span> 
-                                  resources
-                                  
-                          </li>
-              
-                          <li class="card__meta__item">
-                              Line number: 226
-                          </li>
-                      </ul>
-              
-                      <hr/>
-              
-                          <h2>Impact</h2>
-                          <p>Using this role grants dangerous permissions</p>
-              
-                          <h2>Remediation</h2>
-                          <p>Consider removing this permissions</p>
-              
-              
-                          <hr/>
-                  </div><!-- .card__section -->
-              
-                  <div class="cta card__cta">
-                      <p><a href="https://snyk.io/security-rules/SNYK-CC-K8S-47">More about this issue</a></p>
-                  </div>
-              
-              </div><!-- .card -->
-              <div class="card card--vuln  disclosure--not-new severity--medium" data-snyk-test="medium">
-                  <h2 class="card__title">Role with dangerous permissions</h2>
-                  <div class="card__section">
-              
-                      <div class="label label--medium">
-                          <span class="label__text">medium severity</span>
-                      </div>
-              
-                      <hr/>
-              
-                      <ul class="card__meta">
-                          <li class="card__meta__item">
-                              Public ID: <a href="https://snyk.io/security-rules/SNYK-CC-K8S-47">SNYK-CC-K8S-47</a> 
-                          </li>
-              
-                          <li class="card__meta__item">Introduced through:
-                                  [DocId: 10]
+                                  role
                                    <span class="list-paths__item__arrow">›</span> 
                                   rules[1]
                                    <span class="list-paths__item__arrow">›</span> 
@@ -691,7 +653,55 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 208
+                              Line number: 189
+                          </li>
+                      </ul>
+              
+                      <hr/>
+              
+                          <h2>Impact</h2>
+                          <p>Using this role grants dangerous permissions</p>
+              
+                          <h2>Remediation</h2>
+                          <p>Consider removing this permissions</p>
+              
+              
+                          <hr/>
+                  </div><!-- .card__section -->
+              
+                  <div class="cta card__cta">
+                      <p><a href="https://snyk.io/security-rules/SNYK-CC-K8S-47">More about this issue</a></p>
+                  </div>
+              
+              </div><!-- .card -->
+              <div class="card card--vuln  disclosure--not-new severity--medium" data-snyk-test="medium">
+                  <h2 class="card__title">Role with dangerous permissions</h2>
+                  <div class="card__section">
+              
+                      <div class="label label--medium">
+                          <span class="label__text">medium severity</span>
+                      </div>
+              
+                      <hr/>
+              
+                      <ul class="card__meta">
+                          <li class="card__meta__item">
+                              Public ID: <a href="https://snyk.io/security-rules/SNYK-CC-K8S-47">SNYK-CC-K8S-47</a> 
+                          </li>
+              
+                          <li class="card__meta__item">Introduced through:
+                                  [DocId: 10]
+                                   <span class="list-paths__item__arrow">›</span> 
+                                  role
+                                   <span class="list-paths__item__arrow">›</span> 
+                                  rules[3]
+                                   <span class="list-paths__item__arrow">›</span> 
+                                  resources
+                                  
+                          </li>
+              
+                          <li class="card__meta__item">
+                              Line number: 189
                           </li>
                       </ul>
               
@@ -730,6 +740,8 @@
                           <li class="card__meta__item">Introduced through:
                                   [DocId: 11]
                                    <span class="list-paths__item__arrow">›</span> 
+                                  role
+                                   <span class="list-paths__item__arrow">›</span> 
                                   rules[0]
                                    <span class="list-paths__item__arrow">›</span> 
                                   resources
@@ -737,7 +749,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 242
+                              Line number: 230
                           </li>
                       </ul>
               
@@ -789,7 +801,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1153
+                              Line number: 1085
                           </li>
                       </ul>
               
@@ -847,7 +859,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 616
+                              Line number: 615
                           </li>
                       </ul>
               
@@ -905,7 +917,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 789
+                              Line number: 728
                           </li>
                       </ul>
               
@@ -963,7 +975,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 755
+                              Line number: 694
                           </li>
                       </ul>
               
@@ -1021,7 +1033,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 845
+                              Line number: 784
                           </li>
                       </ul>
               
@@ -1079,7 +1091,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 919
+                              Line number: 858
                           </li>
                       </ul>
               
@@ -1137,7 +1149,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1153
+                              Line number: 1085
                           </li>
                       </ul>
               
@@ -1195,7 +1207,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 975
+                              Line number: 914
                           </li>
                       </ul>
               
@@ -1253,7 +1265,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1238
+                              Line number: 1170
                           </li>
                       </ul>
               
@@ -1311,7 +1323,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1542
+                              Line number: 1467
                           </li>
                       </ul>
               
@@ -1363,7 +1375,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 769
+                              Line number: 708
                           </li>
                       </ul>
               
@@ -1419,7 +1431,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 929
+                              Line number: 868
                           </li>
                       </ul>
               
@@ -1471,7 +1483,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 616
+                              Line number: 615
                           </li>
                       </ul>
               
@@ -1523,7 +1535,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 755
+                              Line number: 694
                           </li>
                       </ul>
               
@@ -1575,7 +1587,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 789
+                              Line number: 728
                           </li>
                       </ul>
               
@@ -1627,7 +1639,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 919
+                              Line number: 858
                           </li>
                       </ul>
               
@@ -1679,7 +1691,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1153
+                              Line number: 1085
                           </li>
                       </ul>
               
@@ -1737,7 +1749,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 616
+                              Line number: 615
                           </li>
                       </ul>
               
@@ -1795,7 +1807,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 755
+                              Line number: 694
                           </li>
                       </ul>
               
@@ -1853,7 +1865,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 789
+                              Line number: 728
                           </li>
                       </ul>
               
@@ -1911,7 +1923,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 845
+                              Line number: 784
                           </li>
                       </ul>
               
@@ -1969,7 +1981,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 919
+                              Line number: 858
                           </li>
                       </ul>
               
@@ -2027,7 +2039,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1153
+                              Line number: 1085
                           </li>
                       </ul>
               
@@ -2085,7 +2097,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 975
+                              Line number: 914
                           </li>
                       </ul>
               
@@ -2143,7 +2155,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1238
+                              Line number: 1170
                           </li>
                       </ul>
               
@@ -2201,7 +2213,7 @@
                           </li>
               
                           <li class="card__meta__item">
-                              Line number: 1542
+                              Line number: 1467
                           </li>
                       </ul>
               

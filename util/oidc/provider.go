@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	gooidc "github.com/coreos/go-oidc/v3/oidc"
+	gooidc "github.com/coreos/go-oidc"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )

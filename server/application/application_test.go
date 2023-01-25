@@ -540,9 +540,6 @@ func TestDeleteApp(t *testing.T) {
 		deleted = true
 		return true, nil, nil
 	})
-	fakeAppCs.AddReactor("get", "applications", func(action kubetesting.Action) (handled bool, ret runtime.Object, err error) {
-		return true, &appsv1.Application{Spec: appsv1.ApplicationSpec{Source: &appsv1.ApplicationSource{}}}, nil
-	})
 	appServer.appclientset = fakeAppCs
 
 	trueVar := true
@@ -867,9 +864,6 @@ func TestGetCachedAppState(t *testing.T) {
 	}
 	appServer := newTestAppServer(testApp, testProj)
 	fakeClientSet := appServer.appclientset.(*apps.Clientset)
-	fakeClientSet.AddReactor("get", "applications", func(action kubetesting.Action) (handled bool, ret runtime.Object, err error) {
-		return true, &appsv1.Application{Spec: appsv1.ApplicationSpec{Source: &appsv1.ApplicationSource{}}}, nil
-	})
 	t.Run("NoError", func(t *testing.T) {
 		err := appServer.getCachedAppState(context.Background(), testApp, func() error {
 			return nil
@@ -892,9 +886,6 @@ func TestGetCachedAppState(t *testing.T) {
 				updated.ResourceVersion = "2"
 				appServer.appBroadcaster.OnUpdate(testApp, updated)
 				return true, testApp, nil
-			})
-			fakeClientSet.AddReactor("get", "applications", func(action kubetesting.Action) (handled bool, ret runtime.Object, err error) {
-				return true, &appsv1.Application{Spec: appsv1.ApplicationSpec{Source: &appsv1.ApplicationSource{}}}, nil
 			})
 			fakeClientSet.Unlock()
 			fakeClientSet.AddWatchReactor("applications", func(action kubetesting.Action) (handled bool, ret watch.Interface, err error) {
@@ -1095,7 +1086,7 @@ func TestGetAppRefresh_HardRefresh(t *testing.T) {
 	assert.NoError(t, err)
 	require.NotNil(t, getAppDetailsQuery)
 	assert.True(t, getAppDetailsQuery.NoCache)
-	assert.Equal(t, testApp.Spec.Source, getAppDetailsQuery.Source)
+	assert.Equal(t, &testApp.Spec.Source, getAppDetailsQuery.Source)
 
 	assert.NoError(t, err)
 	select {

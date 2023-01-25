@@ -170,7 +170,7 @@ func appendTemplatedValues(clusterValues map[string]string, params map[string]in
 		result, err := replaceTemplatedString(value, params, appSet)
 
 		if err != nil {
-			return fmt.Errorf("error replacing templated String: %w", err)
+			return err
 		}
 
 		if appSet.Spec.GoTemplate {

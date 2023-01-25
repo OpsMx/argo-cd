@@ -12,7 +12,7 @@ import (
 	"text/template"
 	"unsafe"
 
-	"github.com/Masterminds/sprig/v3"
+	"github.com/Masterminds/sprig"
 	"github.com/valyala/fasttemplate"
 
 	log "github.com/sirupsen/logrus"

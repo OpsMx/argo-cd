@@ -292,11 +292,11 @@ func saveToFile(err error, outputFormat string, result reconcileResults, outputP
 	switch outputFormat {
 	case "yaml":
 		if data, err = yaml.Marshal(result); err != nil {
-			return fmt.Errorf("error marshalling yaml: %w", err)
+			return err
 		}
 	case "json":
 		if data, err = json.Marshal(result); err != nil {
-			return fmt.Errorf("error marshalling json: %w", err)
+			return err
 		}
 	default:
 		return fmt.Errorf("format %s is not supported", outputFormat)
@@ -401,12 +401,7 @@ func reconcileApplications(
 			return nil, err
 		}
 
-		sources := make([]v1alpha1.ApplicationSource, 0)
-		revisions := make([]string, 0)
-		sources = append(sources, app.Spec.GetSource())
-		revisions = append(revisions, app.Spec.GetSource().TargetRevision)
-
-		res := appStateManager.CompareAppState(&app, proj, revisions, sources, false, false, nil, false)
+		res := appStateManager.CompareAppState(&app, proj, app.Spec.Source.TargetRevision, app.Spec.Source, false, false, nil)
 		items = append(items, appReconcileResult{
 			Name:       app.Name,
 			Conditions: app.Status.Conditions,

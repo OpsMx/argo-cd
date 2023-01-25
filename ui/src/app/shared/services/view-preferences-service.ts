@@ -14,7 +14,7 @@ export enum AppsDetailsViewKey {
 
 export interface AppDetailsPreferences {
     resourceFilter: string[];
-    view: AppsDetailsViewType | string;
+    view: AppsDetailsViewType;
     resourceView: 'manifest' | 'diff' | 'desiredManifest';
     inlineDiff: boolean;
     compactDiff: boolean;
@@ -67,7 +67,6 @@ export class AppsListPreferences {
         pref.projectsFilter = [];
         pref.reposFilter = [];
         pref.syncFilter = [];
-        pref.autoSyncFilter = [];
         pref.showFavorites = false;
     }
 
@@ -75,7 +74,6 @@ export class AppsListPreferences {
     public projectsFilter: string[];
     public reposFilter: string[];
     public syncFilter: string[];
-    public autoSyncFilter: string[];
     public healthFilter: string[];
     public namespacesFilter: string[];
     public clustersFilter: string[];
@@ -129,7 +127,6 @@ const DEFAULT_PREFERENCES: ViewPreferences = {
         clustersFilter: new Array<string>(),
         reposFilter: new Array<string>(),
         syncFilter: new Array<string>(),
-        autoSyncFilter: new Array<string>(),
         healthFilter: new Array<string>(),
         hideFilters: false,
         showFavorites: false,

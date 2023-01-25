@@ -2,7 +2,6 @@ package test
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -81,20 +80,6 @@ func YamlToUnstructured(yamlStr string) *unstructured.Unstructured {
 		panic(err)
 	}
 	return &unstructured.Unstructured{Object: obj}
-}
-
-// ToMap converts any object to a map[string]interface{}
-func ToMap(obj interface{}) map[string]interface{} {
-	data, err := json.Marshal(obj)
-	if err != nil {
-		panic(err)
-	}
-	var res map[string]interface{}
-	err = json.Unmarshal(data, &res)
-	if err != nil {
-		panic(err)
-	}
-	return res
 }
 
 // GetTestDir will return the full directory path of the

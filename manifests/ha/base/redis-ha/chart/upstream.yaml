@@ -41,7 +41,6 @@ data:
     port 6379
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
-    bind 0.0.0.0
     maxmemory 0
     maxmemory-policy volatile-lru
     min-replicas-max-lag 5
@@ -54,7 +53,6 @@ data:
   sentinel.conf: |
     dir "/data"
     port 26379
-    bind 0.0.0.0
         sentinel down-after-milliseconds argocd 10000
         sentinel failover-timeout argocd 180000
         maxclients 10000
@@ -620,7 +618,7 @@ data:
       timeout check 2s
 
     listen health_check_http_url
-      bind :8888  
+      bind [::]:8888  v4v6
       mode http
       monitor-uri /healthz
       option      dontlognull
@@ -667,7 +665,7 @@ data:
     # decide redis backend to use
     #master
     frontend ft_redis_master
-      bind :6379 
+      bind [::]:6379 v4v6
       use_backend bk_redis_master
     # Check all redis servers to see if they think they are master
     backend bk_redis_master
@@ -1047,7 +1045,7 @@ spec:
         release: argocd
         revision: "1"
       annotations:
-        checksum/config: 718bbb277da8610063a7c0fd810984577c2e8ab215815a71211dfa6e20f67321
+        checksum/config: 1f7a9ffcacb3871ceb9b0741c0714e3f7fa656d426a398c1f727fffb01073f35
     spec:
       # Needed when using unmodified rbac-setup.yml
       
@@ -1155,7 +1153,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 69130412bda04eacad3530cb7bcf26cf121401e725e15d0959dd71a7380afe75
+        checksum/init-config: 84ccf6a9b8a7fa3ae5b62a8f17d6c65a5197e9605da9b2761179bf942828eefe
       labels:
         release: argocd
         app: redis-ha
@@ -1179,7 +1177,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
       - name: config-init
-        image: redis:7.0.7-alpine
+        image: redis:7.0.5-alpine
         imagePullPolicy: IfNotPresent
         resources:
           {}
@@ -1206,7 +1204,7 @@ spec:
 
       containers:
       - name: redis
-        image: redis:7.0.7-alpine
+        image: redis:7.0.5-alpine
         imagePullPolicy: IfNotPresent
         command:
         - redis-server
@@ -1256,7 +1254,7 @@ spec:
               - /bin/sh
               - /readonly-config/trigger-failover-if-master.sh
       - name: sentinel
-        image: redis:7.0.7-alpine
+        image: redis:7.0.5-alpine
         imagePullPolicy: IfNotPresent
         command:
           - redis-sentinel
@@ -1300,7 +1298,7 @@ spec:
           {}
 
       - name: split-brain-fix
-        image: redis:7.0.7-alpine
+        image: redis:7.0.5-alpine
         imagePullPolicy: IfNotPresent
         command:
           - sh

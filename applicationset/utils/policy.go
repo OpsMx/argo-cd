@@ -11,7 +11,6 @@ var Policies = map[string]Policy{
 	"sync":          &SyncPolicy{},
 	"create-only":   &CreateOnlyPolicy{},
 	"create-update": &CreateUpdatePolicy{},
-	"create-delete": &CreateDeletePolicy{},
 }
 
 type SyncPolicy struct{}
@@ -42,14 +41,4 @@ func (p *CreateOnlyPolicy) Update() bool {
 
 func (p *CreateOnlyPolicy) Delete() bool {
 	return false
-}
-
-type CreateDeletePolicy struct{}
-
-func (p *CreateDeletePolicy) Update() bool {
-	return false
-}
-
-func (p *CreateDeletePolicy) Delete() bool {
-	return true
 }

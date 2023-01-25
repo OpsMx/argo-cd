@@ -144,10 +144,9 @@ func (m *MatrixGenerator) GetRequeueAfter(appSetGenerator *argoprojiov1alpha1.Ap
 
 	for _, r := range appSetGenerator.Matrix.Generators {
 		base := &argoprojiov1alpha1.ApplicationSetGenerator{
-			List:        r.List,
-			Clusters:    r.Clusters,
-			Git:         r.Git,
-			PullRequest: r.PullRequest,
+			List:     r.List,
+			Clusters: r.Clusters,
+			Git:      r.Git,
 		}
 		generators := GetRelevantGenerators(base, m.supportedGenerators)
 

@@ -64,20 +64,13 @@ else
 DOCKER_SRC_MOUNT="$(PWD):/go/src/github.com/argoproj/argo-cd$(VOLUME_MOUNT)"
 endif
 
-# User and group IDs to map to the test container
-CONTAINER_UID=$(shell id -u)
-CONTAINER_GID=$(shell id -g)
-
-# Set SUDO to sudo to run privileged commands with sudo
-SUDO?=
-
 # Runs any command in the argocd-test-utils container in server mode
 # Server mode container will start with uid 0 and drop privileges during runtime
 define run-in-test-server
-	$(SUDO) docker run --rm -it \
+	docker run --rm -it \
 		--name argocd-test-server \
-		-u $(CONTAINER_UID):$(CONTAINER_GID) \
-		-e USER_ID=$(CONTAINER_UID) \
+		-u $(shell id -u):$(shell id -g) \
+		-e USER_ID=$(shell id -u) \
 		-e HOME=/home/user \
 		-e GOPATH=/go \
 		-e GOCACHE=/tmp/go-build-cache \
@@ -105,9 +98,9 @@ endef
 
 # Runs any command in the argocd-test-utils container in client mode
 define run-in-test-client
-	$(SUDO) docker run --rm -it \
+	docker run --rm -it \
 	  --name argocd-test-client \
-		-u $(CONTAINER_UID):$(CONTAINER_GID) \
+		-u $(shell id -u):$(shell id -g) \
 		-e HOME=/home/user \
 		-e GOPATH=/go \
 		-e ARGOCD_E2E_K3S=$(ARGOCD_E2E_K3S) \
@@ -126,7 +119,7 @@ endef
 
 #
 define exec-in-test-server
-	$(SUDO) docker exec -it -u $(CONTAINER_UID):$(CONTAINER_GID) -e ARGOCD_E2E_RECORD=$(ARGOCD_E2E_RECORD) -e ARGOCD_E2E_K3S=$(ARGOCD_E2E_K3S) argocd-test-server $(1)
+	docker exec -it -u $(shell id -u):$(shell id -g) -e ARGOCD_E2E_RECORD=$(ARGOCD_E2E_RECORD) -e ARGOCD_E2E_K3S=$(ARGOCD_E2E_K3S) argocd-test-server $(1)
 endef
 
 PATH:=$(PATH):$(PWD)/hack
@@ -251,8 +244,8 @@ release-cli: clean-debug build-ui
 .PHONY: test-tools-image
 test-tools-image:
 ifndef SKIP_TEST_TOOLS_IMAGE
-	$(SUDO) docker build --build-arg UID=$(CONTAINER_UID) -t $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE) -f test/container/Dockerfile .
-	$(SUDO) docker tag $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE) $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE):$(TEST_TOOLS_TAG)
+	docker build --build-arg UID=$(shell id -u) -t $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE) -f test/container/Dockerfile .
+	docker tag $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE) $(TEST_TOOLS_PREFIX)$(TEST_TOOLS_IMAGE):$(TEST_TOOLS_TAG)
 endif
 
 .PHONY: manifests-local
