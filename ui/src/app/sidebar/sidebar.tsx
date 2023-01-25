@@ -20,7 +20,7 @@ export const useSidebarTarget = () => {
 
     React.useEffect(() => {
         const sidebar = document.getElementById(SIDEBAR_TOOLS_ID);
-        // sidebar.appendChild(sidebarTarget?.current);
+        sidebar.appendChild(sidebarTarget?.current);
         return () => {
             sidebarTarget.current?.remove();
         };
@@ -48,7 +48,7 @@ export const Sidebar = (props: SidebarProps) => {
     return (
         <div className={`sidebar ${props.pref.hideSidebar ? 'sidebar--collapsed' : ''}`}>
             <div className='sidebar__container'>
-                <div className='sidebar__logo'>
+               {/* <div className='sidebar__logo'>
                     <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                         <i className={`fas fa-arrow-${props.pref.hideSidebar ? 'right' : 'left'}`} />
                     </div>
@@ -61,7 +61,7 @@ export const Sidebar = (props: SidebarProps) => {
                         </div>
                     )}
                     <img src='assets/images/logo.png' alt='Argo' className='sidebar__logo__character' />{' '}
-                </div>
+                </div>*/}
 
                 {(props.navItems || []).map(item => (
                     <Tooltip key={item.path} content={<div className='sidebar__tooltip'>{item?.tooltip || item.title}</div>} {...tooltipProps}>
