@@ -27,6 +27,12 @@ export const ExternalLinkAnnotation = 'link.argocd.argoproj.io/external-link';
 
 type ActionMenuItem = MenuItem & {disabled?: boolean};
 
+export let popupConfirmed: boolean = false;
+
+export function isPopupFn() {
+    return popupConfirmed;
+}
+
 export function nodeKey(node: NodeId) {
     return [node.group, node.kind, node.namespace, node.name].join('/');
 }
@@ -104,6 +110,7 @@ export async function deleteApplication(appName: string, appNamespace: string, a
                 try {
                     await services.applications.delete(appName, appNamespace, vals.propagationPolicy);
                     confirmed = true;
+                    popupConfirmed = confirmed;
                     close();
                 } catch (e) {
                     apis.notifications.show({
@@ -113,8 +120,8 @@ export async function deleteApplication(appName: string, appNamespace: string, a
                 }
             }
         },
-        {name: 'argo-icon-warning', color: 'warning'},
-        'yellow',
+        {name: '', color: 'info'},
+        '',
         {propagationPolicy: 'foreground'}
     );
     return confirmed;

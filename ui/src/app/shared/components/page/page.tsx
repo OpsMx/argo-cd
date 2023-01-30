@@ -6,6 +6,8 @@ import {map} from 'rxjs/operators';
 import {Context, ContextApis} from '../../context';
 import {services} from '../../services';
 import requests from '../../services/requests';
+import * as AppUtils from '../../../applications/components/utils'
+import PopupModal from '../simplePopup/popup';
 
 const mostRecentLoggedIn = new BehaviorSubject<boolean>(false);
 
@@ -62,6 +64,11 @@ export const Page = (props: PageProps) => {
                         useTitleOnly={props.useTitleOnly}
                         toolbar={!props.hideAuth ? AddAuthToToolbar(props.toolbar, ctx) : props.toolbar}
                     />
+                    {AppUtils.isPopupFn() && 
+                        <PopupModal isOpen={true}
+                        header="Deleted Successfully"
+                        content="Application Deleted Successfully. Please navigate to ISD Dashboard."></PopupModal>
+                    }
                 </div>
             )}
         </DataLoader>
