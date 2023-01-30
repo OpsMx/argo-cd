@@ -12,6 +12,8 @@ import {getConditionCategory, HealthStatusIcon, OperationState, syncStatusMessag
 import {ApplicationSyncWindowStatusIcon, ComparisonStatusIcon, getAppOperationState, getConditionCategory, HealthStatusIcon, OperationState, syncStatusMessage} from '../utils';
 >>>>>>> ac0fce6b6 (Inital commint - Argo CD v2.5.4 release version)
 import {RevisionMetadataPanel} from './revision-metadata-panel';
+import * as AppUtils from '../utils'
+import { Observable } from 'rxjs';
 
 require('./application-status-panel.scss');
 
@@ -215,7 +217,11 @@ export const ApplicationStatusPanel = ({application, showDiff, showOperation, sh
                 noLoaderOnInputChange={true}
                 input={application}
                 load={async app => {
-                    return await services.applications.getApplicationSyncWindowState(app.metadata.name, app.metadata.namespace);
+                    if(!AppUtils.isPopupFn()){
+                        return await services.applications.getApplicationSyncWindowState(app.metadata.name, app.metadata.namespace);
+                    }
+                    return new Observable();
+
                 }}>
                 {(data: models.ApplicationSyncWindowState) => (
                     <React.Fragment>
