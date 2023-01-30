@@ -745,7 +745,7 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
 
     private onAppDeleted() {
         this.appContext.apis.notifications.show({type: NotificationType.Success, content: `Application '${this.props.match.params.name}' was deleted`});
-        this.appContext.apis.navigation.goto('/applications');
+        // this.appContext.apis.navigation.goto('/applications');   // To avoid redirecting to the listing page
     }
 
     private async updateApp(app: appModels.Application, query: {validate?: boolean}) {
