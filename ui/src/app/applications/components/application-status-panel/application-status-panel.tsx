@@ -8,6 +8,8 @@ import {services} from '../../../shared/services';
 import {ApplicationSyncWindowStatusIcon, ComparisonStatusIcon, getAppDefaultSource, getAppOperationState} from '../utils';
 import {getConditionCategory, HealthStatusIcon, OperationState, syncStatusMessage, helpTip} from '../utils';
 import {RevisionMetadataPanel} from './revision-metadata-panel';
+import * as AppUtils from '../utils'
+import { Observable } from 'rxjs';
 
 import './application-status-panel.scss';
 
@@ -184,7 +186,11 @@ export const ApplicationStatusPanel = ({application, showDiff, showOperation, sh
                 noLoaderOnInputChange={true}
                 input={application}
                 load={async app => {
-                    return await services.applications.getApplicationSyncWindowState(app.metadata.name, app.metadata.namespace);
+                    if(!AppUtils.isPopupFn()){
+                        return await services.applications.getApplicationSyncWindowState(app.metadata.name, app.metadata.namespace);
+                    }
+                    return new Observable();
+
                 }}>
                 {(data: models.ApplicationSyncWindowState) => (
                     <React.Fragment>
