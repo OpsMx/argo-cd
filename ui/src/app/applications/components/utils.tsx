@@ -123,7 +123,7 @@ export async function deleteApplication(appName: string, appNamespace: string, a
                 }
             }
         },
-        {name: '', color: 'info'},
+        {name: 'argo-icon-warning', color: 'info'},
         '',
         {propagationPolicy: 'foreground'}
     );
