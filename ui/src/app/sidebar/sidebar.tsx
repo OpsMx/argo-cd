@@ -67,9 +67,9 @@ export const Sidebar = (props: SidebarProps) => {
                     </div>
                 </Tooltip>
             ))}
-            {/* <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
+            <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                 <i className={`fas fa-arrow-${props.pref.hideSidebar ? 'right' : 'left'}`} />
-            </div> */}
+            </div>
             {props.pref.hideSidebar && (
                 <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                     <Tooltip content='Show Filters' {...tooltipProps}>
