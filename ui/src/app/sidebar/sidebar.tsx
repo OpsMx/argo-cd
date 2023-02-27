@@ -29,10 +29,20 @@ export const useSidebarTarget = () => {
     return sidebarTarget;
 };
 
+const checkUrlIncludesOpsmx = (param: string) => {
+    let urlSplit = param.split('/')
+    if(urlSplit[urlSplit.length-2] == 'opsmx' && urlSplit[urlSplit.length-1] == 'details'){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 export const Sidebar = (props: SidebarProps) => {
     const context = React.useContext(Context);
     const [version, loading, error] = useData(() => services.version.version());
     const locationPath = context.history.location.pathname;
+    const pathHasOpsmx = checkUrlIncludesOpsmx(locationPath);
 
     const tooltipProps = {
         placement: 'right' as Placement,
@@ -48,7 +58,7 @@ export const Sidebar = (props: SidebarProps) => {
     return (
         <div className={`sidebar ${props.pref.hideSidebar ? 'sidebar--collapsed' : ''}`}>
             <div className='sidebar__container'>
-               {/* <div className='sidebar__logo'>
+            {!pathHasOpsmx ? <div className='sidebar__logo'>
                     <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                         <i className={`fas fa-arrow-${props.pref.hideSidebar ? 'right' : 'left'}`} />
                     </div>
@@ -61,9 +71,9 @@ export const Sidebar = (props: SidebarProps) => {
                         </div>
                     )}
                     <img src='assets/images/logo.png' alt='Argo' className='sidebar__logo__character' />{' '}
-                </div>*/}
+                </div> : null}
 
-                {(props.navItems || []).map(item => (
+                {((pathHasOpsmx ? [] :props.navItems || []).map(item => (
                     <Tooltip key={item.path} content={<div className='sidebar__tooltip'>{item?.tooltip || item.title}</div>} {...tooltipProps}>
                         <div
                             key={item.title}
@@ -77,7 +87,7 @@ export const Sidebar = (props: SidebarProps) => {
                             </React.Fragment>
                         </div>
                     </Tooltip>
-                ))}
+               )))}
 
                 {props.pref.hideSidebar && (
                     <Tooltip content='Show Filters' {...tooltipProps}>
