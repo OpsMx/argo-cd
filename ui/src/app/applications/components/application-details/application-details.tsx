@@ -181,6 +181,10 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
         services.viewPreferences.updatePreferences({appDetails: {...pref, groupNodes: !pref.groupNodes}});
     }
 
+    private pathHasOpsmx() {
+        return this.props.match.path.includes('opsmx');
+    }
+
     private getPageTitle(view: string) {
         const {Tree, Pods, Network, List} = AppsDetailsViewKey;
         switch (view) {
@@ -378,9 +382,9 @@ export class ApplicationDetails extends React.Component<RouteComponentProps<{app
                                         useTitleOnly={true}
                                         topBarTitle={this.getPageTitle(pref.view)}
                                         toolbar={{
-                                            breadcrumbs: [
-                                                // {title: 'Applications', path: '/applications'},
-                                                // {title: <ApplicationsDetailsAppDropdown appName={this.props.match.params.name} />}
+                                            breadcrumbs: this.pathHasOpsmx() ? [] : [
+                                                {title: 'Applications', path: '/applications'},
+                                                {title: <ApplicationsDetailsAppDropdown appName={this.props.match.params.name} />}
                                             ],
                                             actionMenu: {items: this.getApplicationActionMenu(application, true)},
                                             tools: (
