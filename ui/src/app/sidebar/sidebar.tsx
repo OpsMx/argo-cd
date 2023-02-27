@@ -29,10 +29,20 @@ export const useSidebarTarget = () => {
     return sidebarTarget;
 };
 
+const checkUrlIncludesOpsmx = (param: string) => {
+    let urlSplit = param.split('/')
+    if(urlSplit[urlSplit.length-2] == 'opsmx' && urlSplit[urlSplit.length-1] == 'details'){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 export const Sidebar = (props: SidebarProps) => {
     const context = React.useContext(Context);
     const [version, loading, error] = useData(() => services.version.version());
     const locationPath = context.history.location.pathname;
+    const pathHasOpsmx = checkUrlIncludesOpsmx(locationPath);
 
     const tooltipProps = {
         placement: 'right' as Placement,
