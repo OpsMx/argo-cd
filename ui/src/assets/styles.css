@@ -9,6 +9,10 @@
     --primary: #6fe5ff;
 }
 
+.top-bar + .top-bar {
+    background: #fff !important;
+}
+
 .top-bar {
     background: var(--sidebar-background) !important;
 }
@@ -38,7 +42,8 @@
     background: var(--sidebar-background) !important;
 }
 
-.page__content-wrapper {
+.page__content-wrapper,
+.page__top-bar {
     background: var(--page-and-panel-background) !important;
 }
 
