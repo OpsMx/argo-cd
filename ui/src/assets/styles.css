@@ -9,7 +9,8 @@
     --primary: #6fe5ff;
 }
 
-.top-bar + .top-bar {
+.top-bar + .top-bar,
+.page__content-wrapper .top-bar {
     background: #fff !important;
 }
 
