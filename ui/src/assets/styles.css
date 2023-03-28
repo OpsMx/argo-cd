@@ -1,7 +1,7 @@
 :root {
-    --sidebar-background: #39546a;
-    --filter-background: #4b729366;
-    --filter-background-active: #4b7293;
+    --sidebar-background: #fff; /*#4c6d95; #39546a; */
+    --filter-background: #fff; /*#4b729366; */
+    --filter-background-active: #fff;/* #4b7293; */
     --page-and-panel-background: #f8f8f8;
     --button-primary: #149cb5;
     --button-secondary: #d7e8ed;
@@ -15,11 +15,11 @@
 }
 
 .top-bar {
-    background: var(--sidebar-background) !important;
+    /* background: var(--sidebar-background) !important; */
 }
 
 .top-bar__breadcrumbs {
-    color: var(--primary) !important;;
+    /* color: var(--primary) !important;; */
 }
 
 .filter ::placeholder {
@@ -31,16 +31,29 @@
 }
 
 .filter__item .checkbox{
-    border: 2px solid #fff !important;
+    border: 2px solid rgb(0 0 0 / 70%) !important;
+}
+
+.filter__item--selected .checkbox{
+    border: none !important;
 }
 
 .filter__item--selected {
     background-color: var(--filter-background-active) !important;
+    color: black !important;
 }
 
 .sidebar,
 .nav-bar {
     background: var(--sidebar-background) !important;
+    box-shadow: 1px 0px 3px 0px rgb(0 0 0 / 10%) !important;
+    z-index: 1 !important;
+    margin-right: 1px !important;
+    color: rgb(0 0 0 / 70%) !important;
+}
+
+.cd-layout__content.cd-layout__content--sb-expanded {
+    z-index: 0;
 }
 
 .page__content-wrapper,
@@ -68,6 +81,14 @@
 .argo-button:hover {
     background-color: var(--button-secondary) !important;
     color: #000 !important;
+    font-weight: lighter;
+}
+
+
+.argo-button--base:hover i,
+.argo-button:hover i {
+    /* font-weight: lighter; */
+    opacity: 0.5;
 }
 
 /* secondary */
@@ -94,9 +115,12 @@
 a,
 /* title of the each item in list in settings page */
 .settings-overview__redirect-panel__title,
-.selected,
+.selected  {
+    /* color: var(--primary) !important; */
+}
+
 .top-bar__title {
-    color: var(--primary) !important;
+    /* color: var(--primary) !important; */
 }
 
 .tabs__indicator {
@@ -105,4 +129,35 @@ a,
 
 .applications-list__search {
     border-radius: 3px !important;
+}
+
+.autocomplete__input::placeholder {
+    color: transparent !important;
+}
+
+.filters-group__header, .filter__header {
+    color: rgb(0 0 0 / 70%) !important;
+}
+
+input.autocomplete__input.input {
+    background: white !important;
+    border-radius: 0px;
+    border: 1px solid black !important;
+}
+
+.sidebar__nav-item.sidebar__nav-item--active {
+    color: white !important;
+    background: var(--button-primary) !important;
+}
+
+.sidebar__nav-item, .sidebar__nav-item i {
+    color: rgb(0 0 0 / 70%) !important;
+}
+
+.sidebar__nav-item--active i {
+    color: white !important;
+}
+
+.filter__item__label {
+    color: rgb(0 0 0 / 70%) !important;
 }
