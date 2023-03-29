@@ -47,7 +47,7 @@
 .nav-bar {
     background: var(--sidebar-background) !important;
     box-shadow: 1px 0px 3px 0px rgb(0 0 0 / 10%) !important;
-    z-index: 1 !important;
+    z-index: 0 !important;
     margin-right: 1px !important;
     color: rgb(0 0 0 / 70%) !important;
 }
