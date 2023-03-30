@@ -161,3 +161,14 @@ input.autocomplete__input.input {
 .filter__item__label {
     color: rgb(0 0 0 / 70%) !important;
 }
+
+.cd-layout:has(.sliding-panel--opened) {
+    display: inline;
+}
+
+.application-resource-tree__node {
+    box-shadow: 0px 0px 3px 1px #ccd6dd !important;
+}
+.settings-overview__redirect-panel, .user-info-overview__panel, .argo-table-list__row {
+    box-shadow: 0px 0px 4px 1px rgb(0 0 0 / 10%) !important;
+}
