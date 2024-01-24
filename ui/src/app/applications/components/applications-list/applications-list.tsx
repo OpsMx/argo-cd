@@ -309,11 +309,22 @@ const FlexTopBar = (props: {toolbar: Toolbar | Observable<Toolbar>}) => {
     );
 };
 
+const checkUrlIncludesOpsmx = (param: string) => {
+    let urlSplit = param?.split('/')
+    if(urlSplit && urlSplit[urlSplit.length-2] == 'opsmx' && urlSplit[urlSplit.length-1] == 'creation'){
+        return true;
+    }
+        return false;
+}
+
 export const ApplicationsList = (props: RouteComponentProps<{}>) => {
     const query = new URLSearchParams(props.location.search);
     const appInput = tryJsonParse(query.get('new'));
     const syncAppsInput = tryJsonParse(query.get('syncApps'));
     const refreshAppsInput = tryJsonParse(query.get('refreshApps'));
+    const context = React.useContext(Context);
+    const locationPath = context.history.location.pathname;
+    const pathHasOpsmx = checkUrlIncludesOpsmx(locationPath);
     const [createApi, setCreateApi] = React.useState(null);
     const clusters = React.useMemo(() => services.clusters.list(), []);
     const [isAppCreatePending, setAppCreatePending] = React.useState(false);
@@ -598,7 +609,11 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                     </ObservableQuery>
                                                     <SlidingPanel
                                                         isShown={!!appInput}
-                                                        onClose={() => ctx.navigation.goto('.', {new: null}, {replace: true})}
+                                                        onClose={() => {
+                                                            if(pathHasOpsmx){
+                                                                window.parent.postMessage({msg:'closeEvent'},'*')
+                                                            }
+                                                            ctx.navigation.goto('.', {new: null}, {replace: true})}}
                                                         header={
                                                             <div>
                                                                 <button
@@ -611,7 +626,11 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                                 </button>{' '}
                                                                 <button
                                                                     qe-id='applications-list-button-cancel'
-                                                                    onClick={() => ctx.navigation.goto('.', {new: null}, {replace: true})}
+                                                                    onClick={() => {  
+                                                                    if(pathHasOpsmx){
+                                                                     window.parent.postMessage({msg:'closeEvent'},'*')
+                                                                    }
+                                                                    ctx.navigation.goto('.', {new: null}, {replace: true})}}
                                                                     className='argo-button argo-button--base-o'>
                                                                     Cancel
                                                                 </button>
@@ -626,6 +645,10 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                                     setAppCreatePending(true);
                                                                     try {
                                                                         await services.applications.create(app);
+                                                                        //iframe msg alert needed
+                                                                        if(pathHasOpsmx){
+                                                                            window.parent.postMessage({msg:'saveEvent'},'*')
+                                                                        }
                                                                         ctx.navigation.goto('.', {new: null}, {replace: true});
                                                                     } catch (e) {
                                                                         ctx.notifications.show({
