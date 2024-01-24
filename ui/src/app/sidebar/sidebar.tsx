@@ -29,12 +29,11 @@ export const useSidebarTarget = () => {
 };
 
 const checkUrlIncludesOpsmx = (param: string) => {
-    let urlSplit = param.split('/')
-    if(urlSplit[urlSplit.length-2] == 'opsmx' && urlSplit[urlSplit.length-1] == 'details'){
+    let urlSplit = param?.split('/')
+    if(urlSplit && urlSplit[urlSplit.length-2] == 'opsmx' && (urlSplit[urlSplit.length-1] == 'details' || urlSplit[urlSplit.length-1] == 'creation')){
         return true;
-    }else{
-        return false;
     }
+        return false;
 }
 
 export const Sidebar = (props: SidebarProps) => {

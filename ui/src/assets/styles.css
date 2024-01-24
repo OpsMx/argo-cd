@@ -172,3 +172,11 @@ input.autocomplete__input.input {
 .settings-overview__redirect-panel, .user-info-overview__panel, .argo-table-list__row {
     box-shadow: 0px 0px 4px 1px rgb(0 0 0 / 10%) !important;
 }
+
+.opsmx_hide .sliding-panel__wrapper{
+    width:100% !important
+}
+
+.opsmx_hide .page__top-bar, .opsmx_hide .sidebar  {
+ display: none;
+}
