@@ -101,12 +101,13 @@ export const ApplicationCreatePanel = (props: {
     onAppChanged: (app: models.Application) => any;
     createApp: (app: models.Application) => any;
     getFormApi: (api: FormApi) => any;
+    externalPath?: boolean;
 }) => {
     const [yamlMode, setYamlMode] = React.useState(false);
     const [explicitPathType, setExplicitPathType] = React.useState<{path: string; type: models.AppSourceType}>(null);
     const [destFormat, setDestFormat] = React.useState('URL');
     const [retry, setRetry] = React.useState(false);
-
+    const pathHasOpsmx = props.externalPath;
     function normalizeTypeFields(formApi: FormApi, type: models.AppSourceType) {
         const app = formApi.getFormState().values;
         for (const item of appTypes) {
@@ -129,6 +130,9 @@ export const ApplicationCreatePanel = (props: {
                     ]).then(([projects, clusters, reposInfo]) => ({projects, clusters, reposInfo}))
                 }>
                 {({projects, clusters, reposInfo}) => {
+                    if (pathHasOpsmx) {
+                        window.parent.postMessage({msg:'loadEvent'},'*');
+                    }
                     const repos = reposInfo.map(info => info.repo).sort();
                     const app = deepMerge(DEFAULT_APP, props.app || {});
                     const repoInfo = reposInfo.find(info => info.repo === app.spec.source.repoURL);
