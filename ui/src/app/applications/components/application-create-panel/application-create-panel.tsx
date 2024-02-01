@@ -103,6 +103,7 @@ export const ApplicationCreatePanel = (props: {
     onAppChanged: (app: models.Application) => any;
     createApp: (app: models.Application) => any;
     getFormApi: (api: FormApi) => any;
+    externalPath?: boolean;
 }) => {
     const [yamlMode, setYamlMode] = React.useState(false);
     const [explicitPathType, setExplicitPathType] = React.useState<{path: string; type: models.AppSourceType}>(null);
@@ -118,6 +119,7 @@ export const ApplicationCreatePanel = (props: {
         }
     }, []);
 
+    const pathHasOpsmx = props.externalPath;
     function normalizeTypeFields(formApi: FormApi, type: models.AppSourceType) {
         const appToNormalize = formApi.getFormState().values;
         for (const item of appTypes) {
@@ -140,6 +142,9 @@ export const ApplicationCreatePanel = (props: {
                     ]).then(([projects, clusters, reposInfo]) => ({projects, clusters, reposInfo}))
                 }>
                 {({projects, clusters, reposInfo}) => {
+                    if (pathHasOpsmx) {
+                        window.parent.postMessage({msg:'loadEvent'},'*');
+                    }
                     const repos = reposInfo.map(info => info.repo).sort();
                     const repoInfo = reposInfo.find(info => info.repo === app.spec.source.repoURL);
                     if (repoInfo) {
