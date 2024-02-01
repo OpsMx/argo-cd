@@ -310,7 +310,6 @@ const FlexTopBar = (props: {toolbar: Toolbar | Observable<Toolbar>}) => {
 const checkUrlIncludesOpsmx = (param: string) => {
     let urlSplit = param?.split('/')
     if(urlSplit && urlSplit[urlSplit.length-2] == 'opsmx' && urlSplit[urlSplit.length-1] == 'creation'){
-        window.parent.postMessage({msg:'loadEvent'},'*');
         return true;
     }
         return false;
@@ -658,6 +657,7 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                                     }
                                                                 }}
                                                                 app={appInput}
+                                                                externalPath = {pathHasOpsmx}
                                                                 onAppChanged={app => ctx.navigation.goto('.', {new: JSON.stringify(app)}, {replace: true})}
                                                             />
                                                         )}
