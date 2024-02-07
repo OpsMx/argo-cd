@@ -141,7 +141,7 @@ export const ApplicationCreatePanel = (props: {
                 }>
                 {({projects, clusters, reposInfo}) => {
                     if (pathHasOpsmx) {
-                        window.parent.postMessage({msg:'loadEvent'},'*');
+                        window.parent.postMessage(window.btoa(JSON.stringify({msg:'loadEvent'})),'*')
                     }
                     const repos = reposInfo.map(info => info.repo).sort();
                     const repoInfo = reposInfo.find(info => info.repo === app.spec.source.repoURL);

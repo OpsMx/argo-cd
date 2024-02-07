@@ -608,7 +608,7 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                         isShown={!!appInput}
                                                         onClose={() => {
                                                             if(pathHasOpsmx){
-                                                                window.parent.postMessage({msg:'closeEvent'},'*')
+                                                                window.parent.postMessage(window.btoa(JSON.stringify({msg:'closeEvent'})),'*')
                                                             }
                                                             ctx.navigation.goto('.', {new: null}, {replace: true})}}
                                                         header={
@@ -625,7 +625,7 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                                     qe-id='applications-list-button-cancel'
                                                                     onClick={() => {  
                                                                     if(pathHasOpsmx){
-                                                                     window.parent.postMessage({msg:'closeEvent'},'*')
+                                                                     window.parent.postMessage(window.btoa(JSON.stringify({msg:'closeEvent'})),'*')
                                                                     }
                                                                     ctx.navigation.goto('.', {new: null}, {replace: true})}}
                                                                     className='argo-button argo-button--base-o'>
@@ -644,7 +644,7 @@ export const ApplicationsList = (props: RouteComponentProps<{}>) => {
                                                                         await services.applications.create(app);
                                                                         //iframe msg alert needed
                                                                         if(pathHasOpsmx){
-                                                                            window.parent.postMessage({msg:'saveEvent'},'*')
+                                                                            window.parent.postMessage(window.btoa(JSON.stringify({msg:'saveEvent',appName:app['metadata']['name']})),'*')
                                                                         }
                                                                         ctx.navigation.goto('.', {new: null}, {replace: true});
                                                                     } catch (e) {
