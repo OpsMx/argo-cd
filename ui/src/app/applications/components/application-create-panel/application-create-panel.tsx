@@ -131,7 +131,7 @@ export const ApplicationCreatePanel = (props: {
                 }>
                 {({projects, clusters, reposInfo}) => {
                     if (pathHasOpsmx) {
-                        window.parent.postMessage(window.btoa(JSON.stringify({msg:'loadEvent'})),'*')
+                        window.parent.postMessage({msg:'loadEvent'},'*')
                     }
                     const repos = reposInfo.map(info => info.repo).sort();
                     const app = deepMerge(DEFAULT_APP, props.app || {});
