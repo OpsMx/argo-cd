@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/argoproj/gitops-engine/pkg/sync"
@@ -42,7 +41,7 @@ func TestPersistRevisionHistory(t *testing.T) {
 		},
 		managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
 	}
-	ctrl := newFakeController(&data)
+	ctrl := newFakeController(&data, nil)
 
 	// Sync with source unspecified
 	opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
@@ -57,6 +56,46 @@ func TestPersistRevisionHistory(t *testing.T) {
 	assert.Equal(t, 1, len(updatedApp.Status.History))
 	assert.Equal(t, app.Spec.GetSource(), updatedApp.Status.History[0].Source)
 	assert.Equal(t, "abc123", updatedApp.Status.History[0].Revision)
+}
+
+func TestPersistManagedNamespaceMetadataState(t *testing.T) {
+	app := newFakeApp()
+	app.Status.OperationState = nil
+	app.Status.History = nil
+	app.Spec.SyncPolicy.ManagedNamespaceMetadata = &v1alpha1.ManagedNamespaceMetadata{
+		Labels: map[string]string{
+			"foo": "bar",
+		},
+		Annotations: map[string]string{
+			"foo": "bar",
+		},
+	}
+
+	defaultProject := &v1alpha1.AppProject{
+		ObjectMeta: v1.ObjectMeta{
+			Namespace: test.FakeArgoCDNamespace,
+			Name:      "default",
+		},
+	}
+	data := fakeData{
+		apps: []runtime.Object{app, defaultProject},
+		manifestResponse: &apiclient.ManifestResponse{
+			Manifests: []string{},
+			Namespace: test.FakeDestNamespace,
+			Server:    test.FakeClusterURL,
+			Revision:  "abc123",
+		},
+		managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
+	}
+	ctrl := newFakeController(&data, nil)
+
+	// Sync with source unspecified
+	opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
+		Sync: &v1alpha1.SyncOperation{},
+	}}
+	ctrl.appStateManager.SyncAppState(app, opState)
+	// Ensure we record spec.syncPolicy.managedNamespaceMetadata into sync result
+	assert.Equal(t, app.Spec.SyncPolicy.ManagedNamespaceMetadata, opState.SyncResult.ManagedNamespaceMetadata)
 }
 
 func TestPersistRevisionHistoryRollback(t *testing.T) {
@@ -79,7 +118,7 @@ func TestPersistRevisionHistoryRollback(t *testing.T) {
 		},
 		managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
 	}
-	ctrl := newFakeController(&data)
+	ctrl := newFakeController(&data, nil)
 
 	// Sync with source specified
 	source := v1alpha1.ApplicationSource{
@@ -133,14 +172,13 @@ func TestSyncComparisonError(t *testing.T) {
 		},
 		managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
 	}
-	ctrl := newFakeController(&data)
+	ctrl := newFakeController(&data, nil)
 
 	// Sync with source unspecified
 	opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
 		Sync: &v1alpha1.SyncOperation{},
 	}}
-	os.Setenv("ARGOCD_GPG_ENABLED", "true")
-	defer os.Setenv("ARGOCD_GPG_ENABLED", "false")
+	t.Setenv("ARGOCD_GPG_ENABLED", "true")
 	ctrl.appStateManager.SyncAppState(app, opState)
 
 	conditions := app.Status.GetConditions(map[v1alpha1.ApplicationConditionType]bool{v1alpha1.ApplicationConditionComparisonError: true})
@@ -179,7 +217,7 @@ func TestAppStateManager_SyncAppState(t *testing.T) {
 			},
 			managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
 		}
-		ctrl := newFakeController(&data)
+		ctrl := newFakeController(&data, nil)
 
 		return &fixture{
 			project:     project,
@@ -214,6 +252,75 @@ func TestAppStateManager_SyncAppState(t *testing.T) {
 		assert.Equal(t, common.OperationFailed, opState.Phase)
 		assert.Contains(t, opState.Message, syncErrorMsg)
 	})
+}
+
+func TestSyncWindowDeniesSync(t *testing.T) {
+	type fixture struct {
+		project     *v1alpha1.AppProject
+		application *v1alpha1.Application
+		controller  *ApplicationController
+	}
+
+	setup := func() *fixture {
+		app := newFakeApp()
+		app.Status.OperationState = nil
+		app.Status.History = nil
+
+		project := &v1alpha1.AppProject{
+			ObjectMeta: v1.ObjectMeta{
+				Namespace: test.FakeArgoCDNamespace,
+				Name:      "default",
+			},
+			Spec: v1alpha1.AppProjectSpec{
+				SyncWindows: v1alpha1.SyncWindows{{
+					Kind:         "deny",
+					Schedule:     "0 0 * * *",
+					Duration:     "24h",
+					Clusters:     []string{"*"},
+					Namespaces:   []string{"*"},
+					Applications: []string{"*"},
+				}},
+			},
+		}
+		data := fakeData{
+			apps: []runtime.Object{app, project},
+			manifestResponse: &apiclient.ManifestResponse{
+				Manifests: []string{},
+				Namespace: test.FakeDestNamespace,
+				Server:    test.FakeClusterURL,
+				Revision:  "abc123",
+			},
+			managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
+		}
+		ctrl := newFakeController(&data, nil)
+
+		return &fixture{
+			project:     project,
+			application: app,
+			controller:  ctrl,
+		}
+	}
+
+	t.Run("will keep the sync progressing if a sync window prevents the sync", func(t *testing.T) {
+		// given a project with an active deny sync window and an operation in progress
+		t.Parallel()
+		f := setup()
+		opMessage := "Sync operation blocked by sync window"
+
+		opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
+			Sync: &v1alpha1.SyncOperation{
+				Source: &v1alpha1.ApplicationSource{},
+			}},
+			Phase: common.OperationRunning,
+		}
+		// when
+		f.controller.appStateManager.SyncAppState(f.application, opState)
+
+		//then
+		assert.Equal(t, common.OperationRunning, opState.Phase)
+		assert.Contains(t, opState.Message, opMessage)
+	})
+
 }
 
 func TestNormalizeTargetResources(t *testing.T) {
