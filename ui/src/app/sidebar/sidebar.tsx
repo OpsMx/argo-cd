@@ -57,7 +57,7 @@ export const Sidebar = (props: SidebarProps) => {
     return (
         <div className={`sidebar ${props.pref.hideSidebar ? 'sidebar--collapsed' : ''}`}>
             <div className='sidebar__container'>
-                <div className='sidebar__logo'>
+            {!pathHasOpsmx ? <div className='sidebar__logo'>
                     <div onClick={() => services.viewPreferences.updatePreferences({...props.pref, hideSidebar: !props.pref.hideSidebar})} className='sidebar__collapse-button'>
                         <i className={`fas fa-arrow-${props.pref.hideSidebar ? 'right' : 'left'}`} />
                     </div>
@@ -70,9 +70,9 @@ export const Sidebar = (props: SidebarProps) => {
                         </div>
                     )}
                     <img src='assets/images/logo.png' alt='Argo' className='sidebar__logo__character' />{' '}
-                </div>
+                </div>  : null}
 
-                {(props.navItems || []).map(item => (
+                {((pathHasOpsmx ? [] :props.navItems || []).map(item => (
                     <Tooltip key={item.path} content={<div className='sidebar__tooltip'>{item?.tooltip || item.title}</div>} {...tooltipProps}>
                         <div
                             key={item.title}
@@ -86,7 +86,7 @@ export const Sidebar = (props: SidebarProps) => {
                             </React.Fragment>
                         </div>
                     </Tooltip>
-                ))}
+                )))}
 
                 {props.pref.hideSidebar && (
                     <Tooltip content='Show Filters' {...tooltipProps}>
